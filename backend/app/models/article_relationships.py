@@ -1,21 +1,18 @@
 from sqlalchemy import Column, Integer, ForeignKey, Table
-from sqlalchemy.orm import relationship
 from ..database import Base
 
-class ArticleCategory(Base):
-    __tablename__ = "article_categories"
+# 文章-分类关联表
+article_categories = Table(
+    "article_categories",
+    Base.metadata,
+    Column("article_id", Integer, ForeignKey("articles.id", ondelete="CASCADE")),
+    Column("category_id", Integer, ForeignKey("categories.id", ondelete="CASCADE"))
+)
 
-    article_id = Column(Integer, ForeignKey("articles.id"), primary_key=True)
-    category_id = Column(Integer, ForeignKey("categories.id"), primary_key=True)
-    
-    article = relationship("Article", backref="categories")
-    category = relationship("Category", back_populates="articles")
-
-class ArticleTag(Base):
-    __tablename__ = "article_tags"
-
-    article_id = Column(Integer, ForeignKey("articles.id"), primary_key=True)
-    tag_id = Column(Integer, ForeignKey("tags.id"), primary_key=True)
-    
-    article = relationship("Article", backref="tags")
-    tag = relationship("Tag", back_populates="articles") 
+# 文章-标签关联表
+article_tags = Table(
+    "article_tags",
+    Base.metadata,
+    Column("article_id", Integer, ForeignKey("articles.id", ondelete="CASCADE")),
+    Column("tag_id", Integer, ForeignKey("tags.id", ondelete="CASCADE"))
+) 

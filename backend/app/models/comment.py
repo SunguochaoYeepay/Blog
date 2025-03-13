@@ -1,30 +1,33 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
+from app.database import Base
 from datetime import datetime
-from ..database import Base
 
 class Comment(Base):
     __tablename__ = "comments"
 
     id = Column(Integer, primary_key=True, index=True)
     content = Column(Text, nullable=False)
-    author_name = Column(String(100))  # 用于未登录用户
-    author_email = Column(String(100))  # 用于未登录用户
+    article_id = Column(Integer, ForeignKey("articles.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    parent_id = Column(Integer, ForeignKey("comments.id", ondelete="CASCADE"), nullable=True)
     
-    # Status
+    # 状态字段
     is_approved = Column(Boolean, default=False)
     is_spam = Column(Boolean, default=False)
     
-    # Relations
-    article_id = Column(Integer, ForeignKey("articles.id"))
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)  # 可以是匿名评论
-    parent_id = Column(Integer, ForeignKey("comments.id"), nullable=True)
+    # 元数据
+    ip_address = Column(String(45))  # IPv6 地址最长 45 个字符
+    user_agent = Column(String(200))  # 用户浏览器信息
     
-    # Timestamps
+    # 时间戳
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    # Relationships
-    article = relationship("Article", backref="comments")
-    user = relationship("User", backref="comments")
-    parent = relationship("Comment", remote_side=[id], backref="replies") 
+
+    # 关系
+    article = relationship("Article", back_populates="comments")
+    user = relationship("User", back_populates="comments")
+    parent = relationship("Comment", remote_side=[id], backref="replies")
+
+    class Config:
+        from_attributes = True 

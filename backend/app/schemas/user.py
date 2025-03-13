@@ -10,7 +10,15 @@ class UserBase(BaseModel):
     role: str
 
 class UserCreate(UserBase):
-    pass
+    password: str
+
+class UserUpdate(BaseModel):
+    username: Optional[str] = None
+    email: Optional[str] = None
+    full_name: Optional[str] = None
+    department: Optional[str] = None
+    role: Optional[str] = None
+    password: Optional[str] = None
 
 class UserResponse(UserBase):
     id: int

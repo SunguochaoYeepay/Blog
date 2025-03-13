@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 import os
 
 # 使用环境变量或默认值
@@ -23,9 +23,17 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
+# 依赖注入
 def get_db():
     db = SessionLocal()
     try:
         yield db
     finally:
-        db.close() 
+        db.close()
+
+# 初始化数据库
+def init_db():
+    import os
+    if os.path.exists("blog.db"):
+        os.remove("blog.db")
+    Base.metadata.create_all(bind=engine) 
