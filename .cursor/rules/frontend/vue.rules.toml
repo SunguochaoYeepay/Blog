@@ -1,0 +1,29 @@
+[framework]
+name = "vue"
+version = "3.x"
+typescript = true
+vite = true
+
+[dependencies]
+vue = "^3.3.0"
+"ant-design-vue" = "^4.0.0"
+pinia = "^2.1.0"
+"vue-router" = "^4.2.0"
+
+[dev-dependencies]
+typescript = "^5.0.0"
+"@vitejs/plugin-vue" = "^4.3.0"
+"@vue/compiler-sfc" = "^3.3.0"
+
+[build]
+target = "es2020"
+minify = true
+sourcemap = true
+
+[style]
+css_preprocessor = "scss"
+css_modules = true
+
+[lint]
+eslint = true
+prettier = true 

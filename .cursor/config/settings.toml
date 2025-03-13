@@ -1,0 +1,26 @@
+[editor]
+tab_size = 2
+insert_spaces = true
+auto_format = true
+format_on_save = true
+
+[language.vue]
+file_patterns = ["*.vue"]
+tab_size = 2
+
+[language.python]
+file_patterns = ["*.py"]
+tab_size = 4
+
+[git]
+auto_fetch = true
+auto_push = false
+
+[security]
+enable_cors = true
+enable_csp = true
+
+[performance]
+enable_code_splitting = true
+enable_lazy_loading = true
+enable_caching = true 

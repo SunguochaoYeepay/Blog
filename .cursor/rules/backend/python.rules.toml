@@ -1,0 +1,36 @@
+[framework]
+name = "fastapi"
+version = "^0.100.0"
+python_version = ">=3.9"
+
+[dependencies]
+fastapi = "^0.100.0"
+uvicorn = "^0.23.0"
+sqlalchemy = "^2.0.0"
+pydantic = "^2.0.0"
+python-jose = "^3.3.0"
+passlib = "^1.7.4"
+python-multipart = "^0.0.6"
+alembic = "^1.11.0"
+
+[database]
+type = "mysql"
+orm = "sqlalchemy"
+migration = "alembic"
+
+[server]
+host = "0.0.0.0"
+port = 3000
+reload = true
+workers = 4
+
+[security]
+jwt_secret_key = "${JWT_SECRET_KEY}"
+algorithm = "HS256"
+access_token_expire_minutes = 30
+
+[cors]
+allow_origins = ["http://localhost:8080"]
+allow_credentials = true
+allow_methods = ["*"]
+allow_headers = ["*"] 
