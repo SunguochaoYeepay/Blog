@@ -10,6 +10,18 @@ from ..database import get_db
 from ..logger import setup_logger
 from sqlalchemy import or_
 from ..utils.slug import generate_slug
+from .auth import get_current_user
+from ..dependencies.redis import (
+    cache_article,
+    get_cached_article,
+    delete_article_cache,
+    increment_article_view,
+    get_article_views,
+    toggle_article_like,
+    get_article_likes,
+    cache_multiple_articles,
+    get_cached_multiple_articles
+)
 
 logger = setup_logger("articles")
 router = APIRouter()
@@ -17,6 +29,7 @@ router = APIRouter()
 @router.post("/articles", response_model=Response[ArticleResponse], status_code=status.HTTP_201_CREATED)
 async def create_article(
     article: ArticleCreate,
+    current_user = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     logger.info(f"Creating new article: {article.title}")
@@ -27,11 +40,12 @@ async def create_article(
         if article.category_ids:
             categories = db.query(Category).filter(Category.id.in_(article.category_ids)).all()
             if len(categories) != len(article.category_ids):
+                missing_ids = set(article.category_ids) - set(c.id for c in categories)
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail=Response(
                         code=400,
-                        message="部分分类不存在"
+                        message=f"部分分类不存在: {missing_ids}"
                     ).model_dump()
                 )
         
@@ -40,11 +54,12 @@ async def create_article(
         if article.tag_ids:
             tags = db.query(Tag).filter(Tag.id.in_(article.tag_ids)).all()
             if len(tags) != len(article.tag_ids):
+                missing_ids = set(article.tag_ids) - set(t.id for t in tags)
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail=Response(
                         code=400,
-                        message="部分标签不存在"
+                        message=f"部分标签不存在: {missing_ids}"
                     ).model_dump()
                 )
         
@@ -64,7 +79,7 @@ async def create_article(
             status=article.status,
             is_featured=article.is_featured,
             allow_comments=article.allow_comments,
-            author_id=1  # TODO: 从当前用户获取
+            author_id=current_user.id  # 使用当前用户的ID
         )
         
         db.add(db_article)
@@ -79,6 +94,14 @@ async def create_article(
         db.commit()
         db.refresh(db_article)
         
+        # 缓存新文章
+        article_data = ArticleResponse.model_validate(db_article).model_dump()
+        cache_article(db_article.id, article_data)
+        
+        # 清除文章列表缓存
+        delete_article_cache("recent")
+        delete_article_cache("featured")
+        
         logger.info(f"Article created successfully: {db_article.id}")
         return Response[ArticleResponse](
             code=201,
@@ -87,6 +110,7 @@ async def create_article(
         )
     except HTTPException as e:
         db.rollback()
+        logger.error(f"Error creating article (HTTP): {str(e.detail)}")
         raise e
     except Exception as e:
         db.rollback()
@@ -95,7 +119,7 @@ async def create_article(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=Response(
                 code=500,
-                message="创建文章失败"
+                message=f"创建文章失败: {str(e)}"
             ).model_dump()
         )
 
@@ -112,6 +136,22 @@ async def list_articles(
 ):
     """获取文章列表"""
     logger.info(f"Listing articles with skip: {skip}, limit: {limit}, keyword: {keyword}, title: {title}")
+    
+    # 如果没有过滤条件，尝试从缓存获取
+    if not any([keyword, status, is_featured, author_id, title]) and skip == 0:
+        cached_articles = get_cached_multiple_articles("recent")
+        if cached_articles:
+            total = len(cached_articles)
+            return Response[dict](
+                code=200,
+                message="查询成功",
+                data={
+                    "data": cached_articles[:limit],
+                    "total": total,
+                    "skip": skip,
+                    "limit": limit
+                }
+            )
     
     # 构建查询
     query = db.query(Article)
@@ -163,9 +203,9 @@ async def list_articles(
             "created_at": article.created_at,
             "updated_at": article.updated_at,
             "published_at": article.published_at,
-            "view_count": article.view_count,
+            "view_count": get_article_views(article.id),  # 从Redis获取浏览量
+            "like_count": get_article_likes(article.id),  # 从Redis获取点赞数
             "comment_count": article.comment_count,
-            "like_count": article.like_count,
             "author": {
                 "id": article.author.id,
                 "username": article.author.username,
@@ -190,6 +230,10 @@ async def list_articles(
         }
         article_responses.append(article_dict)
     
+    # 如果是获取首页文章，缓存结果
+    if not any([keyword, status, is_featured, author_id, title]) and skip == 0:
+        cache_multiple_articles(article_responses, "recent")
+    
     logger.info(f"Found {len(articles)} articles out of {total} total matches")
     return Response[dict](
         code=200,
@@ -208,6 +252,17 @@ async def get_article(
     db: Session = Depends(get_db)
 ):
     """获取文章详情"""
+    # 尝试从缓存获取
+    cached_article = get_cached_article(article_id)
+    if cached_article:
+        # 增加浏览次数
+        increment_article_view(article_id)
+        return Response[ArticleResponse](
+            code=200,
+            message="查询成功",
+            data=ArticleResponse.model_validate(cached_article)
+        )
+    
     article = db.query(Article).filter(Article.id == article_id).first()
     if not article:
         raise HTTPException(
@@ -218,10 +273,19 @@ async def get_article(
             ).model_dump()
         )
     
+    # 增加浏览次数
+    increment_article_view(article_id)
+    
+    # 缓存文章数据
+    article_data = ArticleResponse.model_validate(article).model_dump()
+    article_data["view_count"] = get_article_views(article_id)
+    article_data["like_count"] = get_article_likes(article_id)
+    cache_article(article_id, article_data)
+    
     return Response[ArticleResponse](
         code=200,
         message="查询成功",
-        data=ArticleResponse.model_validate(article)
+        data=ArticleResponse.model_validate(article_data)
     )
 
 @router.put("/articles/{article_id}", response_model=Response[ArticleResponse], status_code=status.HTTP_200_OK)
@@ -277,6 +341,14 @@ async def update_article(
         db.commit()
         db.refresh(article)
         
+        # 更新缓存
+        article_data = ArticleResponse.model_validate(article).model_dump()
+        cache_article(article.id, article_data)
+        
+        # 清除文章列表缓存
+        delete_article_cache("recent")
+        delete_article_cache("featured")
+        
         logger.info(f"Article updated successfully: {article.id}")
         return Response[ArticleResponse](
             code=200,
@@ -314,6 +386,11 @@ async def delete_article(
         db.delete(article)
         db.commit()
         
+        # 删除缓存
+        delete_article_cache(article_id)
+        delete_article_cache("recent")
+        delete_article_cache("featured")
+        
         logger.info(f"Article deleted successfully: {article_id}")
         return Response(
             code=200,
@@ -327,5 +404,48 @@ async def delete_article(
             detail=Response(
                 code=500,
                 message="删除文章失败"
+            ).model_dump()
+        )
+
+@router.post("/articles/{article_id}/like", response_model=Response[dict])
+async def like_article(
+    article_id: int,
+    current_user = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """点赞/取消点赞文章"""
+    # 检查文章是否存在
+    article = db.query(Article).filter(Article.id == article_id).first()
+    if not article:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=Response(
+                code=404,
+                message="文章不存在"
+            ).model_dump()
+        )
+    
+    try:
+        # 切换点赞状态
+        is_liked = toggle_article_like(article_id, current_user.id)
+        
+        # 获取最新点赞数
+        like_count = get_article_likes(article_id)
+        
+        return Response[dict](
+            code=200,
+            message="操作成功",
+            data={
+                "is_liked": is_liked,
+                "like_count": like_count
+            }
+        )
+    except Exception as e:
+        logger.error(f"Error toggling article like: {str(e)}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=Response(
+                code=500,
+                message="操作失败"
             ).model_dump()
         ) 

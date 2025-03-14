@@ -11,6 +11,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str
+    avatar: Optional[str] = None
 
 class UserUpdate(BaseModel):
     username: Optional[str] = None
@@ -19,11 +20,15 @@ class UserUpdate(BaseModel):
     department: Optional[str] = None
     role: Optional[str] = None
     password: Optional[str] = None
+    avatar: Optional[str] = None
 
 class UserResponse(UserBase):
     id: int
-    created_at: datetime
+    avatar: Optional[str] = None
+    is_active: bool = True
     last_login: Optional[datetime] = None
+    created_at: datetime
+    updated_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True

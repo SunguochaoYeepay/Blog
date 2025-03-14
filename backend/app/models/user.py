@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text
 from sqlalchemy.orm import relationship
 from app.database import Base
 from datetime import datetime
@@ -14,6 +14,7 @@ class User(Base):
     department = Column(String(100))
     role = Column(String(20), default="user")  # user, admin
     hashed_password = Column(String(200), nullable=False)
+    avatar = Column(Text(length=16777215), nullable=True)  # MEDIUMTEXT，最大支持16MB
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

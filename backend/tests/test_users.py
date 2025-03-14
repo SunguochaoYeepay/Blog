@@ -83,11 +83,12 @@ def create_test_user(user_data: dict, test_db: Session) -> User:
     test_db.refresh(db_user)
     return db_user
 
-def test_create_user(test_db: Session):
+def test_create_user(admin_token: str, test_db: Session):
     """测试创建用户"""
     response = client.post(
         "/api/users",
-        json=test_user
+        json=test_user,
+        headers={"Authorization": f"Bearer {admin_token}"}
     )
     assert response.status_code == 201
     data = response.json()

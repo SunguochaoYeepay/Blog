@@ -4,7 +4,8 @@ from typing import Optional
 class Settings(BaseSettings):
     """应用配置"""
     # 数据库配置
-    DATABASE_URL: str = "sqlite:///./test.db"
+    DATABASE_URL: str = "mysql+pymysql://root:password@localhost:3306/demo"
+    TEST_DATABASE_URL: str = "mysql+pymysql://root:password@localhost:3306/demo_test"
     
     # MySQL settings
     mysql_user: str
@@ -31,6 +32,11 @@ class Settings(BaseSettings):
     # 分页配置
     DEFAULT_PAGE_SIZE: int = 10
     MAX_PAGE_SIZE: int = 100
+    
+    # Redis配置
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6379
+    REDIS_DB: int = 0
     
     class Config:
         env_file = ".env"

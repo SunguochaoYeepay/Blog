@@ -1549,3 +1549,790 @@ sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed
 2025-03-14 02:14:30,999 - articles - INFO - Found 1 articles out of 1 total matches
 2025-03-14 02:14:31,742 - articles - INFO - Article updated successfully: 1
 2025-03-14 02:14:32,236 - articles - INFO - Article deleted successfully: 1
+2025-03-14 10:30:20,574 - articles - INFO - Creating new article: Test Article
+2025-03-14 10:30:20,580 - articles - ERROR - Error creating article: Object of type datetime is not JSON serializable
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/backend/app/api/articles.py", line 96, in create_article
+    cache_article(db_article.id, article_data)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/backend/app/dependencies/redis.py", line 75, in cache_article
+    redis_client.setex(key, ARTICLE_CACHE_TTL, json.dumps(article_data))
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/json/__init__.py", line 231, in dumps
+    return _default_encoder.encode(obj)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/json/encoder.py", line 199, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/json/encoder.py", line 257, in iterencode
+    return _iterencode(o, 0)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type datetime is not JSON serializable
+2025-03-14 10:30:20,857 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: None, title: None
+2025-03-14 10:30:21,676 - articles - ERROR - Error updating article: 2 validation errors for ArticleResponse
+author_id
+  Input should be a valid integer [type=int_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.6/v/int_type
+author
+  Input should be a valid dictionary or object to extract fields from [type=model_attributes_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.6/v/model_attributes_type
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/backend/app/api/articles.py", line 341, in update_article
+    article_data = ArticleResponse.model_validate(article).model_dump()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pydantic/main.py", line 509, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+pydantic_core._pydantic_core.ValidationError: 2 validation errors for ArticleResponse
+author_id
+  Input should be a valid integer [type=int_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.6/v/int_type
+author
+  Input should be a valid dictionary or object to extract fields from [type=model_attributes_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.6/v/model_attributes_type
+2025-03-14 10:30:21,924 - articles - INFO - Article deleted successfully: 1
+2025-03-14 10:31:52,996 - articles - INFO - Creating new article: Test Article
+2025-03-14 10:31:53,018 - articles - INFO - Article created successfully: 1
+2025-03-14 10:31:53,266 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: None, title: None
+2025-03-14 10:31:53,270 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-14 10:31:53,763 - articles - INFO - Article updated successfully: 1
+2025-03-14 10:31:54,009 - articles - INFO - Article deleted successfully: 1
+2025-03-14 10:34:44,941 - articles - INFO - Creating new article: Test Article
+2025-03-14 10:34:44,951 - articles - INFO - Article created successfully: 1
+2025-03-14 10:34:45,196 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: None, title: None
+2025-03-14 10:34:45,201 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-14 10:34:45,692 - articles - INFO - Article updated successfully: 1
+2025-03-14 10:34:45,943 - articles - INFO - Article deleted successfully: 1
+2025-03-14 10:37:34,915 - articles - INFO - Creating new article: Test Article
+2025-03-14 10:37:34,925 - articles - INFO - Article created successfully: 1
+2025-03-14 10:37:35,170 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: None, title: None
+2025-03-14 10:37:35,176 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-14 10:37:35,669 - articles - INFO - Article updated successfully: 1
+2025-03-14 10:37:35,924 - articles - INFO - Article deleted successfully: 1
+2025-03-14 10:41:58,186 - articles - INFO - Creating new article: Test Article
+2025-03-14 10:41:58,222 - articles - INFO - Article created successfully: 1
+2025-03-14 10:41:58,500 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: None, title: None
+2025-03-14 10:41:58,532 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-14 10:41:59,165 - articles - INFO - Article updated successfully: 1
+2025-03-14 10:41:59,416 - articles - INFO - Article deleted successfully: 1
+2025-03-14 10:44:18,772 - articles - INFO - Creating new article: Test Article
+2025-03-14 10:44:18,780 - articles - INFO - Article created successfully: 1
+2025-03-14 10:44:19,030 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: None, title: None
+2025-03-14 10:44:19,034 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-14 10:44:19,534 - articles - INFO - Article updated successfully: 1
+2025-03-14 10:44:19,783 - articles - INFO - Article deleted successfully: 1
+2025-03-14 10:45:42,893 - articles - INFO - Creating new article: Test Article
+2025-03-14 10:45:42,899 - articles - INFO - Article created successfully: 1
+2025-03-14 10:45:43,149 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: None, title: None
+2025-03-14 10:45:43,154 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-14 10:45:43,667 - articles - INFO - Article updated successfully: 1
+2025-03-14 10:45:43,920 - articles - INFO - Article deleted successfully: 1
+2025-03-14 10:47:01,028 - articles - INFO - Creating new article: Test Article
+2025-03-14 10:47:01,034 - articles - INFO - Article created successfully: 1
+2025-03-14 10:47:01,280 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: None, title: None
+2025-03-14 10:47:01,309 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-14 10:47:01,807 - articles - INFO - Article updated successfully: 1
+2025-03-14 10:47:02,059 - articles - INFO - Article deleted successfully: 1
+2025-03-14 10:50:29,545 - articles - INFO - Creating new article: Test Article
+2025-03-14 10:50:29,552 - articles - INFO - Article created successfully: 1
+2025-03-14 10:50:29,797 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: None, title: None
+2025-03-14 10:50:29,803 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-14 10:50:30,300 - articles - INFO - Article updated successfully: 1
+2025-03-14 10:50:30,547 - articles - INFO - Article deleted successfully: 1
+2025-03-14 10:52:34,032 - articles - INFO - Creating new article: Test Article
+2025-03-14 10:52:34,039 - articles - INFO - Article created successfully: 1
+2025-03-14 10:52:34,284 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: None, title: None
+2025-03-14 10:52:34,288 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-14 10:52:35,017 - articles - INFO - Article updated successfully: 1
+2025-03-14 10:52:35,262 - articles - INFO - Article deleted successfully: 1
+2025-03-14 12:51:28,024 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 12:51:28,115 - articles - INFO - Found 2 articles out of 2 total matches
+2025-03-14 12:51:40,034 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 12:51:45,641 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 12:52:07,219 - articles - INFO - Creating new article: 11221
+2025-03-14 12:52:07,305 - articles - INFO - Article created successfully: 3
+2025-03-14 12:52:11,017 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 12:52:11,028 - articles - INFO - Found 3 articles out of 3 total matches
+2025-03-14 12:52:15,961 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 12:52:29,990 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 12:54:00,578 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 12:55:27,382 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 12:55:47,598 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 12:55:59,144 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 12:56:01,134 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 12:56:04,017 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 12:56:07,421 - articles - INFO - Article deleted successfully: 3
+2025-03-14 12:56:07,446 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 12:56:07,463 - articles - INFO - Found 2 articles out of 2 total matches
+2025-03-14 12:56:11,697 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 12:58:20,983 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 12:59:30,506 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 12:59:32,512 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 12:59:36,096 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 12:59:46,276 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 12:59:54,440 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:01:38,165 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:01:46,264 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:01:51,066 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:02:06,990 - articles - INFO - Creating new article: 1212
+2025-03-14 13:02:07,041 - articles - INFO - Article created successfully: 4
+2025-03-14 13:02:09,292 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:02:09,334 - articles - INFO - Found 3 articles out of 3 total matches
+2025-03-14 13:02:13,121 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:02:32,861 - articles - INFO - Creating new article: 12345
+2025-03-14 13:02:33,146 - articles - INFO - Article created successfully: 5
+2025-03-14 13:02:35,180 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:02:35,209 - articles - INFO - Found 4 articles out of 4 total matches
+2025-03-14 13:02:38,493 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:10:38,936 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:18:08,461 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:18:11,171 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:22:58,645 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:28:13,209 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:28:19,883 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:28:25,054 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:29:14,250 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:29:40,733 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:32:16,632 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:32:27,165 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:34:06,554 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:36:45,027 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:36:50,793 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:37:20,534 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:37:24,355 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:37:28,132 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:37:46,449 - articles - INFO - Creating new article: 222222222222222
+2025-03-14 13:37:46,567 - articles - INFO - Article created successfully: 6
+2025-03-14 13:37:50,433 - articles - INFO - Creating new article: 222222222222222
+2025-03-14 13:37:50,442 - articles - ERROR - Error creating article: (pymysql.err.IntegrityError) (1062, "Duplicate entry '2' for key 'articles.slug'")
+[SQL: INSERT INTO articles (title, slug, content, summary, meta_title, meta_description, keywords, status, is_featured, allow_comments, created_at, updated_at, published_at, author_id, view_count, comment_count, like_count) VALUES (%(title)s, %(slug)s, %(content)s, %(summary)s, %(meta_title)s, %(meta_description)s, %(keywords)s, %(status)s, %(is_featured)s, %(allow_comments)s, %(created_at)s, %(updated_at)s, %(published_at)s, %(author_id)s, %(view_count)s, %(comment_count)s, %(like_count)s)]
+[parameters: {'title': '222222222222222', 'slug': '2', 'content': '2222222222222222222222', 'summary': '222222222', 'meta_title': '222', 'meta_description': '', 'keywords': '', 'status': 'draft', 'is_featured': 0, 'allow_comments': 1, 'created_at': datetime.datetime(2025, 3, 14, 5, 37, 50, 436516), 'updated_at': datetime.datetime(2025, 3, 14, 5, 37, 50, 436518), 'published_at': None, 'author_id': 1, 'view_count': 0, 'comment_count': 0, 'like_count': 0}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1960, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 153, in execute
+    result = self._query(query)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 322, in _query
+    conn.query(q)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 558, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 822, in _read_query_result
+    result.read()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 1200, in read
+    first_packet = self.connection._read_packet()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 772, in _read_packet
+    packet.raise_for_error()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.IntegrityError: (1062, "Duplicate entry '2' for key 'articles.slug'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/backend/app/api/articles.py", line 83, in create_article
+    db.flush()  # 获取文章ID但不提交事务
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4296, in flush
+    self._flush(objects)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4431, in _flush
+    with util.safe_reraise():
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4392, in _flush
+    flush_context.execute()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1408, in execute
+    return meth(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/sql/elements.py", line 513, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1630, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1839, in _execute_context
+    return self._exec_single_context(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1979, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 2335, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1960, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 153, in execute
+    result = self._query(query)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 322, in _query
+    conn.query(q)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 558, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 822, in _read_query_result
+    result.read()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 1200, in read
+    first_packet = self.connection._read_packet()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 772, in _read_packet
+    packet.raise_for_error()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.IntegrityError: (pymysql.err.IntegrityError) (1062, "Duplicate entry '2' for key 'articles.slug'")
+[SQL: INSERT INTO articles (title, slug, content, summary, meta_title, meta_description, keywords, status, is_featured, allow_comments, created_at, updated_at, published_at, author_id, view_count, comment_count, like_count) VALUES (%(title)s, %(slug)s, %(content)s, %(summary)s, %(meta_title)s, %(meta_description)s, %(keywords)s, %(status)s, %(is_featured)s, %(allow_comments)s, %(created_at)s, %(updated_at)s, %(published_at)s, %(author_id)s, %(view_count)s, %(comment_count)s, %(like_count)s)]
+[parameters: {'title': '222222222222222', 'slug': '2', 'content': '2222222222222222222222', 'summary': '222222222', 'meta_title': '222', 'meta_description': '', 'keywords': '', 'status': 'draft', 'is_featured': 0, 'allow_comments': 1, 'created_at': datetime.datetime(2025, 3, 14, 5, 37, 50, 436516), 'updated_at': datetime.datetime(2025, 3, 14, 5, 37, 50, 436518), 'published_at': None, 'author_id': 1, 'view_count': 0, 'comment_count': 0, 'like_count': 0}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-03-14 13:38:09,569 - articles - INFO - Creating new article: 222222222222222
+2025-03-14 13:38:09,602 - articles - ERROR - Error creating article: (pymysql.err.IntegrityError) (1062, "Duplicate entry '2' for key 'articles.slug'")
+[SQL: INSERT INTO articles (title, slug, content, summary, meta_title, meta_description, keywords, status, is_featured, allow_comments, created_at, updated_at, published_at, author_id, view_count, comment_count, like_count) VALUES (%(title)s, %(slug)s, %(content)s, %(summary)s, %(meta_title)s, %(meta_description)s, %(keywords)s, %(status)s, %(is_featured)s, %(allow_comments)s, %(created_at)s, %(updated_at)s, %(published_at)s, %(author_id)s, %(view_count)s, %(comment_count)s, %(like_count)s)]
+[parameters: {'title': '222222222222222', 'slug': '2', 'content': '2222222222222222222222', 'summary': '222222222', 'meta_title': '222', 'meta_description': '', 'keywords': '', 'status': 'draft', 'is_featured': 0, 'allow_comments': 1, 'created_at': datetime.datetime(2025, 3, 14, 5, 38, 9, 594548), 'updated_at': datetime.datetime(2025, 3, 14, 5, 38, 9, 594552), 'published_at': None, 'author_id': 1, 'view_count': 0, 'comment_count': 0, 'like_count': 0}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1960, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 153, in execute
+    result = self._query(query)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 322, in _query
+    conn.query(q)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 558, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 822, in _read_query_result
+    result.read()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 1200, in read
+    first_packet = self.connection._read_packet()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 772, in _read_packet
+    packet.raise_for_error()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.IntegrityError: (1062, "Duplicate entry '2' for key 'articles.slug'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/backend/app/api/articles.py", line 83, in create_article
+    db.flush()  # 获取文章ID但不提交事务
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4296, in flush
+    self._flush(objects)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4431, in _flush
+    with util.safe_reraise():
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4392, in _flush
+    flush_context.execute()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1408, in execute
+    return meth(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/sql/elements.py", line 513, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1630, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1839, in _execute_context
+    return self._exec_single_context(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1979, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 2335, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1960, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 153, in execute
+    result = self._query(query)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 322, in _query
+    conn.query(q)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 558, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 822, in _read_query_result
+    result.read()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 1200, in read
+    first_packet = self.connection._read_packet()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 772, in _read_packet
+    packet.raise_for_error()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.IntegrityError: (pymysql.err.IntegrityError) (1062, "Duplicate entry '2' for key 'articles.slug'")
+[SQL: INSERT INTO articles (title, slug, content, summary, meta_title, meta_description, keywords, status, is_featured, allow_comments, created_at, updated_at, published_at, author_id, view_count, comment_count, like_count) VALUES (%(title)s, %(slug)s, %(content)s, %(summary)s, %(meta_title)s, %(meta_description)s, %(keywords)s, %(status)s, %(is_featured)s, %(allow_comments)s, %(created_at)s, %(updated_at)s, %(published_at)s, %(author_id)s, %(view_count)s, %(comment_count)s, %(like_count)s)]
+[parameters: {'title': '222222222222222', 'slug': '2', 'content': '2222222222222222222222', 'summary': '222222222', 'meta_title': '222', 'meta_description': '', 'keywords': '', 'status': 'draft', 'is_featured': 0, 'allow_comments': 1, 'created_at': datetime.datetime(2025, 3, 14, 5, 38, 9, 594548), 'updated_at': datetime.datetime(2025, 3, 14, 5, 38, 9, 594552), 'published_at': None, 'author_id': 1, 'view_count': 0, 'comment_count': 0, 'like_count': 0}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-03-14 13:39:20,715 - articles - INFO - Creating new article: Test Article
+2025-03-14 13:39:20,740 - articles - INFO - Article created successfully: 9
+2025-03-14 13:41:04,863 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:41:05,042 - articles - INFO - Found 6 articles out of 6 total matches
+2025-03-14 13:41:09,802 - articles - INFO - Article updated successfully: 1
+2025-03-14 13:41:09,955 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:41:10,021 - articles - INFO - Found 6 articles out of 6 total matches
+2025-03-14 13:41:26,029 - articles - INFO - Creating new article: 22222
+2025-03-14 13:41:26,044 - articles - ERROR - Error creating article: (pymysql.err.IntegrityError) (1062, "Duplicate entry '2' for key 'articles.slug'")
+[SQL: INSERT INTO articles (title, slug, content, summary, meta_title, meta_description, keywords, status, is_featured, allow_comments, created_at, updated_at, published_at, author_id, view_count, comment_count, like_count) VALUES (%(title)s, %(slug)s, %(content)s, %(summary)s, %(meta_title)s, %(meta_description)s, %(keywords)s, %(status)s, %(is_featured)s, %(allow_comments)s, %(created_at)s, %(updated_at)s, %(published_at)s, %(author_id)s, %(view_count)s, %(comment_count)s, %(like_count)s)]
+[parameters: {'title': '22222', 'slug': '2', 'content': '22222222222222', 'summary': '2', 'meta_title': '', 'meta_description': '', 'keywords': '', 'status': 'draft', 'is_featured': 0, 'allow_comments': 1, 'created_at': datetime.datetime(2025, 3, 14, 5, 41, 26, 39182), 'updated_at': datetime.datetime(2025, 3, 14, 5, 41, 26, 39185), 'published_at': None, 'author_id': 1, 'view_count': 0, 'comment_count': 0, 'like_count': 0}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1960, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 153, in execute
+    result = self._query(query)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 322, in _query
+    conn.query(q)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 558, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 822, in _read_query_result
+    result.read()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 1200, in read
+    first_packet = self.connection._read_packet()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 772, in _read_packet
+    packet.raise_for_error()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.IntegrityError: (1062, "Duplicate entry '2' for key 'articles.slug'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/backend/app/api/articles.py", line 83, in create_article
+    db.flush()  # 获取文章ID但不提交事务
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4296, in flush
+    self._flush(objects)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4431, in _flush
+    with util.safe_reraise():
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4392, in _flush
+    flush_context.execute()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1408, in execute
+    return meth(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/sql/elements.py", line 513, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1630, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1839, in _execute_context
+    return self._exec_single_context(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1979, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 2335, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1960, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 153, in execute
+    result = self._query(query)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 322, in _query
+    conn.query(q)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 558, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 822, in _read_query_result
+    result.read()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 1200, in read
+    first_packet = self.connection._read_packet()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 772, in _read_packet
+    packet.raise_for_error()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.IntegrityError: (pymysql.err.IntegrityError) (1062, "Duplicate entry '2' for key 'articles.slug'")
+[SQL: INSERT INTO articles (title, slug, content, summary, meta_title, meta_description, keywords, status, is_featured, allow_comments, created_at, updated_at, published_at, author_id, view_count, comment_count, like_count) VALUES (%(title)s, %(slug)s, %(content)s, %(summary)s, %(meta_title)s, %(meta_description)s, %(keywords)s, %(status)s, %(is_featured)s, %(allow_comments)s, %(created_at)s, %(updated_at)s, %(published_at)s, %(author_id)s, %(view_count)s, %(comment_count)s, %(like_count)s)]
+[parameters: {'title': '22222', 'slug': '2', 'content': '22222222222222', 'summary': '2', 'meta_title': '', 'meta_description': '', 'keywords': '', 'status': 'draft', 'is_featured': 0, 'allow_comments': 1, 'created_at': datetime.datetime(2025, 3, 14, 5, 41, 26, 39182), 'updated_at': datetime.datetime(2025, 3, 14, 5, 41, 26, 39185), 'published_at': None, 'author_id': 1, 'view_count': 0, 'comment_count': 0, 'like_count': 0}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-03-14 13:41:28,430 - articles - INFO - Creating new article: 22222
+2025-03-14 13:41:28,437 - articles - ERROR - Error creating article: (pymysql.err.IntegrityError) (1062, "Duplicate entry '2' for key 'articles.slug'")
+[SQL: INSERT INTO articles (title, slug, content, summary, meta_title, meta_description, keywords, status, is_featured, allow_comments, created_at, updated_at, published_at, author_id, view_count, comment_count, like_count) VALUES (%(title)s, %(slug)s, %(content)s, %(summary)s, %(meta_title)s, %(meta_description)s, %(keywords)s, %(status)s, %(is_featured)s, %(allow_comments)s, %(created_at)s, %(updated_at)s, %(published_at)s, %(author_id)s, %(view_count)s, %(comment_count)s, %(like_count)s)]
+[parameters: {'title': '22222', 'slug': '2', 'content': '22222222222222', 'summary': '2', 'meta_title': '', 'meta_description': '', 'keywords': '', 'status': 'draft', 'is_featured': 0, 'allow_comments': 1, 'created_at': datetime.datetime(2025, 3, 14, 5, 41, 28, 434791), 'updated_at': datetime.datetime(2025, 3, 14, 5, 41, 28, 434794), 'published_at': None, 'author_id': 1, 'view_count': 0, 'comment_count': 0, 'like_count': 0}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1960, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 153, in execute
+    result = self._query(query)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 322, in _query
+    conn.query(q)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 558, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 822, in _read_query_result
+    result.read()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 1200, in read
+    first_packet = self.connection._read_packet()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 772, in _read_packet
+    packet.raise_for_error()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.IntegrityError: (1062, "Duplicate entry '2' for key 'articles.slug'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/backend/app/api/articles.py", line 83, in create_article
+    db.flush()  # 获取文章ID但不提交事务
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4296, in flush
+    self._flush(objects)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4431, in _flush
+    with util.safe_reraise():
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4392, in _flush
+    flush_context.execute()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1408, in execute
+    return meth(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/sql/elements.py", line 513, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1630, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1839, in _execute_context
+    return self._exec_single_context(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1979, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 2335, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1960, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 153, in execute
+    result = self._query(query)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 322, in _query
+    conn.query(q)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 558, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 822, in _read_query_result
+    result.read()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 1200, in read
+    first_packet = self.connection._read_packet()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 772, in _read_packet
+    packet.raise_for_error()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.IntegrityError: (pymysql.err.IntegrityError) (1062, "Duplicate entry '2' for key 'articles.slug'")
+[SQL: INSERT INTO articles (title, slug, content, summary, meta_title, meta_description, keywords, status, is_featured, allow_comments, created_at, updated_at, published_at, author_id, view_count, comment_count, like_count) VALUES (%(title)s, %(slug)s, %(content)s, %(summary)s, %(meta_title)s, %(meta_description)s, %(keywords)s, %(status)s, %(is_featured)s, %(allow_comments)s, %(created_at)s, %(updated_at)s, %(published_at)s, %(author_id)s, %(view_count)s, %(comment_count)s, %(like_count)s)]
+[parameters: {'title': '22222', 'slug': '2', 'content': '22222222222222', 'summary': '2', 'meta_title': '', 'meta_description': '', 'keywords': '', 'status': 'draft', 'is_featured': 0, 'allow_comments': 1, 'created_at': datetime.datetime(2025, 3, 14, 5, 41, 28, 434791), 'updated_at': datetime.datetime(2025, 3, 14, 5, 41, 28, 434794), 'published_at': None, 'author_id': 1, 'view_count': 0, 'comment_count': 0, 'like_count': 0}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-03-14 13:49:22,691 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:49:43,255 - articles - INFO - Creating new article: 23323223
+2025-03-14 13:49:43,315 - articles - INFO - Article created successfully: 12
+2025-03-14 13:49:43,514 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:49:43,530 - articles - INFO - Found 2 articles out of 2 total matches
+2025-03-14 13:49:51,471 - articles - INFO - Article deleted successfully: 12
+2025-03-14 13:49:51,486 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:49:51,499 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-14 13:50:04,746 - articles - INFO - Creating new article: 23323223233232232332322323323223233232232332322323323223233232232332322323323223233232232332322323323223
+2025-03-14 13:50:04,773 - articles - ERROR - Error creating article: (pymysql.err.DataError) (1406, "Data too long for column 'title' at row 1")
+[SQL: INSERT INTO articles (title, slug, content, summary, meta_title, meta_description, keywords, status, is_featured, allow_comments, created_at, updated_at, published_at, author_id, view_count, comment_count, like_count) VALUES (%(title)s, %(slug)s, %(content)s, %(summary)s, %(meta_title)s, %(meta_description)s, %(keywords)s, %(status)s, %(is_featured)s, %(allow_comments)s, %(created_at)s, %(updated_at)s, %(published_at)s, %(author_id)s, %(view_count)s, %(comment_count)s, %(like_count)s)]
+[parameters: {'title': '23323223233232232332322323323223233232232332322323323223233232232332322323323223233232232332322323323223', 'slug': '23323223', 'content': '2332322323323223233232232332322323323223233232232332322323323223233232232332322323323223', 'summary': '', 'meta_title': '', 'meta_description': '', 'keywords': '', 'status': 'draft', 'is_featured': 0, 'allow_comments': 1, 'created_at': datetime.datetime(2025, 3, 14, 5, 50, 4, 753598), 'updated_at': datetime.datetime(2025, 3, 14, 5, 50, 4, 753600), 'published_at': None, 'author_id': 4, 'view_count': 0, 'comment_count': 0, 'like_count': 0}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1960, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 153, in execute
+    result = self._query(query)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 322, in _query
+    conn.query(q)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 558, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 822, in _read_query_result
+    result.read()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 1200, in read
+    first_packet = self.connection._read_packet()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 772, in _read_packet
+    packet.raise_for_error()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.DataError: (1406, "Data too long for column 'title' at row 1")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/backend/app/api/articles.py", line 86, in create_article
+    db.flush()  # 获取文章ID但不提交事务
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4296, in flush
+    self._flush(objects)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4431, in _flush
+    with util.safe_reraise():
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4392, in _flush
+    flush_context.execute()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1408, in execute
+    return meth(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/sql/elements.py", line 513, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1630, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1839, in _execute_context
+    return self._exec_single_context(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1979, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 2335, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1960, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 153, in execute
+    result = self._query(query)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 322, in _query
+    conn.query(q)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 558, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 822, in _read_query_result
+    result.read()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 1200, in read
+    first_packet = self.connection._read_packet()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 772, in _read_packet
+    packet.raise_for_error()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.DataError: (pymysql.err.DataError) (1406, "Data too long for column 'title' at row 1")
+[SQL: INSERT INTO articles (title, slug, content, summary, meta_title, meta_description, keywords, status, is_featured, allow_comments, created_at, updated_at, published_at, author_id, view_count, comment_count, like_count) VALUES (%(title)s, %(slug)s, %(content)s, %(summary)s, %(meta_title)s, %(meta_description)s, %(keywords)s, %(status)s, %(is_featured)s, %(allow_comments)s, %(created_at)s, %(updated_at)s, %(published_at)s, %(author_id)s, %(view_count)s, %(comment_count)s, %(like_count)s)]
+[parameters: {'title': '23323223233232232332322323323223233232232332322323323223233232232332322323323223233232232332322323323223', 'slug': '23323223', 'content': '2332322323323223233232232332322323323223233232232332322323323223233232232332322323323223', 'summary': '', 'meta_title': '', 'meta_description': '', 'keywords': '', 'status': 'draft', 'is_featured': 0, 'allow_comments': 1, 'created_at': datetime.datetime(2025, 3, 14, 5, 50, 4, 753598), 'updated_at': datetime.datetime(2025, 3, 14, 5, 50, 4, 753600), 'published_at': None, 'author_id': 4, 'view_count': 0, 'comment_count': 0, 'like_count': 0}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+2025-03-14 13:50:15,711 - articles - INFO - Creating new article: 23323223233232232332322323323223233232232332322323323223233232232332322323323223233232232332322323323223
+2025-03-14 13:50:15,722 - articles - ERROR - Error creating article: (pymysql.err.DataError) (1406, "Data too long for column 'title' at row 1")
+[SQL: INSERT INTO articles (title, slug, content, summary, meta_title, meta_description, keywords, status, is_featured, allow_comments, created_at, updated_at, published_at, author_id, view_count, comment_count, like_count) VALUES (%(title)s, %(slug)s, %(content)s, %(summary)s, %(meta_title)s, %(meta_description)s, %(keywords)s, %(status)s, %(is_featured)s, %(allow_comments)s, %(created_at)s, %(updated_at)s, %(published_at)s, %(author_id)s, %(view_count)s, %(comment_count)s, %(like_count)s)]
+[parameters: {'title': '23323223233232232332322323323223233232232332322323323223233232232332322323323223233232232332322323323223', 'slug': '23323223', 'content': '2332322323323223233232232332322323323223233232232332322323323223233232232332322323323223', 'summary': '', 'meta_title': '', 'meta_description': '', 'keywords': '', 'status': 'draft', 'is_featured': 0, 'allow_comments': 1, 'created_at': datetime.datetime(2025, 3, 14, 5, 50, 15, 717233), 'updated_at': datetime.datetime(2025, 3, 14, 5, 50, 15, 717236), 'published_at': None, 'author_id': 4, 'view_count': 0, 'comment_count': 0, 'like_count': 0}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1960, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 153, in execute
+    result = self._query(query)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 322, in _query
+    conn.query(q)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 558, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 822, in _read_query_result
+    result.read()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 1200, in read
+    first_packet = self.connection._read_packet()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 772, in _read_packet
+    packet.raise_for_error()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.DataError: (1406, "Data too long for column 'title' at row 1")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/backend/app/api/articles.py", line 86, in create_article
+    db.flush()  # 获取文章ID但不提交事务
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4296, in flush
+    self._flush(objects)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4431, in _flush
+    with util.safe_reraise():
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 4392, in _flush
+    flush_context.execute()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1408, in execute
+    return meth(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/sql/elements.py", line 513, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1630, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1839, in _execute_context
+    return self._exec_single_context(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1979, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 2335, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1960, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 153, in execute
+    result = self._query(query)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/cursors.py", line 322, in _query
+    conn.query(q)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 558, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 822, in _read_query_result
+    result.read()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 1200, in read
+    first_packet = self.connection._read_packet()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/connections.py", line 772, in _read_packet
+    packet.raise_for_error()
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/venv/lib/python3.10/site-packages/pymysql/err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.DataError: (pymysql.err.DataError) (1406, "Data too long for column 'title' at row 1")
+[SQL: INSERT INTO articles (title, slug, content, summary, meta_title, meta_description, keywords, status, is_featured, allow_comments, created_at, updated_at, published_at, author_id, view_count, comment_count, like_count) VALUES (%(title)s, %(slug)s, %(content)s, %(summary)s, %(meta_title)s, %(meta_description)s, %(keywords)s, %(status)s, %(is_featured)s, %(allow_comments)s, %(created_at)s, %(updated_at)s, %(published_at)s, %(author_id)s, %(view_count)s, %(comment_count)s, %(like_count)s)]
+[parameters: {'title': '23323223233232232332322323323223233232232332322323323223233232232332322323323223233232232332322323323223', 'slug': '23323223', 'content': '2332322323323223233232232332322323323223233232232332322323323223233232232332322323323223', 'summary': '', 'meta_title': '', 'meta_description': '', 'keywords': '', 'status': 'draft', 'is_featured': 0, 'allow_comments': 1, 'created_at': datetime.datetime(2025, 3, 14, 5, 50, 15, 717233), 'updated_at': datetime.datetime(2025, 3, 14, 5, 50, 15, 717236), 'published_at': None, 'author_id': 4, 'view_count': 0, 'comment_count': 0, 'like_count': 0}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+2025-03-14 13:51:27,678 - articles - INFO - Creating new article: 23323223233232232332322323323223233232232332322323323223233232232332322323323223233232232332322323323223
+2025-03-14 13:51:27,804 - articles - INFO - Article created successfully: 13
+2025-03-14 13:51:27,953 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:51:27,965 - articles - INFO - Found 2 articles out of 2 total matches
+2025-03-14 13:51:35,276 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:56:42,020 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:56:49,905 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:57:01,533 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:58:16,012 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:58:17,869 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 13:58:37,792 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:00:01,351 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:00:34,283 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:00:35,720 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:00:36,493 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:00:47,435 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:01:25,628 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:01:30,117 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:03:07,275 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:03:12,024 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:03:16,386 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:04:27,434 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:05:09,803 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:07:04,780 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:07:08,518 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:07:31,162 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:08:03,696 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:08:19,871 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:11:37,993 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:13:14,995 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:16:04,505 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:17:21,764 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:18:36,887 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:18:47,765 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:42:26,548 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:42:30,100 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:42:39,673 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:43:33,198 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:53:56,292 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:53:56,362 - articles - INFO - Found 2 articles out of 2 total matches
+2025-03-14 14:54:04,092 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:54:08,063 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:54:17,189 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:54:30,675 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:54:35,219 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:54:41,363 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: 22, title: 22
+2025-03-14 14:54:41,395 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-14 14:54:42,646 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: 22, title: 22
+2025-03-14 14:54:42,654 - articles - INFO - Found 0 articles out of 0 total matches
+2025-03-14 14:54:44,724 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: 22, title: 22
+2025-03-14 14:54:44,732 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-14 14:54:52,474 - articles - INFO - Article updated successfully: 13
+2025-03-14 14:54:52,523 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:54:52,538 - articles - INFO - Found 2 articles out of 2 total matches
+2025-03-14 14:55:03,404 - articles - INFO - Creating new article: 1221
+2025-03-14 14:55:03,487 - articles - INFO - Article created successfully: 14
+2025-03-14 14:55:03,665 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:55:03,718 - articles - INFO - Found 3 articles out of 3 total matches
+2025-03-14 14:55:43,133 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:56:03,379 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:59:21,219 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:59:34,730 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:59:38,645 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 14:59:56,227 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:00:42,544 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:00:46,913 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:01:09,270 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:01:23,185 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:01:42,816 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:02:34,074 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:03:10,747 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:03:17,943 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:03:34,863 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:21:39,031 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:21:49,005 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:23:55,345 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:25:01,209 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:25:03,241 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:25:07,490 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:26:56,032 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:27:58,894 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:52:09,014 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:52:49,745 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:55:52,714 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 15:55:52,898 - articles - INFO - Found 3 articles out of 3 total matches
+2025-03-14 16:09:28,563 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 16:24:43,954 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 16:24:49,202 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 16:25:06,291 - articles - INFO - Creating new article: 22222222222
+2025-03-14 16:25:06,456 - articles - INFO - Article created successfully: 15
+2025-03-14 16:25:06,646 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 16:25:06,714 - articles - INFO - Found 4 articles out of 4 total matches
+2025-03-14 16:25:09,334 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 16:25:12,697 - articles - INFO - Article updated successfully: 13
+2025-03-14 16:25:12,787 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 16:25:12,827 - articles - INFO - Found 4 articles out of 4 total matches
+2025-03-14 18:19:54,210 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 18:19:54,571 - articles - INFO - Found 4 articles out of 4 total matches
+2025-03-14 18:19:57,351 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 18:23:48,319 - articles - INFO - Creating new article: Test Article
+2025-03-14 18:23:48,352 - articles - INFO - Article created successfully: 1
+2025-03-14 18:23:48,613 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: None, title: None
+2025-03-14 18:23:48,625 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-14 18:23:49,153 - articles - INFO - Article updated successfully: 1
+2025-03-14 18:23:49,412 - articles - INFO - Article deleted successfully: 1
+2025-03-14 18:24:34,761 - articles - INFO - Creating new article: Test Article
+2025-03-14 18:24:34,767 - articles - INFO - Article created successfully: 1
+2025-03-14 18:24:35,024 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: None, title: None
+2025-03-14 18:24:35,030 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-14 18:24:35,560 - articles - INFO - Article updated successfully: 1
+2025-03-14 18:24:35,822 - articles - INFO - Article deleted successfully: 1
+2025-03-14 18:28:40,147 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-14 18:28:40,269 - articles - INFO - Found 4 articles out of 4 total matches

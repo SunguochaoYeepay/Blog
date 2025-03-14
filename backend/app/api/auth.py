@@ -11,6 +11,13 @@ from app.schemas.response import Response
 from app.schemas.auth import Token, TokenData, UserLogin
 from app.logger import setup_logger
 from ..config import settings
+from ..dependencies.redis import (
+    add_token_to_blacklist, 
+    is_token_blacklisted,
+    cache_user,
+    get_cached_user,
+    delete_user_cache
+)
 
 logger = setup_logger("auth")
 router = APIRouter()
@@ -39,35 +46,47 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
 
-async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
+async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    """获取当前用户"""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="未提供认证凭据",
+        detail=Response(
+            code=401,
+            message="无效的认证凭据"
+        ).model_dump(),
         headers={"WWW-Authenticate": "Bearer"},
     )
+    
     try:
+        # 检查令牌是否在黑名单中
+        if is_token_blacklisted(token):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=Response(
+                    code=401,
+                    message="令牌已失效"
+                ).model_dump(),
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+            
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="无效的认证凭据",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-        token_data = {"username": username}
+            raise credentials_exception
+        token_data = TokenData(username=username)
     except jwt.ExpiredSignatureError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="认证凭据已过期",
+            detail=Response(
+                code=401,
+                message="认证凭据已过期"
+            ).model_dump(),
             headers={"WWW-Authenticate": "Bearer"},
         )
-    except jwt.JWTError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="无效的认证凭据",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    user = db.query(User).filter(User.username == token_data["username"]).first()
+    except JWTError:
+        raise credentials_exception
+        
+    user = db.query(User).filter(User.username == token_data.username).first()
     if user is None:
         raise credentials_exception
     return user
@@ -141,6 +160,18 @@ async def register(user_data: UserLogin, db: Session = Depends(get_db)):
         db.commit()
         db.refresh(db_user)
         
+        # 缓存新用户信息
+        user_data = {
+            "id": db_user.id,
+            "username": db_user.username,
+            "email": db_user.email,
+            "full_name": db_user.full_name,
+            "department": db_user.department,
+            "role": db_user.role,
+            "created_at": db_user.created_at.isoformat()
+        }
+        cache_user(db_user.id, user_data)
+        
         # 生成访问令牌
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
@@ -173,18 +204,33 @@ async def register(user_data: UserLogin, db: Session = Depends(get_db)):
 async def get_current_user_info(current_user: User = Depends(get_current_user)):
     """获取当前用户信息"""
     try:
+        # 尝试从缓存获取用户信息
+        cached_user = get_cached_user(current_user.id)
+        if cached_user:
+            return Response[dict](
+                code=200,
+                message="获取成功",
+                data=cached_user
+            )
+        
+        # 如果缓存未命中，从数据库获取并缓存
+        user_data = {
+            "id": current_user.id,
+            "username": current_user.username,
+            "email": current_user.email,
+            "full_name": current_user.full_name,
+            "department": current_user.department,
+            "role": current_user.role,
+            "created_at": current_user.created_at.isoformat()
+        }
+        
+        # 缓存用户信息
+        cache_user(current_user.id, user_data)
+        
         return Response[dict](
             code=200,
             message="获取成功",
-            data={
-                "id": current_user.id,
-                "username": current_user.username,
-                "email": current_user.email,
-                "full_name": current_user.full_name,
-                "department": current_user.department,
-                "role": current_user.role,
-                "created_at": current_user.created_at
-            }
+            data=user_data
         )
     except Exception as e:
         logger.error(f"Error getting user info: {str(e)}", exc_info=True)
@@ -195,4 +241,36 @@ async def get_current_user_info(current_user: User = Depends(get_current_user)):
                 message="获取用户信息失败",
                 data=None
             ).model_dump()
+        )
+
+@router.post("/auth/logout", response_model=Response)
+async def logout(token: str = Depends(oauth2_scheme)):
+    """用户注销"""
+    try:
+        # 解码令牌以获取过期时间
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        exp = payload.get("exp")
+        
+        if exp:
+            # 计算剩余有效期（秒）
+            current_timestamp = datetime.utcnow().timestamp()
+            remaining_time = int(exp - current_timestamp)
+            
+            if remaining_time > 0:
+                # 将令牌添加到黑名单，过期时间与令牌剩余有效期相同
+                add_token_to_blacklist(token, remaining_time)
+        
+        logger.info(f"User logged out successfully")
+        return Response(
+            code=200,
+            message="注销成功"
+        )
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=Response(
+                code=401,
+                message="无效的认证凭据"
+            ).model_dump(),
+            headers={"WWW-Authenticate": "Bearer"},
         ) 

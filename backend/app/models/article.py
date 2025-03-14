@@ -8,7 +8,7 @@ class Article(Base):
     __tablename__ = "articles"
 
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String(100), nullable=False)
+    title = Column(String(200), nullable=False)
     slug = Column(String(100), unique=True, nullable=False)
     content = Column(Text, nullable=False)
     summary = Column(String(200))

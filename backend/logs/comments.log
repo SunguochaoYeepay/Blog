@@ -140,3 +140,94 @@ WHERE articles.id = ?
 2025-03-14 02:14:35,723 - comments - INFO - Comment approved successfully: 1
 2025-03-14 02:14:35,979 - comments - INFO - Comment marked as spam successfully: 1
 2025-03-14 02:14:36,228 - comments - INFO - Comment deleted successfully: 1
+2025-03-14 10:18:07,781 - comments - ERROR - Error creating comment: Object of type datetime is not JSON serializable
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/backend/app/api/comments.py", line 62, in create_comment
+    cache_comment(db_comment.id, comment_data)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/backend/app/dependencies/redis.py", line 112, in cache_comment
+    redis_client.setex(key, COMMENT_CACHE_TTL, json.dumps(comment_data))
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/json/__init__.py", line 231, in dumps
+    return _default_encoder.encode(obj)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/json/encoder.py", line 199, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/json/encoder.py", line 257, in iterencode
+    return _iterencode(o, 0)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type datetime is not JSON serializable
+2025-03-14 10:18:08,311 - comments - ERROR - Error getting comments: Object of type datetime is not JSON serializable
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/backend/app/api/comments.py", line 113, in get_article_comments
+    cache_comment(comment.id, comment_data)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/backend/app/dependencies/redis.py", line 112, in cache_comment
+    redis_client.setex(key, COMMENT_CACHE_TTL, json.dumps(comment_data))
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/json/__init__.py", line 231, in dumps
+    return _default_encoder.encode(obj)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/json/encoder.py", line 199, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/json/encoder.py", line 257, in iterencode
+    return _iterencode(o, 0)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type datetime is not JSON serializable
+2025-03-14 10:18:08,990 - comments - ERROR - Error updating comment: Object of type datetime is not JSON serializable
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/backend/app/api/comments.py", line 195, in update_comment
+    cache_comment(comment.id, comment_data)
+  File "/Users/sunguochao/Documents/Development/cursor/demo2/backend/app/dependencies/redis.py", line 112, in cache_comment
+    redis_client.setex(key, COMMENT_CACHE_TTL, json.dumps(comment_data))
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/json/__init__.py", line 231, in dumps
+    return _default_encoder.encode(obj)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/json/encoder.py", line 199, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/json/encoder.py", line 257, in iterencode
+    return _iterencode(o, 0)
+  File "/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type datetime is not JSON serializable
+2025-03-14 10:18:09,238 - comments - INFO - Comment deleted successfully: 1
+2025-03-14 10:18:09,482 - comments - INFO - Comment like toggled successfully: 1
+2025-03-14 10:20:18,566 - comments - INFO - Comment created successfully: 1
+2025-03-14 10:20:19,609 - comments - INFO - Comment updated successfully: 1
+2025-03-14 10:20:19,857 - comments - INFO - Comment deleted successfully: 1
+2025-03-14 10:20:20,103 - comments - INFO - Comment like toggled successfully: 1
+2025-03-14 10:24:42,497 - comments - INFO - Comment created successfully: 1
+2025-03-14 10:24:43,543 - comments - INFO - Comment updated successfully: 1
+2025-03-14 10:24:43,791 - comments - INFO - Comment deleted successfully: 1
+2025-03-14 10:24:44,049 - comments - INFO - Comment like toggled successfully: 1
+2025-03-14 10:37:40,149 - comments - INFO - Comment created successfully: 1
+2025-03-14 10:37:41,138 - comments - INFO - Comment updated successfully: 1
+2025-03-14 10:37:41,387 - comments - INFO - Comment deleted successfully: 1
+2025-03-14 10:37:41,635 - comments - INFO - Comment like toggled successfully: 1
+2025-03-14 10:42:03,622 - comments - INFO - Comment created successfully: 1
+2025-03-14 10:42:04,647 - comments - INFO - Comment updated successfully: 1
+2025-03-14 10:42:04,908 - comments - INFO - Comment deleted successfully: 1
+2025-03-14 10:42:05,155 - comments - INFO - Comment like toggled successfully: 1
+2025-03-14 10:44:24,015 - comments - INFO - Comment created successfully: 1
+2025-03-14 10:44:25,037 - comments - INFO - Comment updated successfully: 1
+2025-03-14 10:44:25,288 - comments - INFO - Comment deleted successfully: 1
+2025-03-14 10:44:25,535 - comments - INFO - Comment like toggled successfully: 1
+2025-03-14 10:45:48,156 - comments - INFO - Comment created successfully: 1
+2025-03-14 10:45:49,275 - comments - INFO - Comment updated successfully: 1
+2025-03-14 10:45:49,530 - comments - INFO - Comment deleted successfully: 1
+2025-03-14 10:45:49,781 - comments - INFO - Comment like toggled successfully: 1
+2025-03-14 10:47:06,330 - comments - INFO - Comment created successfully: 1
+2025-03-14 10:47:07,356 - comments - INFO - Comment updated successfully: 1
+2025-03-14 10:47:07,606 - comments - INFO - Comment deleted successfully: 1
+2025-03-14 10:47:07,854 - comments - INFO - Comment like toggled successfully: 1
+2025-03-14 10:50:34,948 - comments - INFO - Comment created successfully: 1
+2025-03-14 10:50:35,973 - comments - INFO - Comment updated successfully: 1
+2025-03-14 10:50:36,220 - comments - INFO - Comment deleted successfully: 1
+2025-03-14 10:50:36,466 - comments - INFO - Comment like toggled successfully: 1
+2025-03-14 10:52:39,491 - comments - INFO - Comment created successfully: 1
+2025-03-14 10:52:40,495 - comments - INFO - Comment updated successfully: 1
+2025-03-14 10:52:40,744 - comments - INFO - Comment deleted successfully: 1
+2025-03-14 10:52:40,994 - comments - INFO - Comment like toggled successfully: 1
+2025-03-14 18:23:53,905 - comments - INFO - Comment created successfully: 1
+2025-03-14 18:23:54,976 - comments - INFO - Comment updated successfully: 1
+2025-03-14 18:23:55,240 - comments - INFO - Comment deleted successfully: 1
+2025-03-14 18:23:55,514 - comments - INFO - Comment like toggled successfully: 1
+2025-03-14 18:24:40,459 - comments - INFO - Comment created successfully: 1
+2025-03-14 18:24:41,533 - comments - INFO - Comment updated successfully: 1
+2025-03-14 18:24:41,801 - comments - INFO - Comment deleted successfully: 1
+2025-03-14 18:24:42,064 - comments - INFO - Comment like toggled successfully: 1

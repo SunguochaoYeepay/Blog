@@ -1,84 +1,100 @@
-# Blog System
+# 用户和文章管理系统
 
-一个基于 FastAPI 和 Vue.js 的博客系统。
+一个基于 Vue.js 和 FastAPI 构建的全栈网络应用，用于管理用户和文章。
+
+## 功能特性
+
+### 用户管理
+- 用户注册和身份验证
+- 用户角色管理（管理员、编辑、普通用户）
+- 用户资料管理
+- 部门组织管理
+
+### 文章管理
+- 文章创建和编辑
+- 分类和标签管理
+- 文章状态管理
+- 评论系统
+- 浏览量和点赞统计
 
 ## 技术栈
+
+### 前端
+- Vue 3
+- Vite
+- Ant Design Vue
+- Vue Router
+- Axios
 
 ### 后端
 - FastAPI
 - SQLAlchemy
-- MySQL
-- Pydantic
-- Uvicorn
-
-### 前端
-- Vue 3
-- TypeScript
-- Ant Design Vue
-- Vite
-
-## 功能特性
-
-- 文章管理
-  - 创建、编辑、删除文章
-  - 文章分类和标签
-  - SEO 优化
-  - 草稿和发布状态管理
-  
-- 评论系统
-  - 评论管理
-  - 垃圾评论过滤
-  - 评论审核
-
-- 用户系统
-  - 用户管理
-  - 角色权限
+- PyMySQL
+- Alembic（数据库迁移）
+- JWT 认证
 
 ## 快速开始
 
-1. 克隆项目
-```bash
-git clone https://github.com/SunguochaoYeepay/Blog.git
-cd Blog
-```
+### 环境要求
+- Python 3.10+
+- Node.js 16+
+- MySQL 8.0+
 
-2. 后端设置
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-```
+### 后端设置
+1. 进入后端目录：
+   ```bash
+   cd backend
+   ```
 
-3. 前端设置
-```bash
-cd frontend
-npm install
-```
+2. 创建并激活虚拟环境：
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Windows: venv\Scripts\activate
+   ```
 
-4. 启动服务
-```bash
-# 在项目根目录
-./run.sh all  # 启动所有服务
-```
+3. 安装依赖：
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. 设置数据库：
+   ```bash
+   alembic upgrade head
+   ```
+
+5. 启动后端服务器：
+   ```bash
+   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+   ```
+
+### 前端设置
+1. 进入前端目录：
+   ```bash
+   cd frontend
+   ```
+
+2. 安装依赖：
+   ```bash
+   npm install
+   ```
+
+3. 启动开发服务器：
+   ```bash
+   npm run dev
+   ```
 
 ## API 文档
+- 当后端服务器运行时，可以在 `http://localhost:8000/docs` 访问 API 文档。
 
-- Swagger UI: http://localhost:3000/docs
-- ReDoc: http://localhost:3000/redoc
+## 开发状态
+- [x] 用户 CRUD 操作
+- [x] 认证和授权
+- [x] 文章管理
+- [x] 分类和标签管理
+- [x] 评论系统
+- [ ] 文件上传和管理
+- [ ] 用户活动追踪
+- [ ] 高级搜索功能
 
-## 目录结构
-
-```
-.
-├── backend/            # 后端代码
-│   ├── app/           # 应用代码
-│   │   ├── api/      # API 路由
-│   │   ├── models/   # 数据模型
-│   │   └── schemas/  # Pydantic 模型
-│   └── requirements.txt
-├── frontend/          # 前端代码
-│   ├── src/
-│   └── package.json
-└── run.sh            # 启动脚本
-``` 
+## 许可证
+本项目采用 MIT 许可证。 
