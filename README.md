@@ -1,5 +1,7 @@
 # Blog Application
 
+[中文文档](README_zh.md)
+
 A modern blog application built with FastAPI and Vue.js, featuring a clean and responsive design.
 
 ## Features
@@ -29,6 +31,34 @@ A modern blog application built with FastAPI and Vue.js, featuring a clean and r
 - Ant Design Vue - UI component library
 - Vue Router - Official router for Vue.js
 - Vite - Next generation frontend tooling
+
+## Project Structure
+
+```
+Blog/
+├── backend/                # Backend project directory
+│   ├── app/               # Application code
+│   │   ├── api/          # API routes
+│   │   ├── core/         # Core configurations
+│   │   ├── crud/         # Database operations
+│   │   ├── db/           # Database configurations
+│   │   ├── models/       # Database models
+│   │   ├── schemas/      # Pydantic models
+│   │   └── utils/        # Utility functions
+│   ├── tests/            # Test files
+│   └── requirements.txt   # Python dependencies
+│
+└── frontend/             # Frontend project directory
+    ├── src/             # Source code
+    │   ├── api/        # API calls
+    │   ├── assets/     # Static assets
+    │   ├── components/ # Vue components
+    │   ├── router/     # Router configuration
+    │   ├── store/      # State management
+    │   └── views/      # Page views
+    ├── public/         # Public files
+    └── package.json    # Node.js dependencies
+```
 
 ## Getting Started
 
@@ -83,6 +113,48 @@ npm install
 ```bash
 npm run dev
 ```
+
+## Feature List
+
+### User Features
+- [x] User registration
+- [x] User login
+- [ ] Password reset
+- [ ] Profile management
+- [ ] Avatar upload
+
+### Article Features
+- [x] Create article
+- [x] Edit article
+- [x] Delete article
+- [x] Article list
+- [x] Article detail
+- [ ] Article categories
+- [ ] Article tags
+- [ ] Article comments
+
+### Management Features
+- [x] Article management
+- [ ] User management
+- [ ] Comment management
+- [ ] System settings
+
+## Development Guidelines
+
+### Git Commit Convention
+- feat: New feature
+- fix: Bug fix
+- docs: Documentation changes
+- style: Code style changes
+- refactor: Code refactoring
+- test: Test case changes
+- chore: Other changes
+
+### Code Style
+- Backend follows PEP 8
+- Frontend follows ESLint config
+- Use TypeScript type annotations
+- Components use Composition API
 
 ## API Documentation
 
