@@ -1,100 +1,112 @@
-# 用户和文章管理系统
+# Blog Application
 
-一个基于 Vue.js 和 FastAPI 构建的全栈网络应用，用于管理用户和文章。
+A modern blog application built with FastAPI and Vue.js, featuring a clean and responsive design.
 
-## 功能特性
+## Features
 
-### 用户管理
-- 用户注册和身份验证
-- 用户角色管理（管理员、编辑、普通用户）
-- 用户资料管理
-- 部门组织管理
+- 🚀 Modern tech stack: FastAPI (Backend) + Vue 3 (Frontend)
+- 🎨 Beautiful UI with Ant Design Vue
+- 🔐 JWT-based authentication
+- 📝 Full CRUD operations for articles
+- 🎯 RESTful API design
+- 🔍 Article search and filtering
+- 📱 Responsive design for all devices
 
-### 文章管理
-- 文章创建和编辑
-- 分类和标签管理
-- 文章状态管理
-- 评论系统
-- 浏览量和点赞统计
+## Tech Stack
 
-## 技术栈
+### Backend
+- FastAPI - High-performance web framework
+- SQLAlchemy - SQL toolkit and ORM
+- PyMySQL - MySQL database adapter
+- Python-Jose - JWT token handling
+- Passlib - Password hashing
+- Redis - Caching
+- Uvicorn - ASGI server
 
-### 前端
-- Vue 3
-- Vite
-- Ant Design Vue
-- Vue Router
-- Axios
+### Frontend
+- Vue 3 - Progressive JavaScript framework
+- TypeScript - Type-safe JavaScript
+- Ant Design Vue - UI component library
+- Vue Router - Official router for Vue.js
+- Vite - Next generation frontend tooling
 
-### 后端
-- FastAPI
-- SQLAlchemy
-- PyMySQL
-- Alembic（数据库迁移）
-- JWT 认证
+## Getting Started
 
-## 快速开始
-
-### 环境要求
+### Prerequisites
 - Python 3.10+
 - Node.js 16+
 - MySQL 8.0+
+- Redis 6.0+
 
-### 后端设置
-1. 进入后端目录：
-   ```bash
-   cd backend
-   ```
+### Backend Setup
 
-2. 创建并激活虚拟环境：
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # Windows: venv\Scripts\activate
-   ```
+1. Navigate to the backend directory:
+```bash
+cd backend
+```
 
-3. 安装依赖：
-   ```bash
-   pip install -r requirements.txt
-   ```
+2. Create and activate virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: .\venv\Scripts\activate
+```
 
-4. 设置数据库：
-   ```bash
-   alembic upgrade head
-   ```
+3. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-5. 启动后端服务器：
-   ```bash
-   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-   ```
+4. Set up environment variables:
+```bash
+cp .env.example .env
+# Edit .env with your database credentials and other settings
+```
 
-### 前端设置
-1. 进入前端目录：
-   ```bash
-   cd frontend
-   ```
+5. Run the server:
+```bash
+uvicorn app.main:app --reload
+```
 
-2. 安装依赖：
-   ```bash
-   npm install
-   ```
+### Frontend Setup
 
-3. 启动开发服务器：
-   ```bash
-   npm run dev
-   ```
+1. Navigate to the frontend directory:
+```bash
+cd frontend
+```
 
-## API 文档
-- 当后端服务器运行时，可以在 `http://localhost:8000/docs` 访问 API 文档。
+2. Install dependencies:
+```bash
+npm install
+```
 
-## 开发状态
-- [x] 用户 CRUD 操作
-- [x] 认证和授权
-- [x] 文章管理
-- [x] 分类和标签管理
-- [x] 评论系统
-- [ ] 文件上传和管理
-- [ ] 用户活动追踪
-- [ ] 高级搜索功能
+3. Start development server:
+```bash
+npm run dev
+```
 
-## 许可证
-本项目采用 MIT 许可证。 
+## API Documentation
+
+Once the backend server is running, you can access:
+- Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
+
+## Features in Development
+
+- [ ] Comment system
+- [ ] Article categories and tags
+- [ ] Advanced search functionality
+- [ ] User profile management
+- [ ] Image upload and management
+- [ ] Article analytics
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
