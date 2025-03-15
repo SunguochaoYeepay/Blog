@@ -2581,3 +2581,65 @@ sqlalchemy.exc.DataError: (pymysql.err.DataError) (1406, "Data too long for colu
 2025-03-14 18:24:49,603 - users - INFO - User deleted successfully: 2
 2025-03-14 18:24:49,863 - users - INFO - Deleting user: 999
 2025-03-14 18:28:37,945 - users - INFO - Fetching user with id: 4
+2025-03-15 11:30:46,172 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-15 11:30:46,177 - users - INFO - Found 8 users out of 8 total matches
+2025-03-15 11:30:55,938 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-15 11:30:55,941 - users - INFO - Found 8 users out of 8 total matches
+2025-03-15 11:31:13,908 - users - INFO - Updating avatar for user: 4
+2025-03-15 11:31:13,940 - users - ERROR - Error updating avatar: cache_user() takes 1 positional argument but 2 were given
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/Blog/backend/app/api/users.py", line 390, in update_user_avatar
+    cache_user(db_user.id, user_data)
+TypeError: cache_user() takes 1 positional argument but 2 were given
+2025-03-15 11:31:18,536 - users - INFO - Updating avatar for user: 4
+2025-03-15 11:31:18,545 - users - ERROR - Error updating avatar: cache_user() takes 1 positional argument but 2 were given
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/Blog/backend/app/api/users.py", line 390, in update_user_avatar
+    cache_user(db_user.id, user_data)
+TypeError: cache_user() takes 1 positional argument but 2 were given
+2025-03-15 11:31:56,215 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-15 11:31:56,217 - users - INFO - Found 8 users out of 8 total matches
+2025-03-15 11:32:09,708 - users - INFO - Creating new user: 2q121
+2025-03-15 11:32:09,958 - users - INFO - User created successfully: 14
+2025-03-15 11:32:10,025 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-15 11:32:10,028 - users - INFO - Found 9 users out of 9 total matches
+2025-03-15 11:32:25,924 - users - INFO - Fetching user with id: 14
+2025-03-15 11:32:46,855 - users - INFO - Creating new user: 2q121
+2025-03-15 11:32:51,854 - users - INFO - Creating new user: 2q12122
+2025-03-15 11:32:56,324 - users - INFO - Creating new user: 2q12122
+2025-03-15 11:32:56,576 - users - INFO - User created successfully: 15
+2025-03-15 11:32:56,639 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-15 11:32:56,642 - users - INFO - Found 10 users out of 10 total matches
+2025-03-15 11:33:03,676 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-15 11:33:03,677 - users - INFO - Found 10 users out of 10 total matches
+2025-03-15 11:33:05,943 - users - INFO - Fetching user with id: 2
+2025-03-15 11:33:08,308 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-15 11:33:08,310 - users - INFO - Found 10 users out of 10 total matches
+2025-03-15 11:34:14,058 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-15 11:34:14,063 - users - INFO - Found 10 users out of 10 total matches
+2025-03-15 11:34:18,028 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-15 11:34:18,031 - users - INFO - Found 10 users out of 10 total matches
+2025-03-15 11:34:21,165 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-15 11:34:21,167 - users - INFO - Found 10 users out of 10 total matches
+2025-03-15 11:34:52,893 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-15 11:34:52,895 - users - INFO - Found 10 users out of 10 total matches
+2025-03-15 11:34:54,908 - users - INFO - Fetching user with id: 2
+2025-03-15 11:34:56,839 - users - INFO - Updating user: 2
+2025-03-15 11:34:57,094 - users - INFO - User updated successfully: 2
+2025-03-15 11:34:57,177 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-15 11:34:57,180 - users - INFO - Found 10 users out of 10 total matches
+2025-03-15 11:34:59,453 - users - INFO - Fetching user with id: 5
+2025-03-15 11:35:07,231 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-15 11:35:07,233 - users - INFO - Found 10 users out of 10 total matches
+2025-03-15 11:39:15,455 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-15 11:39:15,458 - users - INFO - Found 10 users out of 10 total matches
+2025-03-15 11:39:19,710 - users - INFO - Deleting user: 15
+2025-03-15 11:39:19,721 - users - INFO - User deleted successfully: 15
+2025-03-15 11:39:19,747 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-15 11:39:19,750 - users - INFO - Found 9 users out of 9 total matches
+2025-03-15 11:39:22,112 - users - INFO - Deleting user: 14
+2025-03-15 11:39:22,119 - users - INFO - User deleted successfully: 14
+2025-03-15 11:39:22,143 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-15 11:39:22,146 - users - INFO - Found 8 users out of 8 total matches
+2025-03-15 11:39:39,397 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-15 11:39:39,399 - users - INFO - Found 8 users out of 8 total matches

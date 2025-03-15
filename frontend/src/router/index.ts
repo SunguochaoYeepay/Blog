@@ -137,7 +137,7 @@ router.beforeEach(async (to, from, next) => {
     if (!userStore.userInfo) {
       try {
         console.log('Route guard - Fetching user info')
-        await userStore.fetchUserInfo()
+        await userStore.getUserInfo()
         console.log('Route guard - User info fetched successfully')
         
         // 用户信息获取成功后继续导航

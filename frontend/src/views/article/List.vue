@@ -75,8 +75,11 @@
         :data-source="articles"
         :loading="loading"
         :pagination="pagination"
-        :row-selection="{ selectedRowKeys, onChange: keys => selectedRowKeys = keys }"
-        :row-key="record => record.id"
+        :row-selection="{ 
+          selectedRowKeys, 
+          onChange: (keys: number[]) => selectedRowKeys = keys 
+        }"
+        :row-key="(record: ArticleResponse) => record.id"
         @change="handleTableChange"
       >
         <!-- 标题列 -->
@@ -113,6 +116,8 @@ import {
   DeleteOutlined, 
   ReloadOutlined 
 } from '@ant-design/icons-vue';
+import Modal from 'ant-design-vue/es/modal';
+import message from 'ant-design-vue/es/message';
 import { articleApi, type ArticleResponse } from '@/api/article';
 import type { TableProps } from 'ant-design-vue/es/table';
 import type { ColumnsType, SorterResult, TablePaginationConfig } from 'ant-design-vue/es/table/interface';
