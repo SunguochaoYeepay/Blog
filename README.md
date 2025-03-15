@@ -1,184 +1,184 @@
-# Blog Application
+# Blog 博客系统
 
-[中文文档](README_zh.md)
+[English Documentation](README_en.md)
 
-A modern blog application built with FastAPI and Vue.js, featuring a clean and responsive design.
+一个使用 FastAPI 和 Vue.js 构建的现代化博客应用，具有清晰美观的响应式设计。
 
-## Features
+## 功能特点
 
-- 🚀 Modern tech stack: FastAPI (Backend) + Vue 3 (Frontend)
-- 🎨 Beautiful UI with Ant Design Vue
-- 🔐 JWT-based authentication
-- 📝 Full CRUD operations for articles
-- 🎯 RESTful API design
-- 🔍 Article search and filtering
-- 📱 Responsive design for all devices
+- 🚀 现代化技术栈：FastAPI（后端）+ Vue 3（前端）
+- 🎨 基于 Ant Design Vue 的精美界面
+- 🔐 基于 JWT 的身份认证
+- 📝 文章的完整 CRUD 操作
+- 🎯 RESTful API 设计
+- 🔍 文章搜索和过滤
+- 📱 全设备响应式设计
 
-## Tech Stack
+## 技术栈
 
-### Backend
-- FastAPI - High-performance web framework
-- SQLAlchemy - SQL toolkit and ORM
-- PyMySQL - MySQL database adapter
-- Python-Jose - JWT token handling
-- Passlib - Password hashing
-- Redis - Caching
-- Uvicorn - ASGI server
+### 后端
+- FastAPI - 高性能 Web 框架
+- SQLAlchemy - SQL 工具包和 ORM
+- PyMySQL - MySQL 数据库适配器
+- Python-Jose - JWT 令牌处理
+- Passlib - 密码哈希
+- Redis - 缓存
+- Uvicorn - ASGI 服务器
 
-### Frontend
-- Vue 3 - Progressive JavaScript framework
-- TypeScript - Type-safe JavaScript
-- Ant Design Vue - UI component library
-- Vue Router - Official router for Vue.js
-- Vite - Next generation frontend tooling
+### 前端
+- Vue 3 - 渐进式 JavaScript 框架
+- TypeScript - 类型安全的 JavaScript
+- Ant Design Vue - UI 组件库
+- Vue Router - Vue.js 官方路由
+- Vite - 下一代前端构建工具
 
-## Project Structure
+## 项目结构
 
 ```
 Blog/
-├── backend/                # Backend project directory
-│   ├── app/               # Application code
-│   │   ├── api/          # API routes
-│   │   ├── core/         # Core configurations
-│   │   ├── crud/         # Database operations
-│   │   ├── db/           # Database configurations
-│   │   ├── models/       # Database models
-│   │   ├── schemas/      # Pydantic models
-│   │   └── utils/        # Utility functions
-│   ├── tests/            # Test files
-│   └── requirements.txt   # Python dependencies
+├── backend/                # 后端项目目录
+│   ├── app/               # 应用代码
+│   │   ├── api/          # API 路由
+│   │   ├── core/         # 核心配置
+│   │   ├── crud/         # 数据库操作
+│   │   ├── db/           # 数据库配置
+│   │   ├── models/       # 数据库模型
+│   │   ├── schemas/      # Pydantic 模型
+│   │   └── utils/        # 工具函数
+│   ├── tests/            # 测试文件
+│   └── requirements.txt   # Python 依赖
 │
-└── frontend/             # Frontend project directory
-    ├── src/             # Source code
-    │   ├── api/        # API calls
-    │   ├── assets/     # Static assets
-    │   ├── components/ # Vue components
-    │   ├── router/     # Router configuration
-    │   ├── store/      # State management
-    │   └── views/      # Page views
-    ├── public/         # Public files
-    └── package.json    # Node.js dependencies
+└── frontend/             # 前端项目目录
+    ├── src/             # 源代码
+    │   ├── api/        # API 调用
+    │   ├── assets/     # 静态资源
+    │   ├── components/ # Vue 组件
+    │   ├── router/     # 路由配置
+    │   ├── store/      # 状态管理
+    │   └── views/      # 页面视图
+    ├── public/         # 公共文件
+    └── package.json    # Node.js 依赖
 ```
 
-## Getting Started
+## 快速开始
 
-### Prerequisites
+### 环境要求
 - Python 3.10+
 - Node.js 16+
 - MySQL 8.0+
 - Redis 6.0+
 
-### Backend Setup
+### 后端设置
 
-1. Navigate to the backend directory:
+1. 进入后端目录：
 ```bash
 cd backend
 ```
 
-2. Create and activate virtual environment:
+2. 创建并激活虚拟环境：
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: .\venv\Scripts\activate
+source venv/bin/activate  # Windows 系统：.\venv\Scripts\activate
 ```
 
-3. Install dependencies:
+3. 安装依赖：
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Set up environment variables:
+4. 设置环境变量：
 ```bash
 cp .env.example .env
-# Edit .env with your database credentials and other settings
+# 编辑 .env 文件，填入数据库凭证和其他设置
 ```
 
-5. Run the server:
+5. 运行服务器：
 ```bash
 uvicorn app.main:app --reload
 ```
 
-### Frontend Setup
+### 前端设置
 
-1. Navigate to the frontend directory:
+1. 进入前端目录：
 ```bash
 cd frontend
 ```
 
-2. Install dependencies:
+2. 安装依赖：
 ```bash
 npm install
 ```
 
-3. Start development server:
+3. 启动开发服务器：
 ```bash
 npm run dev
 ```
 
-## Feature List
+## 功能列表
 
-### User Features
-- [x] User registration
-- [x] User login
-- [ ] Password reset
-- [ ] Profile management
-- [ ] Avatar upload
+### 用户功能
+- [x] 用户注册
+- [x] 用户登录
+- [ ] 密码重置
+- [ ] 个人资料管理
+- [ ] 头像上传
 
-### Article Features
-- [x] Create article
-- [x] Edit article
-- [x] Delete article
-- [x] Article list
-- [x] Article detail
-- [ ] Article categories
-- [ ] Article tags
-- [ ] Article comments
+### 文章功能
+- [x] 创建文章
+- [x] 编辑文章
+- [x] 删除文章
+- [x] 文章列表
+- [x] 文章详情
+- [ ] 文章分类
+- [ ] 文章标签
+- [ ] 文章评论
 
-### Management Features
-- [x] Article management
-- [ ] User management
-- [ ] Comment management
-- [ ] System settings
+### 管理功能
+- [x] 文章管理
+- [ ] 用户管理
+- [ ] 评论管理
+- [ ] 系统设置
 
-## Development Guidelines
+## 开发规范
 
-### Git Commit Convention
-- feat: New feature
-- fix: Bug fix
-- docs: Documentation changes
-- style: Code style changes
-- refactor: Code refactoring
-- test: Test case changes
-- chore: Other changes
+### Git 提交规范
+- feat: 新功能
+- fix: 修复 Bug
+- docs: 文档变更
+- style: 代码格式调整
+- refactor: 代码重构
+- test: 测试用例变更
+- chore: 其他变更
 
-### Code Style
-- Backend follows PEP 8
-- Frontend follows ESLint config
-- Use TypeScript type annotations
-- Components use Composition API
+### 代码规范
+- 后端遵循 PEP 8 规范
+- 前端遵循 ESLint 配置
+- 使用 TypeScript 类型注解
+- 组件使用 Composition API
 
-## API Documentation
+## API 文档
 
-Once the backend server is running, you can access:
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
+后端服务器运行后，可以访问：
+- Swagger UI：http://localhost:8000/docs
+- ReDoc：http://localhost:8000/redoc
 
-## Features in Development
+## 开发中的功能
 
-- [ ] Comment system
-- [ ] Article categories and tags
-- [ ] Advanced search functionality
-- [ ] User profile management
-- [ ] Image upload and management
-- [ ] Article analytics
+- [ ] 评论系统
+- [ ] 文章分类和标签
+- [ ] 高级搜索功能
+- [ ] 用户资料管理
+- [ ] 图片上传和管理
+- [ ] 文章数据分析
 
-## Contributing
+## 贡献指南
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Fork 本仓库
+2. 创建特性分支 (`git checkout -b feature/amazing-feature`)
+3. 提交更改 (`git commit -m 'Add some amazing feature'`)
+4. 推送到分支 (`git push origin feature/amazing-feature`)
+5. 提交 Pull Request
 
-## License
+## 许可证
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+本项目基于 MIT 许可证开源 - 查看 [LICENSE](LICENSE) 文件了解详情
