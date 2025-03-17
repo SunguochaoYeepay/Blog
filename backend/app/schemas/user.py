@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 from typing import Optional
 
@@ -8,6 +8,8 @@ class UserBase(BaseModel):
     full_name: str
     department: str
     role: str
+
+    model_config = ConfigDict(from_attributes=True)
 
 class UserCreate(UserBase):
     password: str
@@ -22,6 +24,8 @@ class UserUpdate(BaseModel):
     password: Optional[str] = None
     avatar: Optional[str] = None
 
+    model_config = ConfigDict(from_attributes=True)
+
 class UserResponse(UserBase):
     id: int
     avatar: Optional[str] = None
@@ -30,11 +34,8 @@ class UserResponse(UserBase):
     created_at: datetime
     updated_at: Optional[datetime] = None
 
-    class Config:
-        from_attributes = True
-
 class UserQuery(BaseModel):
     username: Optional[str] = None
     email: Optional[str] = None
     department: Optional[str] = None
-    role: Optional[str] = None 
+    role: Optional[str] = None

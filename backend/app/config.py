@@ -1,33 +1,33 @@
-from pydantic_settings import BaseSettings
-from typing import Optional
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from typing import Optional, List
+import json
 
 class Settings(BaseSettings):
     """应用配置"""
+    # 服务器配置
+    HOST: str = "127.0.0.1"
+    PORT: int = 8000
+    
     # 数据库配置
-    DATABASE_URL: str = "mysql+pymysql://root:password@localhost:3306/demo"
-    TEST_DATABASE_URL: str = "mysql+pymysql://root:password@localhost:3306/demo_test"
+    DATABASE_URL: str
     
     # MySQL settings
-    mysql_user: str
-    mysql_password: str
-    mysql_host: str
-    mysql_port: str
-    mysql_database: str
+    MYSQL_USER: str
+    MYSQL_PASSWORD: str
+    MYSQL_HOST: str
+    MYSQL_PORT: int
+    MYSQL_DATABASE: str
     
     # JWT配置
-    SECRET_KEY: str = "your-secret-key"  # 在生产环境中应该使用环境变量
+    SECRET_KEY: str
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
     # 上传文件配置
     UPLOAD_DIR: str = "uploads"
     MAX_FILE_SIZE: int = 5 * 1024 * 1024  # 5MB
-    ALLOWED_IMAGE_TYPES: set = {"image/jpeg", "image/png", "image/gif"}
-    ALLOWED_DOCUMENT_TYPES: set = {
-        "application/pdf",
-        "application/msword",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    }
+    ALLOWED_IMAGE_TYPES: List[str]
+    ALLOWED_DOCUMENT_TYPES: List[str]
     
     # 分页配置
     DEFAULT_PAGE_SIZE: int = 10
@@ -39,8 +39,40 @@ class Settings(BaseSettings):
     REDIS_DB: int = 0
     CACHE_EXPIRE_IN_SECONDS: int = 3600  # 1小时
     
-    class Config:
-        env_file = ".env"
-        case_sensitive = False
+    # 日志配置
+    LOG_LEVEL: str = "DEBUG"
+    LOG_FORMAT: str
+    
+    # CORS配置
+    CORS_ORIGINS: List[str]
+    CORS_ALLOW_CREDENTIALS: bool = True
+    
+    # 模型配置
+    model_config = SettingsConfigDict(
+        env_file=".env.dev",
+        case_sensitive=True,
+        env_file_encoding='utf-8'
+    )
+    
+    def model_post_init(self, *args, **kwargs):
+        """后处理配置值"""
+        # 处理字符串形式的列表
+        if isinstance(self.CORS_ORIGINS, str):
+            try:
+                self.CORS_ORIGINS = json.loads(self.CORS_ORIGINS)
+            except json.JSONDecodeError:
+                self.CORS_ORIGINS = [origin.strip() for origin in self.CORS_ORIGINS.strip('[]').split(',')]
+        
+        if isinstance(self.ALLOWED_IMAGE_TYPES, str):
+            try:
+                self.ALLOWED_IMAGE_TYPES = json.loads(self.ALLOWED_IMAGE_TYPES)
+            except json.JSONDecodeError:
+                self.ALLOWED_IMAGE_TYPES = [t.strip() for t in self.ALLOWED_IMAGE_TYPES.strip('[]').split(',')]
+        
+        if isinstance(self.ALLOWED_DOCUMENT_TYPES, str):
+            try:
+                self.ALLOWED_DOCUMENT_TYPES = json.loads(self.ALLOWED_DOCUMENT_TYPES)
+            except json.JSONDecodeError:
+                self.ALLOWED_DOCUMENT_TYPES = [t.strip() for t in self.ALLOWED_DOCUMENT_TYPES.strip('[]').split(',')]
 
-settings = Settings() 
+settings = Settings()

@@ -6,7 +6,7 @@ from app.models.user import User
 from app.database import get_db
 from app.api.auth import create_access_token, get_password_hash
 from datetime import datetime
-from tests.test_config import override_get_db, init_test_db, cleanup_test_db
+from .test_config import override_get_db, init_test_db, cleanup_test_db
 
 # 替换应用程序的数据库依赖
 app.dependency_overrides[get_db] = override_get_db
@@ -146,7 +146,7 @@ def test_get_users(admin_token: str, test_db: Session):
     data = response.json()
     assert data["code"] == 200
     assert data["message"] == "获取成功"
-    assert len(data["data"]["data"]) >= 1
+    assert len(data["data"]["items"]) >= 1
 
 def test_get_users_with_filter(admin_token: str, test_db: Session):
     """测试按条件筛选用户"""
@@ -161,8 +161,8 @@ def test_get_users_with_filter(admin_token: str, test_db: Session):
     data = response.json()
     assert data["code"] == 200
     assert data["message"] == "获取成功"
-    assert len(data["data"]["data"]) >= 1
-    assert all(user["department"] == "IT" for user in data["data"]["data"])
+    assert len(data["data"]["items"]) >= 1
+    assert all(user["department"] == "IT" for user in data["data"]["items"])
 
 def test_get_user(admin_token: str, test_db: Session):
     """测试获取单个用户"""

@@ -77,7 +77,11 @@ def test_get_categories():
     data = response.json()
     assert data["code"] == 200
     assert data["message"] == "获取成功"
-    assert isinstance(data["data"], list)
+    assert isinstance(data["data"]["items"], list)
+    assert "total" in data["data"]
+    assert "page" in data["data"]
+    assert "size" in data["data"]
+    assert "total_pages" in data["data"]
 
 def test_get_category(test_db: Session):
     """测试获取单个分类"""

@@ -2799,3 +2799,95 @@ TypeError: cache_user() takes 1 positional argument but 2 were given
 2025-03-17 19:17:36,555 - users - INFO - Found 10 users out of 11 total matches
 2025-03-17 19:33:58,167 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
 2025-03-17 19:33:58,177 - users - INFO - Found 10 users out of 11 total matches
+2025-03-18 00:57:15,573 - users - INFO - Creating new user: testuser
+2025-03-18 00:57:15,808 - users - INFO - User created successfully: 2
+2025-03-18 00:57:16,295 - users - INFO - Creating new user: testuser
+2025-03-18 00:57:16,798 - users - INFO - Creating new user: testuser2
+2025-03-18 00:57:17,281 - users - INFO - Searching users with query: username=None email=None department=None role=None, page: 1, size: 10
+2025-03-18 00:57:17,283 - users - INFO - Found 2 users out of 2 total matches
+2025-03-18 00:57:17,826 - users - INFO - Searching users with query: username=None email=None department='IT' role=None, page: 1, size: 10
+2025-03-18 00:57:17,826 - users - DEBUG - Applying filters: [<sqlalchemy.sql.elements.BinaryExpression object at 0x106f3e740>]
+2025-03-18 00:57:17,828 - users - INFO - Found 1 users out of 1 total matches
+2025-03-18 00:57:18,313 - users - INFO - Fetching user with id: 2
+2025-03-18 00:57:18,794 - users - INFO - Updating user: 2
+2025-03-18 00:57:18,797 - users - INFO - User updated successfully: 2
+2025-03-18 00:57:19,044 - users - INFO - Updating user: 999
+2025-03-18 00:57:19,764 - users - INFO - Updating user: 3
+2025-03-18 00:57:20,240 - users - INFO - Deleting user: 2
+2025-03-18 00:57:20,243 - users - INFO - User deleted successfully: 2
+2025-03-18 00:57:20,487 - users - INFO - Deleting user: 999
+2025-03-18 00:58:48,607 - users - INFO - Creating new user: testuser
+2025-03-18 00:58:48,847 - users - INFO - User created successfully: 2
+2025-03-18 00:58:49,329 - users - INFO - Creating new user: testuser
+2025-03-18 00:58:49,813 - users - INFO - Creating new user: testuser2
+2025-03-18 00:58:50,298 - users - INFO - Searching users with query: username=None email=None department=None role=None, page: 1, size: 10
+2025-03-18 00:58:50,301 - users - INFO - Found 2 users out of 2 total matches
+2025-03-18 00:58:50,784 - users - INFO - Searching users with query: username=None email=None department='IT' role=None, page: 1, size: 10
+2025-03-18 00:58:50,784 - users - DEBUG - Applying filters: [<sqlalchemy.sql.elements.BinaryExpression object at 0x118896560>]
+2025-03-18 00:58:50,786 - users - INFO - Found 1 users out of 1 total matches
+2025-03-18 00:58:51,266 - users - INFO - Fetching user with id: 2
+2025-03-18 00:58:51,749 - users - INFO - Updating user: 2
+2025-03-18 00:58:51,751 - users - INFO - User updated successfully: 2
+2025-03-18 00:58:51,993 - users - INFO - Updating user: 999
+2025-03-18 00:58:52,706 - users - INFO - Updating user: 3
+2025-03-18 00:58:53,184 - users - INFO - Deleting user: 2
+2025-03-18 00:58:53,187 - users - INFO - User deleted successfully: 2
+2025-03-18 00:58:53,442 - users - INFO - Deleting user: 999
+2025-03-18 01:19:07,932 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-18 01:19:07,942 - users - INFO - Found 10 users out of 11 total matches
+2025-03-18 01:19:09,984 - users - INFO - Fetching user with id: 20
+2025-03-18 01:19:14,297 - users - INFO - Updating user: 20
+2025-03-18 01:19:14,548 - users - INFO - User updated successfully: 20
+2025-03-18 01:19:14,600 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-18 01:19:14,604 - users - INFO - Found 10 users out of 11 total matches
+2025-03-18 01:39:07,644 - users - INFO - Creating new user: testuser
+2025-03-18 01:39:07,906 - users - INFO - User created successfully: 2
+2025-03-18 01:39:08,387 - users - INFO - Creating new user: testuser
+2025-03-18 01:39:08,866 - users - INFO - Creating new user: testuser2
+2025-03-18 01:39:09,344 - users - INFO - Searching users with query: username=None email=None department=None role=None, page: 1, size: 10
+2025-03-18 01:39:09,346 - users - INFO - Found 2 users out of 2 total matches
+2025-03-18 01:39:09,823 - users - INFO - Searching users with query: username=None email=None department='IT' role=None, page: 1, size: 10
+2025-03-18 01:39:09,824 - users - DEBUG - Applying filters: [<sqlalchemy.sql.elements.BinaryExpression object at 0x10796a620>]
+2025-03-18 01:39:09,825 - users - INFO - Found 1 users out of 1 total matches
+2025-03-18 01:39:10,303 - users - INFO - Fetching user with id: 2
+2025-03-18 01:39:10,784 - users - INFO - Updating user: 2
+2025-03-18 01:39:10,785 - users - INFO - User updated successfully: 2
+2025-03-18 01:39:11,029 - users - INFO - Updating user: 999
+2025-03-18 01:39:11,740 - users - INFO - Updating user: 3
+2025-03-18 01:39:12,219 - users - INFO - Deleting user: 2
+2025-03-18 01:39:12,221 - users - INFO - User deleted successfully: 2
+2025-03-18 01:39:12,466 - users - INFO - Deleting user: 999
+2025-03-18 01:42:57,493 - users - INFO - Creating new user: testuser
+2025-03-18 01:42:57,729 - users - INFO - User created successfully: 2
+2025-03-18 01:42:58,209 - users - INFO - Creating new user: testuser
+2025-03-18 01:42:58,685 - users - INFO - Creating new user: testuser2
+2025-03-18 01:42:59,165 - users - INFO - Searching users with query: username=None email=None department=None role=None, page: 1, size: 10
+2025-03-18 01:42:59,167 - users - INFO - Found 2 users out of 2 total matches
+2025-03-18 01:42:59,648 - users - INFO - Searching users with query: username=None email=None department='IT' role=None, page: 1, size: 10
+2025-03-18 01:42:59,648 - users - DEBUG - Applying filters: [<sqlalchemy.sql.elements.BinaryExpression object at 0x111b7a020>]
+2025-03-18 01:42:59,650 - users - INFO - Found 1 users out of 1 total matches
+2025-03-18 01:43:00,125 - users - INFO - Fetching user with id: 2
+2025-03-18 01:43:00,613 - users - INFO - Updating user: 2
+2025-03-18 01:43:00,614 - users - INFO - User updated successfully: 2
+2025-03-18 01:43:00,859 - users - INFO - Updating user: 999
+2025-03-18 01:43:01,606 - users - INFO - Updating user: 3
+2025-03-18 01:43:02,104 - users - INFO - Deleting user: 2
+2025-03-18 01:43:02,107 - users - INFO - User deleted successfully: 2
+2025-03-18 01:43:02,349 - users - INFO - Deleting user: 999
+2025-03-18 01:46:55,009 - users - INFO - Creating new user: testuser
+2025-03-18 01:46:55,243 - users - INFO - User created successfully: 2
+2025-03-18 01:46:55,729 - users - INFO - Creating new user: testuser
+2025-03-18 01:46:56,202 - users - INFO - Creating new user: testuser2
+2025-03-18 01:46:56,677 - users - INFO - Searching users with query: username=None email=None department=None role=None, page: 1, size: 10
+2025-03-18 01:46:56,679 - users - INFO - Found 2 users out of 2 total matches
+2025-03-18 01:46:57,161 - users - INFO - Searching users with query: username=None email=None department='IT' role=None, page: 1, size: 10
+2025-03-18 01:46:57,162 - users - DEBUG - Applying filters: [<sqlalchemy.sql.elements.BinaryExpression object at 0x1206e7910>]
+2025-03-18 01:46:57,163 - users - INFO - Found 1 users out of 1 total matches
+2025-03-18 01:46:57,637 - users - INFO - Fetching user with id: 2
+2025-03-18 01:46:58,113 - users - INFO - Updating user: 2
+2025-03-18 01:46:58,115 - users - INFO - User updated successfully: 2
+2025-03-18 01:46:58,357 - users - INFO - Updating user: 999
+2025-03-18 01:46:59,088 - users - INFO - Updating user: 3
+2025-03-18 01:46:59,565 - users - INFO - Deleting user: 2
+2025-03-18 01:46:59,567 - users - INFO - User deleted successfully: 2
+2025-03-18 01:46:59,809 - users - INFO - Deleting user: 999

@@ -2440,3 +2440,42 @@ sqlalchemy.exc.DataError: (pymysql.err.DataError) (1406, "Data too long for colu
 2025-03-17 19:05:08,039 - articles - INFO - Listing articles with page: 1, size: 10, keyword: None, title: 
 2025-03-17 19:05:21,064 - articles - INFO - Listing articles with page: 1, size: 10, keyword: None, title: 
 2025-03-17 19:17:38,190 - articles - INFO - Listing articles with page: 1, size: 10, keyword: None, title: 
+2025-03-18 00:59:09,632 - articles - INFO - Creating new article: Test Article
+2025-03-18 00:59:09,639 - articles - INFO - Article created successfully: 1
+2025-03-18 00:59:09,886 - articles - INFO - Listing articles with page: 1, size: 10, keyword: None, title: None
+2025-03-18 00:59:09,893 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-18 00:59:10,416 - articles - INFO - Article updated successfully: 1
+2025-03-18 00:59:10,666 - articles - INFO - Article deleted successfully: 1
+2025-03-18 01:00:14,917 - articles - INFO - Creating new article: Test Article
+2025-03-18 01:00:14,923 - articles - INFO - Article created successfully: 1
+2025-03-18 01:00:15,178 - articles - INFO - Listing articles with page: 1, size: 10, keyword: None, title: None
+2025-03-18 01:00:15,185 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-18 01:00:15,678 - articles - INFO - Article updated successfully: 1
+2025-03-18 01:00:15,923 - articles - INFO - Article deleted successfully: 1
+2025-03-18 01:15:59,342 - articles - INFO - Listing articles with page: 1, size: 10, keyword: None, title: 
+2025-03-18 01:15:59,412 - articles - INFO - Found 9 articles out of 9 total matches
+2025-03-18 01:18:19,630 - articles - INFO - Listing articles with page: 1, size: 10, keyword: None, title: 
+2025-03-18 01:18:26,065 - articles - INFO - Listing articles with page: 1, size: 10, keyword: None, title: 
+2025-03-18 01:18:42,514 - articles - INFO - Listing articles with page: 1, size: 10, keyword: None, title: 
+2025-03-18 01:18:48,406 - articles - INFO - Listing articles with page: 1, size: 10, keyword: None, title: 
+2025-03-18 01:19:03,702 - articles - INFO - Article updated successfully: 23
+2025-03-18 01:19:03,765 - articles - INFO - Listing articles with page: 1, size: 10, keyword: None, title: 
+2025-03-18 01:19:03,826 - articles - INFO - Found 9 articles out of 9 total matches
+2025-03-18 01:38:58,484 - articles - INFO - Creating new article: Test Article
+2025-03-18 01:38:58,491 - articles - INFO - Article created successfully: 1
+2025-03-18 01:38:58,733 - articles - INFO - Listing articles with page: 1, size: 10, keyword: None, title: None
+2025-03-18 01:38:58,740 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-18 01:38:59,231 - articles - INFO - Article updated successfully: 1
+2025-03-18 01:38:59,495 - articles - INFO - Article deleted successfully: 1
+2025-03-18 01:42:48,096 - articles - INFO - Creating new article: Test Article
+2025-03-18 01:42:48,104 - articles - INFO - Article created successfully: 1
+2025-03-18 01:42:48,381 - articles - INFO - Listing articles with page: 1, size: 10, keyword: None, title: None
+2025-03-18 01:42:48,387 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-18 01:42:48,904 - articles - INFO - Article updated successfully: 1
+2025-03-18 01:42:49,160 - articles - INFO - Article deleted successfully: 1
+2025-03-18 01:46:45,837 - articles - INFO - Creating new article: Test Article
+2025-03-18 01:46:45,843 - articles - INFO - Article created successfully: 1
+2025-03-18 01:46:46,093 - articles - INFO - Listing articles with page: 1, size: 10, keyword: None, title: None
+2025-03-18 01:46:46,098 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-18 01:46:46,608 - articles - INFO - Article updated successfully: 1
+2025-03-18 01:46:46,859 - articles - INFO - Article deleted successfully: 1

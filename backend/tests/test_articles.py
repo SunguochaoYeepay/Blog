@@ -9,7 +9,7 @@ from app.models.tag import Tag
 from app.database import get_db
 from app.api.auth import create_access_token, get_password_hash
 from datetime import datetime
-from tests.test_config import override_get_db, init_test_db, cleanup_test_db
+from .test_config import override_get_db, init_test_db, cleanup_test_db
 from unittest.mock import patch
 
 # 替换应用程序的数据库依赖
@@ -164,8 +164,8 @@ def test_list_articles(test_token: str, test_db: Session, test_user_data: User):
     data = response.json()
     assert data["code"] == 200
     assert data["message"] == "查询成功"
-    assert len(data["data"]["data"]) == 1
-    assert data["data"]["data"][0]["title"] == test_article["title"]
+    assert len(data["data"]["items"]) == 1
+    assert data["data"]["items"][0]["title"] == test_article["title"]
 
 def test_get_article(test_token: str, test_db: Session, test_user_data: User):
     """测试获取文章详情"""

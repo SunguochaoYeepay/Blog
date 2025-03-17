@@ -1,23 +1,24 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
-import os
+from app.config import settings
+import logging
 
-# 使用环境变量或默认值
-DB_USER = os.getenv("DB_USER", "test")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "1234qwer")
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_PORT = os.getenv("DB_PORT", "3306")
-DB_NAME = os.getenv("DB_NAME", "user_db")
+logger = logging.getLogger(__name__)
 
-# 构建数据库 URL
-SQLALCHEMY_DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+# 使用配置中的数据库 URL
+SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
-    echo=True,  # 启用 SQL 日志
-    pool_pre_ping=True  # 自动检测断开的连接
-)
+try:
+    engine = create_engine(
+        SQLALCHEMY_DATABASE_URL,
+        echo=True,  # 启用 SQL 日志
+        pool_pre_ping=True  # 自动检测断开的连接
+    )
+    logger.info(f"成功连接到数据库：{SQLALCHEMY_DATABASE_URL}")
+except Exception as e:
+    logger.error(f"数据库连接失败：{str(e)}")
+    raise
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -33,7 +34,9 @@ def get_db():
 
 # 初始化数据库
 def init_db():
-    import os
-    if os.path.exists("blog.db"):
-        os.remove("blog.db")
-    Base.metadata.create_all(bind=engine) 
+    try:
+        Base.metadata.create_all(bind=engine)
+        logger.info("数据库表创建成功")
+    except Exception as e:
+        logger.error(f"数据库表创建失败：{str(e)}")
+        raise

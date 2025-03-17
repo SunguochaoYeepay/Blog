@@ -6,7 +6,7 @@ from app.models.user import User
 from app.database import get_db
 from app.api.auth import create_access_token, get_password_hash
 from datetime import datetime, timedelta
-from tests.test_config import override_get_db, init_test_db, cleanup_test_db
+from .test_config import override_get_db, init_test_db, cleanup_test_db
 from unittest.mock import patch, MagicMock
 
 # 替换应用程序的数据库依赖

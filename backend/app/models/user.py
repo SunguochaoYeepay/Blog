@@ -2,7 +2,6 @@ from sqlalchemy import Column, Integer, String, Boolean, DateTime, Text
 from sqlalchemy.orm import relationship
 from app.database import Base
 from datetime import datetime
-from .comment import Comment
 
 class User(Base):
     __tablename__ = "users"
@@ -24,4 +23,4 @@ class User(Base):
     comments = relationship("Comment", back_populates="user", cascade="all, delete-orphan")
 
     class Config:
-        from_attributes = True 
+        from_attributes = True

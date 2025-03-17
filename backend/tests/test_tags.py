@@ -71,7 +71,7 @@ def test_get_tags():
     data = response.json()
     assert data["code"] == 200
     assert data["message"] == "获取成功"
-    assert isinstance(data["data"], list)
+    assert isinstance(data["data"]["items"], list)
 
 def test_get_tag(test_db: Session):
     """测试获取单个标签"""

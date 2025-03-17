@@ -150,8 +150,8 @@ def test_list_comments(test_token: str, test_db: Session, test_article_data: Art
     data = response.json()
     assert data["code"] == 200
     assert data["message"] == "查询成功"
-    assert len(data["data"]) == 1
-    assert data["data"][0]["content"] == test_comment["content"]
+    assert len(data["data"]["items"]) == 1
+    assert data["data"]["items"][0]["content"] == test_comment["content"]
 
 def test_get_comment(test_token: str, test_db: Session, test_article_data: Article, test_user_data: User):
     """测试获取评论详情"""

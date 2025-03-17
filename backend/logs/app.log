@@ -4105,3 +4105,400 @@ AttributeError: type object 'Category' has no attribute 'created_at'
 2025-03-17 19:33:56,370 - app - INFO - Method: GET Path: /api/tags Status: 200 Process Time: 51.70ms
 2025-03-17 19:33:58,138 - app - INFO - Method: OPTIONS Path: /api/users Status: 200 Process Time: 0.70ms
 2025-03-17 19:33:58,179 - app - INFO - Method: GET Path: /api/users Status: 200 Process Time: 36.93ms
+2025-03-17 23:54:31,751 - app - INFO - FastAPI application started
+2025-03-17 23:56:37,715 - app - INFO - FastAPI application started
+2025-03-18 00:21:59,584 - app - INFO - FastAPI application started
+2025-03-18 00:22:57,181 - app - INFO - FastAPI application started
+2025-03-18 00:27:07,545 - app - INFO - FastAPI application started
+2025-03-18 00:28:09,434 - app - INFO - FastAPI application started
+2025-03-18 00:29:15,690 - app - INFO - FastAPI application started
+2025-03-18 00:46:12,023 - app - INFO - FastAPI application started
+2025-03-18 00:53:42,800 - app.main - INFO - FastAPI application started
+2025-03-18 00:54:50,945 - app.main - INFO - FastAPI application started
+2025-03-18 00:55:03,857 - app.main - DEBUG - Root endpoint accessed
+2025-03-18 00:55:03,859 - app.main - INFO - Method: GET Path: / Status: 200 Process Time: 2.67ms
+2025-03-18 00:55:20,607 - app.main - INFO - Method: POST Path: /api/auth/register Status: 400 Process Time: 38.85ms
+2025-03-18 00:56:37,334 - app.main - DEBUG - Root endpoint accessed
+2025-03-18 00:56:37,336 - app.main - INFO - Method: GET Path: / Status: 200 Process Time: 3.82ms
+2025-03-18 00:56:37,363 - app.main - INFO - Method: GET Path: /favicon.ico Status: 404 Process Time: 0.34ms
+2025-03-18 00:56:47,687 - app.main - INFO - Method: GET Path: /docs Status: 200 Process Time: 0.85ms
+2025-03-18 00:56:50,469 - app.main - INFO - Method: GET Path: /openapi.json Status: 200 Process Time: 29.16ms
+2025-03-18 00:56:59,425 - app.main - INFO - FastAPI application started
+2025-03-18 00:56:59,978 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 247.01ms
+2025-03-18 00:57:00,014 - app.main - INFO - Method: POST Path: /api/auth/login Status: 401 Process Time: 30.35ms
+2025-03-18 00:57:00,495 - app.main - INFO - Method: POST Path: /api/auth/login Status: 401 Process Time: 237.79ms
+2025-03-18 00:57:00,974 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 236.99ms
+2025-03-18 00:57:00,980 - app.main - INFO - Method: GET Path: /api/auth/me Status: 200 Process Time: 4.11ms
+2025-03-18 00:57:00,989 - app.main - INFO - Method: GET Path: /api/auth/me Status: 401 Process Time: 1.17ms
+2025-03-18 00:57:00,995 - app.main - INFO - Method: GET Path: /api/auth/me Status: 401 Process Time: 0.55ms
+2025-03-18 00:57:01,007 - app.main - INFO - Method: GET Path: /api/auth/me Status: 401 Process Time: 1.13ms
+2025-03-18 00:57:01,492 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 239.78ms
+2025-03-18 00:57:01,494 - app.main - INFO - Method: POST Path: /api/auth/logout Status: 200 Process Time: 0.73ms
+2025-03-18 00:57:01,501 - app.main - INFO - Method: POST Path: /api/auth/logout Status: 401 Process Time: 0.36ms
+2025-03-18 00:57:01,982 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 239.17ms
+2025-03-18 00:57:01,984 - app.main - INFO - Method: POST Path: /api/auth/logout Status: 200 Process Time: 0.67ms
+2025-03-18 00:57:01,986 - app.main - INFO - Method: GET Path: /api/auth/me Status: 401 Process Time: 0.74ms
+2025-03-18 00:57:15,272 - app.main - INFO - FastAPI application started
+2025-03-18 00:57:15,810 - app.main - INFO - Method: POST Path: /api/users Status: 201 Process Time: 239.69ms
+2025-03-18 00:57:16,295 - app.main - INFO - Method: POST Path: /api/users Status: 400 Process Time: 3.22ms
+2025-03-18 00:57:16,799 - app.main - INFO - Method: POST Path: /api/users Status: 400 Process Time: 27.09ms
+2025-03-18 00:57:17,284 - app.main - INFO - Method: GET Path: /api/users Status: 200 Process Time: 6.63ms
+2025-03-18 00:57:17,829 - app.main - INFO - Method: GET Path: /api/users Status: 200 Process Time: 16.78ms
+2025-03-18 00:57:18,314 - app.main - INFO - Method: GET Path: /api/users/2 Status: 200 Process Time: 2.73ms
+2025-03-18 00:57:18,798 - app.main - INFO - Method: PUT Path: /api/users/2 Status: 200 Process Time: 5.52ms
+2025-03-18 00:57:19,045 - app.main - INFO - Method: PUT Path: /api/users/999 Status: 404 Process Time: 2.82ms
+2025-03-18 00:57:19,765 - app.main - INFO - Method: PUT Path: /api/users/3 Status: 400 Process Time: 2.70ms
+2025-03-18 00:57:20,244 - app.main - INFO - Method: DELETE Path: /api/users/2 Status: 200 Process Time: 5.04ms
+2025-03-18 00:57:20,488 - app.main - INFO - Method: DELETE Path: /api/users/999 Status: 404 Process Time: 2.56ms
+2025-03-18 00:58:35,845 - app.main - INFO - FastAPI application started
+2025-03-18 00:58:48,284 - app.main - INFO - FastAPI application started
+2025-03-18 00:58:48,849 - app.main - INFO - Method: POST Path: /api/users Status: 201 Process Time: 245.85ms
+2025-03-18 00:58:49,330 - app.main - INFO - Method: POST Path: /api/users Status: 400 Process Time: 2.46ms
+2025-03-18 00:58:49,814 - app.main - INFO - Method: POST Path: /api/users Status: 400 Process Time: 2.42ms
+2025-03-18 00:58:50,301 - app.main - INFO - Method: GET Path: /api/users Status: 200 Process Time: 8.23ms
+2025-03-18 00:58:50,787 - app.main - INFO - Method: GET Path: /api/users Status: 200 Process Time: 6.02ms
+2025-03-18 00:58:51,267 - app.main - INFO - Method: GET Path: /api/users/2 Status: 200 Process Time: 2.95ms
+2025-03-18 00:58:51,751 - app.main - INFO - Method: PUT Path: /api/users/2 Status: 200 Process Time: 4.83ms
+2025-03-18 00:58:51,994 - app.main - INFO - Method: PUT Path: /api/users/999 Status: 404 Process Time: 2.58ms
+2025-03-18 00:58:52,707 - app.main - INFO - Method: PUT Path: /api/users/3 Status: 400 Process Time: 2.77ms
+2025-03-18 00:58:53,188 - app.main - INFO - Method: DELETE Path: /api/users/2 Status: 200 Process Time: 5.62ms
+2025-03-18 00:58:53,443 - app.main - INFO - Method: DELETE Path: /api/users/999 Status: 404 Process Time: 14.27ms
+2025-03-18 00:59:09,308 - app.main - INFO - FastAPI application started
+2025-03-18 00:59:09,639 - app.main - INFO - Method: POST Path: /api/articles Status: 201 Process Time: 34.86ms
+2025-03-18 00:59:09,894 - app.main - INFO - Method: GET Path: /api/articles Status: 200 Process Time: 8.82ms
+2025-03-18 00:59:10,171 - app.main - INFO - Method: GET Path: /api/articles/1 Status: 200 Process Time: 1.58ms
+2025-03-18 00:59:10,420 - app.main - INFO - Method: PUT Path: /api/articles/1 Status: 200 Process Time: 7.42ms
+2025-03-18 00:59:10,666 - app.main - INFO - Method: DELETE Path: /api/articles/1 Status: 200 Process Time: 5.55ms
+2025-03-18 00:59:10,913 - app.main - INFO - Method: POST Path: /api/articles/1/like Status: 200 Process Time: 4.71ms
+2025-03-18 00:59:11,156 - app.main - INFO - Method: GET Path: /api/articles/999999 Status: 404 Process Time: 1.61ms
+2025-03-18 01:00:02,029 - app.main - INFO - FastAPI application started
+2025-03-18 01:00:14,572 - app.main - INFO - FastAPI application started
+2025-03-18 01:00:14,924 - app.main - INFO - Method: POST Path: /api/articles Status: 201 Process Time: 10.06ms
+2025-03-18 01:00:15,185 - app.main - INFO - Method: GET Path: /api/articles Status: 200 Process Time: 7.69ms
+2025-03-18 01:00:15,431 - app.main - INFO - Method: GET Path: /api/articles/1 Status: 200 Process Time: 3.52ms
+2025-03-18 01:00:15,678 - app.main - INFO - Method: PUT Path: /api/articles/1 Status: 200 Process Time: 4.85ms
+2025-03-18 01:00:15,924 - app.main - INFO - Method: DELETE Path: /api/articles/1 Status: 200 Process Time: 4.35ms
+2025-03-18 01:00:16,169 - app.main - INFO - Method: POST Path: /api/articles/1/like Status: 200 Process Time: 2.89ms
+2025-03-18 01:00:16,412 - app.main - INFO - Method: GET Path: /api/articles/999999 Status: 404 Process Time: 1.66ms
+2025-03-18 01:00:29,403 - app.main - INFO - FastAPI application started
+2025-03-18 01:00:29,733 - app.main - INFO - Method: POST Path: /api/articles/1/comments Status: 201 Process Time: 6.41ms
+2025-03-18 01:00:29,976 - app.main - INFO - Method: POST Path: /api/articles/999999/comments Status: 404 Process Time: 2.35ms
+2025-03-18 01:00:30,228 - app.main - INFO - Method: GET Path: /api/articles/1/comments Status: 200 Process Time: 8.67ms
+2025-03-18 01:00:30,510 - app.main - INFO - Method: GET Path: /api/comments/1 Status: 200 Process Time: 1.23ms
+2025-03-18 01:00:30,759 - app.main - INFO - Method: PUT Path: /api/comments/1 Status: 200 Process Time: 4.72ms
+2025-03-18 01:00:31,005 - app.main - INFO - Method: DELETE Path: /api/comments/1 Status: 200 Process Time: 3.88ms
+2025-03-18 01:00:31,254 - app.main - INFO - Method: POST Path: /api/comments/1/like Status: 200 Process Time: 2.59ms
+2025-03-18 01:00:31,502 - app.main - INFO - Method: GET Path: /api/comments/999999 Status: 404 Process Time: 1.47ms
+2025-03-18 01:01:18,668 - app.main - INFO - FastAPI application started
+2025-03-18 01:01:32,191 - app.main - INFO - FastAPI application started
+2025-03-18 01:01:32,522 - app.main - INFO - Method: POST Path: /api/articles/1/comments Status: 201 Process Time: 6.70ms
+2025-03-18 01:01:32,768 - app.main - INFO - Method: POST Path: /api/articles/999999/comments Status: 404 Process Time: 1.90ms
+2025-03-18 01:01:33,018 - app.main - INFO - Method: GET Path: /api/articles/1/comments Status: 200 Process Time: 5.87ms
+2025-03-18 01:01:33,264 - app.main - INFO - Method: GET Path: /api/comments/1 Status: 200 Process Time: 1.23ms
+2025-03-18 01:01:33,514 - app.main - INFO - Method: PUT Path: /api/comments/1 Status: 200 Process Time: 4.77ms
+2025-03-18 01:01:33,760 - app.main - INFO - Method: DELETE Path: /api/comments/1 Status: 200 Process Time: 3.57ms
+2025-03-18 01:01:34,008 - app.main - INFO - Method: POST Path: /api/comments/1/like Status: 200 Process Time: 2.87ms
+2025-03-18 01:01:34,254 - app.main - INFO - Method: GET Path: /api/comments/999999 Status: 404 Process Time: 2.33ms
+2025-03-18 01:01:46,996 - app.main - INFO - FastAPI application started
+2025-03-18 01:01:47,301 - app.main - INFO - Method: POST Path: /api/tags Status: 201 Process Time: 4.83ms
+2025-03-18 01:01:47,336 - app.main - INFO - Method: GET Path: /api/tags Status: 200 Process Time: 28.74ms
+2025-03-18 01:01:47,410 - app.main - INFO - Method: GET Path: /api/tags/1 Status: 200 Process Time: 1.66ms
+2025-03-18 01:01:47,657 - app.main - INFO - Method: PUT Path: /api/tags/1 Status: 200 Process Time: 4.65ms
+2025-03-18 01:01:47,908 - app.main - INFO - Method: DELETE Path: /api/tags/1 Status: 200 Process Time: 4.98ms
+2025-03-18 01:01:47,917 - app.main - INFO - Method: POST Path: /api/tags Status: 401 Process Time: 1.25ms
+2025-03-18 01:01:48,165 - app.main - INFO - Method: POST Path: /api/tags Status: 400 Process Time: 2.48ms
+2025-03-18 01:02:28,358 - app.main - INFO - FastAPI application started
+2025-03-18 01:02:41,970 - app.main - INFO - FastAPI application started
+2025-03-18 01:02:42,298 - app.main - INFO - Method: POST Path: /api/tags Status: 201 Process Time: 4.85ms
+2025-03-18 01:02:42,307 - app.main - INFO - Method: GET Path: /api/tags Status: 200 Process Time: 3.22ms
+2025-03-18 01:02:42,317 - app.main - INFO - Method: GET Path: /api/tags/1 Status: 200 Process Time: 1.99ms
+2025-03-18 01:02:42,572 - app.main - INFO - Method: PUT Path: /api/tags/1 Status: 200 Process Time: 3.60ms
+2025-03-18 01:02:42,818 - app.main - INFO - Method: DELETE Path: /api/tags/1 Status: 200 Process Time: 4.73ms
+2025-03-18 01:02:42,827 - app.main - INFO - Method: POST Path: /api/tags Status: 401 Process Time: 1.33ms
+2025-03-18 01:02:43,071 - app.main - INFO - Method: POST Path: /api/tags Status: 400 Process Time: 2.58ms
+2025-03-18 01:03:22,085 - app.main - INFO - FastAPI application started
+2025-03-18 01:03:22,386 - app.api.categories - INFO - Creating new category: Test Category
+2025-03-18 01:03:22,389 - app.api.categories - INFO - Category created successfully: 1
+2025-03-18 01:03:22,390 - app.main - INFO - Method: POST Path: /api/categories Status: 201 Process Time: 7.39ms
+2025-03-18 01:03:22,425 - app.main - INFO - Method: GET Path: /api/categories Status: 200 Process Time: 28.73ms
+2025-03-18 01:03:22,474 - app.main - INFO - Method: GET Path: /api/categories/1 Status: 200 Process Time: 1.99ms
+2025-03-18 01:03:22,720 - app.main - INFO - Method: PUT Path: /api/categories/1 Status: 200 Process Time: 4.26ms
+2025-03-18 01:03:22,968 - app.main - INFO - Method: DELETE Path: /api/categories/1 Status: 200 Process Time: 5.03ms
+2025-03-18 01:03:22,975 - app.main - INFO - Method: POST Path: /api/categories Status: 401 Process Time: 0.93ms
+2025-03-18 01:03:23,220 - app.api.categories - INFO - Creating new category: Duplicate
+2025-03-18 01:03:23,221 - app.main - INFO - Method: POST Path: /api/categories Status: 400 Process Time: 3.05ms
+2025-03-18 01:04:03,732 - app.main - INFO - FastAPI application started
+2025-03-18 01:04:17,789 - app.main - INFO - FastAPI application started
+2025-03-18 01:04:18,133 - app.api.categories - INFO - Creating new category: Test Category
+2025-03-18 01:04:18,135 - app.api.categories - INFO - Category created successfully: 1
+2025-03-18 01:04:18,137 - app.main - INFO - Method: POST Path: /api/categories Status: 201 Process Time: 6.51ms
+2025-03-18 01:04:18,146 - app.main - INFO - Method: GET Path: /api/categories Status: 200 Process Time: 3.46ms
+2025-03-18 01:04:18,156 - app.main - INFO - Method: GET Path: /api/categories/1 Status: 200 Process Time: 3.20ms
+2025-03-18 01:04:18,406 - app.main - INFO - Method: PUT Path: /api/categories/1 Status: 200 Process Time: 4.40ms
+2025-03-18 01:04:18,658 - app.main - INFO - Method: DELETE Path: /api/categories/1 Status: 200 Process Time: 6.20ms
+2025-03-18 01:04:18,666 - app.main - INFO - Method: POST Path: /api/categories Status: 401 Process Time: 1.27ms
+2025-03-18 01:04:18,912 - app.api.categories - INFO - Creating new category: Duplicate
+2025-03-18 01:04:18,913 - app.main - INFO - Method: POST Path: /api/categories Status: 400 Process Time: 2.81ms
+2025-03-18 01:04:31,700 - app.main - INFO - FastAPI application started
+2025-03-18 01:04:32,000 - app.main - INFO - Method: POST Path: /api/upload Status: 201 Process Time: 3.46ms
+2025-03-18 01:04:32,246 - app.main - INFO - Method: POST Path: /api/upload Status: 201 Process Time: 3.48ms
+2025-03-18 01:04:32,254 - app.main - INFO - Method: POST Path: /api/upload Status: 401 Process Time: 0.93ms
+2025-03-18 01:04:32,523 - app.main - INFO - Method: POST Path: /api/upload Status: 400 Process Time: 26.61ms
+2025-03-18 01:04:32,768 - app.main - INFO - Method: POST Path: /api/upload Status: 400 Process Time: 2.60ms
+2025-03-18 01:05:21,256 - app.main - INFO - Method: GET Path: /docs Status: 200 Process Time: 0.77ms
+2025-03-18 01:05:21,325 - app.main - INFO - Method: GET Path: /openapi.json Status: 200 Process Time: 23.68ms
+2025-03-18 01:06:01,359 - app.main - INFO - Method: GET Path: /docs Status: 200 Process Time: 1.15ms
+2025-03-18 01:06:01,550 - app.main - INFO - Method: GET Path: /openapi.json Status: 200 Process Time: 1.18ms
+2025-03-18 01:06:21,224 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 310.86ms
+2025-03-18 01:06:29,370 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 251.90ms
+2025-03-18 01:06:47,115 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 255.14ms
+2025-03-18 01:06:55,714 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 244.04ms
+2025-03-18 01:10:14,883 - app.main - INFO - FastAPI application started
+2025-03-18 01:10:30,875 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 276.19ms
+2025-03-18 01:10:42,844 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 271.54ms
+2025-03-18 01:12:10,575 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 259.27ms
+2025-03-18 01:13:41,542 - app.main - INFO - FastAPI application started
+2025-03-18 01:13:41,543 - app.main - INFO - FastAPI application started
+2025-03-18 01:15:06,475 - app.main - INFO - FastAPI application started
+2025-03-18 01:15:06,475 - app.main - INFO - FastAPI application started
+2025-03-18 01:15:34,560 - app.main - INFO - FastAPI application started
+2025-03-18 01:15:59,065 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 288.48ms
+2025-03-18 01:15:59,068 - app.main - INFO - Method: OPTIONS Path: /api/auth/me Status: 200 Process Time: 0.17ms
+2025-03-18 01:15:59,093 - app.main - INFO - Method: GET Path: /api/auth/me Status: 200 Process Time: 23.51ms
+2025-03-18 01:15:59,340 - app.main - INFO - Method: OPTIONS Path: /api/articles Status: 200 Process Time: 0.23ms
+2025-03-18 01:15:59,414 - app.main - INFO - Method: GET Path: /api/articles Status: 200 Process Time: 72.50ms
+2025-03-18 01:18:04,209 - app.main - INFO - FastAPI application started
+2025-03-18 01:18:04,212 - app.main - INFO - FastAPI application started
+2025-03-18 01:18:19,466 - app.main - INFO - Method: GET Path: /api/auth/me Status: 200 Process Time: 46.51ms
+2025-03-18 01:18:19,631 - app.main - INFO - Method: GET Path: /api/articles Status: 200 Process Time: 1.53ms
+2025-03-18 01:18:26,067 - app.main - INFO - Method: GET Path: /api/articles Status: 200 Process Time: 2.06ms
+2025-03-18 01:18:32,229 - app.main - INFO - Method: OPTIONS Path: /api/auth/logout Status: 200 Process Time: 0.27ms
+2025-03-18 01:18:32,233 - app.main - INFO - Method: POST Path: /api/auth/logout Status: 200 Process Time: 2.63ms
+2025-03-18 01:18:42,443 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 267.07ms
+2025-03-18 01:18:42,449 - app.main - INFO - Method: GET Path: /api/auth/me Status: 200 Process Time: 3.82ms
+2025-03-18 01:18:42,525 - app.main - INFO - Method: GET Path: /api/articles Status: 200 Process Time: 11.96ms
+2025-03-18 01:18:45,335 - app.main - INFO - Method: OPTIONS Path: /api/tags Status: 200 Process Time: 0.20ms
+2025-03-18 01:18:45,347 - app.main - INFO - Method: GET Path: /api/tags Status: 200 Process Time: 10.27ms
+2025-03-18 01:18:46,344 - app.main - INFO - Method: OPTIONS Path: /api/categories Status: 200 Process Time: 0.30ms
+2025-03-18 01:18:46,366 - app.main - INFO - Method: GET Path: /api/categories Status: 200 Process Time: 19.60ms
+2025-03-18 01:18:48,407 - app.main - INFO - Method: GET Path: /api/articles Status: 200 Process Time: 1.62ms
+2025-03-18 01:18:50,329 - app.main - INFO - Method: OPTIONS Path: /api/categories Status: 200 Process Time: 0.56ms
+2025-03-18 01:18:50,330 - app.main - INFO - Method: OPTIONS Path: /api/tags Status: 200 Process Time: 0.77ms
+2025-03-18 01:18:50,361 - app.main - INFO - Method: GET Path: /api/tags Status: 200 Process Time: 30.50ms
+2025-03-18 01:18:50,362 - app.main - INFO - Method: GET Path: /api/categories Status: 200 Process Time: 30.50ms
+2025-03-18 01:18:50,375 - app.main - INFO - Method: OPTIONS Path: /api/articles/23 Status: 200 Process Time: 0.17ms
+2025-03-18 01:18:50,399 - app.main - INFO - Method: GET Path: /api/articles/23 Status: 200 Process Time: 22.48ms
+2025-03-18 01:19:03,644 - app.main - INFO - Method: OPTIONS Path: /api/articles/23 Status: 200 Process Time: 0.97ms
+2025-03-18 01:19:03,703 - app.main - INFO - Method: PUT Path: /api/articles/23 Status: 200 Process Time: 55.38ms
+2025-03-18 01:19:03,827 - app.main - INFO - Method: GET Path: /api/articles Status: 200 Process Time: 62.86ms
+2025-03-18 01:19:07,910 - app.main - INFO - Method: OPTIONS Path: /api/users Status: 200 Process Time: 0.16ms
+2025-03-18 01:19:07,944 - app.main - INFO - Method: GET Path: /api/users Status: 200 Process Time: 32.55ms
+2025-03-18 01:19:09,981 - app.main - INFO - Method: OPTIONS Path: /api/users/20 Status: 200 Process Time: 0.14ms
+2025-03-18 01:19:09,994 - app.main - INFO - Method: GET Path: /api/users/20 Status: 200 Process Time: 12.69ms
+2025-03-18 01:19:14,292 - app.main - INFO - Method: OPTIONS Path: /api/users/20 Status: 200 Process Time: 0.18ms
+2025-03-18 01:19:14,549 - app.main - INFO - Method: PUT Path: /api/users/20 Status: 200 Process Time: 254.43ms
+2025-03-18 01:19:14,606 - app.main - INFO - Method: GET Path: /api/users Status: 200 Process Time: 9.32ms
+2025-03-18 01:19:17,467 - app.main - INFO - Method: GET Path: /api/tags Status: 200 Process Time: 8.90ms
+2025-03-18 01:19:21,907 - app.main - INFO - Method: OPTIONS Path: /api/tags/10 Status: 200 Process Time: 0.15ms
+2025-03-18 01:19:21,921 - app.main - INFO - Method: PUT Path: /api/tags/10 Status: 200 Process Time: 12.69ms
+2025-03-18 01:19:21,938 - app.main - INFO - Method: GET Path: /api/tags Status: 200 Process Time: 4.65ms
+2025-03-18 01:19:24,084 - app.main - INFO - Method: GET Path: /api/categories Status: 200 Process Time: 10.99ms
+2025-03-18 01:19:27,924 - app.main - INFO - Method: OPTIONS Path: /api/categories/25 Status: 200 Process Time: 0.15ms
+2025-03-18 01:19:27,938 - app.main - INFO - Method: PUT Path: /api/categories/25 Status: 200 Process Time: 12.86ms
+2025-03-18 01:19:27,953 - app.main - INFO - Method: GET Path: /api/categories Status: 200 Process Time: 5.87ms
+2025-03-18 01:19:54,410 - app.main - INFO - Method: GET Path: /api/auth/me Status: 200 Process Time: 13.25ms
+2025-03-18 01:19:54,528 - app.main - INFO - Method: GET Path: /api/categories Status: 200 Process Time: 23.92ms
+2025-03-18 01:33:52,373 - app.main - INFO - FastAPI application started
+2025-03-18 01:35:46,397 - app.main - INFO - FastAPI application started
+2025-03-18 01:36:53,429 - app.main - INFO - FastAPI application started
+2025-03-18 01:37:14,297 - app.main - INFO - FastAPI application started
+2025-03-18 01:37:56,075 - app.main - INFO - FastAPI application started
+2025-03-18 01:38:58,132 - app.main - INFO - FastAPI application started
+2025-03-18 01:38:58,492 - app.main - INFO - Method: POST Path: /api/articles Status: 201 Process Time: 10.35ms
+2025-03-18 01:38:58,741 - app.main - INFO - Method: GET Path: /api/articles Status: 200 Process Time: 8.54ms
+2025-03-18 01:38:58,987 - app.main - INFO - Method: GET Path: /api/articles/1 Status: 200 Process Time: 1.74ms
+2025-03-18 01:38:59,232 - app.main - INFO - Method: PUT Path: /api/articles/1 Status: 200 Process Time: 4.63ms
+2025-03-18 01:38:59,496 - app.main - INFO - Method: DELETE Path: /api/articles/1 Status: 200 Process Time: 4.79ms
+2025-03-18 01:38:59,740 - app.main - INFO - Method: POST Path: /api/articles/1/like Status: 200 Process Time: 3.02ms
+2025-03-18 01:38:59,982 - app.main - INFO - Method: GET Path: /api/articles/999999 Status: 404 Process Time: 2.08ms
+2025-03-18 01:39:00,462 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 237.68ms
+2025-03-18 01:39:00,473 - app.main - INFO - Method: POST Path: /api/auth/login Status: 401 Process Time: 3.45ms
+2025-03-18 01:39:00,956 - app.main - INFO - Method: POST Path: /api/auth/login Status: 401 Process Time: 237.13ms
+2025-03-18 01:39:01,435 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 238.01ms
+2025-03-18 01:39:01,439 - app.main - INFO - Method: GET Path: /api/auth/me Status: 200 Process Time: 2.22ms
+2025-03-18 01:39:01,446 - app.main - INFO - Method: GET Path: /api/auth/me Status: 401 Process Time: 1.19ms
+2025-03-18 01:39:01,453 - app.main - INFO - Method: GET Path: /api/auth/me Status: 401 Process Time: 0.47ms
+2025-03-18 01:39:01,461 - app.main - INFO - Method: GET Path: /api/auth/me Status: 401 Process Time: 0.89ms
+2025-03-18 01:39:01,939 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 236.41ms
+2025-03-18 01:39:01,941 - app.main - INFO - Method: POST Path: /api/auth/logout Status: 200 Process Time: 0.89ms
+2025-03-18 01:39:01,949 - app.main - INFO - Method: POST Path: /api/auth/logout Status: 401 Process Time: 0.31ms
+2025-03-18 01:39:02,427 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 236.64ms
+2025-03-18 01:39:02,430 - app.main - INFO - Method: POST Path: /api/auth/logout Status: 200 Process Time: 0.87ms
+2025-03-18 01:39:02,432 - app.main - INFO - Method: GET Path: /api/auth/me Status: 401 Process Time: 0.69ms
+2025-03-18 01:39:02,676 - app.api.categories - INFO - Creating new category: Test Category
+2025-03-18 01:39:02,678 - app.api.categories - INFO - Category created successfully: 1
+2025-03-18 01:39:02,679 - app.main - INFO - Method: POST Path: /api/categories Status: 201 Process Time: 5.37ms
+2025-03-18 01:39:02,689 - app.main - INFO - Method: GET Path: /api/categories Status: 200 Process Time: 3.19ms
+2025-03-18 01:39:02,698 - app.main - INFO - Method: GET Path: /api/categories/1 Status: 200 Process Time: 2.16ms
+2025-03-18 01:39:02,942 - app.main - INFO - Method: PUT Path: /api/categories/1 Status: 200 Process Time: 3.61ms
+2025-03-18 01:39:03,187 - app.main - INFO - Method: DELETE Path: /api/categories/1 Status: 200 Process Time: 3.60ms
+2025-03-18 01:39:03,195 - app.main - INFO - Method: POST Path: /api/categories Status: 401 Process Time: 1.03ms
+2025-03-18 01:39:03,437 - app.api.categories - INFO - Creating new category: Duplicate
+2025-03-18 01:39:03,438 - app.main - INFO - Method: POST Path: /api/categories Status: 400 Process Time: 2.47ms
+2025-03-18 01:39:03,687 - app.main - INFO - Method: POST Path: /api/articles/1/comments Status: 201 Process Time: 6.00ms
+2025-03-18 01:39:03,930 - app.main - INFO - Method: POST Path: /api/articles/999999/comments Status: 404 Process Time: 2.38ms
+2025-03-18 01:39:04,179 - app.main - INFO - Method: GET Path: /api/articles/1/comments Status: 200 Process Time: 4.25ms
+2025-03-18 01:39:04,422 - app.main - INFO - Method: GET Path: /api/comments/1 Status: 200 Process Time: 1.07ms
+2025-03-18 01:39:04,670 - app.main - INFO - Method: PUT Path: /api/comments/1 Status: 200 Process Time: 4.70ms
+2025-03-18 01:39:04,916 - app.main - INFO - Method: DELETE Path: /api/comments/1 Status: 200 Process Time: 4.23ms
+2025-03-18 01:39:05,163 - app.main - INFO - Method: POST Path: /api/comments/1/like Status: 200 Process Time: 3.43ms
+2025-03-18 01:39:05,407 - app.main - INFO - Method: GET Path: /api/comments/999999 Status: 404 Process Time: 2.38ms
+2025-03-18 01:39:05,652 - app.main - INFO - Method: POST Path: /api/tags Status: 201 Process Time: 3.67ms
+2025-03-18 01:39:05,662 - app.main - INFO - Method: GET Path: /api/tags Status: 200 Process Time: 2.72ms
+2025-03-18 01:39:05,673 - app.main - INFO - Method: GET Path: /api/tags/1 Status: 200 Process Time: 1.99ms
+2025-03-18 01:39:05,916 - app.main - INFO - Method: PUT Path: /api/tags/1 Status: 200 Process Time: 3.05ms
+2025-03-18 01:39:06,160 - app.main - INFO - Method: DELETE Path: /api/tags/1 Status: 200 Process Time: 3.47ms
+2025-03-18 01:39:06,168 - app.main - INFO - Method: POST Path: /api/tags Status: 401 Process Time: 1.13ms
+2025-03-18 01:39:06,412 - app.main - INFO - Method: POST Path: /api/tags Status: 400 Process Time: 2.38ms
+2025-03-18 01:39:06,655 - app.main - INFO - Method: POST Path: /api/upload Status: 201 Process Time: 2.65ms
+2025-03-18 01:39:06,904 - app.main - INFO - Method: POST Path: /api/upload Status: 201 Process Time: 8.03ms
+2025-03-18 01:39:06,912 - app.main - INFO - Method: POST Path: /api/upload Status: 401 Process Time: 1.04ms
+2025-03-18 01:39:07,155 - app.main - INFO - Method: POST Path: /api/upload Status: 400 Process Time: 2.31ms
+2025-03-18 01:39:07,401 - app.main - INFO - Method: POST Path: /api/upload Status: 400 Process Time: 1.98ms
+2025-03-18 01:39:07,907 - app.main - INFO - Method: POST Path: /api/users Status: 201 Process Time: 264.96ms
+2025-03-18 01:39:08,388 - app.main - INFO - Method: POST Path: /api/users Status: 400 Process Time: 3.51ms
+2025-03-18 01:39:08,867 - app.main - INFO - Method: POST Path: /api/users Status: 400 Process Time: 2.58ms
+2025-03-18 01:39:09,346 - app.main - INFO - Method: GET Path: /api/users Status: 200 Process Time: 5.42ms
+2025-03-18 01:39:09,826 - app.main - INFO - Method: GET Path: /api/users Status: 200 Process Time: 5.78ms
+2025-03-18 01:39:10,305 - app.main - INFO - Method: GET Path: /api/users/2 Status: 200 Process Time: 3.07ms
+2025-03-18 01:39:10,785 - app.main - INFO - Method: PUT Path: /api/users/2 Status: 200 Process Time: 4.23ms
+2025-03-18 01:39:11,030 - app.main - INFO - Method: PUT Path: /api/users/999 Status: 404 Process Time: 3.13ms
+2025-03-18 01:39:11,741 - app.main - INFO - Method: PUT Path: /api/users/3 Status: 400 Process Time: 3.16ms
+2025-03-18 01:39:12,221 - app.main - INFO - Method: DELETE Path: /api/users/2 Status: 200 Process Time: 4.50ms
+2025-03-18 01:39:12,467 - app.main - INFO - Method: DELETE Path: /api/users/999 Status: 404 Process Time: 2.46ms
+2025-03-18 01:42:47,769 - app.main - INFO - FastAPI application started
+2025-03-18 01:42:48,105 - app.main - INFO - Method: POST Path: /api/articles Status: 201 Process Time: 11.39ms
+2025-03-18 01:42:48,388 - app.main - INFO - Method: GET Path: /api/articles Status: 200 Process Time: 8.06ms
+2025-03-18 01:42:48,644 - app.main - INFO - Method: GET Path: /api/articles/1 Status: 200 Process Time: 2.11ms
+2025-03-18 01:42:48,905 - app.main - INFO - Method: PUT Path: /api/articles/1 Status: 200 Process Time: 4.78ms
+2025-03-18 01:42:49,161 - app.main - INFO - Method: DELETE Path: /api/articles/1 Status: 200 Process Time: 5.02ms
+2025-03-18 01:42:49,410 - app.main - INFO - Method: POST Path: /api/articles/1/like Status: 200 Process Time: 4.19ms
+2025-03-18 01:42:49,656 - app.main - INFO - Method: GET Path: /api/articles/999999 Status: 404 Process Time: 2.79ms
+2025-03-18 01:42:50,136 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 236.67ms
+2025-03-18 01:42:50,146 - app.main - INFO - Method: POST Path: /api/auth/login Status: 401 Process Time: 3.02ms
+2025-03-18 01:42:50,622 - app.main - INFO - Method: POST Path: /api/auth/login Status: 401 Process Time: 236.00ms
+2025-03-18 01:42:51,099 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 236.52ms
+2025-03-18 01:42:51,107 - app.main - INFO - Method: GET Path: /api/auth/me Status: 200 Process Time: 6.42ms
+2025-03-18 01:42:51,143 - app.main - INFO - Method: GET Path: /api/auth/me Status: 401 Process Time: 1.05ms
+2025-03-18 01:42:51,184 - app.main - INFO - Method: GET Path: /api/auth/me Status: 401 Process Time: 0.46ms
+2025-03-18 01:42:51,191 - app.main - INFO - Method: GET Path: /api/auth/me Status: 401 Process Time: 0.99ms
+2025-03-18 01:42:51,669 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 236.48ms
+2025-03-18 01:42:51,671 - app.main - INFO - Method: POST Path: /api/auth/logout Status: 200 Process Time: 0.68ms
+2025-03-18 01:42:51,677 - app.main - INFO - Method: POST Path: /api/auth/logout Status: 401 Process Time: 0.31ms
+2025-03-18 01:42:52,153 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 235.48ms
+2025-03-18 01:42:52,155 - app.main - INFO - Method: POST Path: /api/auth/logout Status: 200 Process Time: 0.69ms
+2025-03-18 01:42:52,158 - app.main - INFO - Method: GET Path: /api/auth/me Status: 401 Process Time: 0.75ms
+2025-03-18 01:42:52,400 - app.api.categories - INFO - Creating new category: Test Category
+2025-03-18 01:42:52,402 - app.api.categories - INFO - Category created successfully: 1
+2025-03-18 01:42:52,403 - app.main - INFO - Method: POST Path: /api/categories Status: 201 Process Time: 5.02ms
+2025-03-18 01:42:52,413 - app.main - INFO - Method: GET Path: /api/categories Status: 200 Process Time: 2.68ms
+2025-03-18 01:42:52,423 - app.main - INFO - Method: GET Path: /api/categories/1 Status: 200 Process Time: 2.05ms
+2025-03-18 01:42:52,669 - app.main - INFO - Method: PUT Path: /api/categories/1 Status: 200 Process Time: 4.38ms
+2025-03-18 01:42:52,916 - app.main - INFO - Method: DELETE Path: /api/categories/1 Status: 200 Process Time: 4.92ms
+2025-03-18 01:42:52,926 - app.main - INFO - Method: POST Path: /api/categories Status: 401 Process Time: 1.12ms
+2025-03-18 01:42:53,169 - app.api.categories - INFO - Creating new category: Duplicate
+2025-03-18 01:42:53,170 - app.main - INFO - Method: POST Path: /api/categories Status: 400 Process Time: 2.61ms
+2025-03-18 01:42:53,426 - app.main - INFO - Method: POST Path: /api/articles/1/comments Status: 201 Process Time: 5.87ms
+2025-03-18 01:42:53,672 - app.main - INFO - Method: POST Path: /api/articles/999999/comments Status: 404 Process Time: 3.03ms
+2025-03-18 01:42:53,924 - app.main - INFO - Method: GET Path: /api/articles/1/comments Status: 200 Process Time: 4.51ms
+2025-03-18 01:42:54,172 - app.main - INFO - Method: GET Path: /api/comments/1 Status: 200 Process Time: 1.34ms
+2025-03-18 01:42:54,424 - app.main - INFO - Method: PUT Path: /api/comments/1 Status: 200 Process Time: 5.04ms
+2025-03-18 01:42:54,674 - app.main - INFO - Method: DELETE Path: /api/comments/1 Status: 200 Process Time: 4.26ms
+2025-03-18 01:42:54,952 - app.main - INFO - Method: POST Path: /api/comments/1/like Status: 200 Process Time: 3.89ms
+2025-03-18 01:42:55,196 - app.main - INFO - Method: GET Path: /api/comments/999999 Status: 404 Process Time: 2.00ms
+2025-03-18 01:42:55,443 - app.main - INFO - Method: POST Path: /api/tags Status: 201 Process Time: 3.93ms
+2025-03-18 01:42:55,452 - app.main - INFO - Method: GET Path: /api/tags Status: 200 Process Time: 2.77ms
+2025-03-18 01:42:55,462 - app.main - INFO - Method: GET Path: /api/tags/1 Status: 200 Process Time: 2.27ms
+2025-03-18 01:42:55,707 - app.main - INFO - Method: PUT Path: /api/tags/1 Status: 200 Process Time: 3.29ms
+2025-03-18 01:42:55,951 - app.main - INFO - Method: DELETE Path: /api/tags/1 Status: 200 Process Time: 3.54ms
+2025-03-18 01:42:55,960 - app.main - INFO - Method: POST Path: /api/tags Status: 401 Process Time: 1.19ms
+2025-03-18 01:42:56,206 - app.main - INFO - Method: POST Path: /api/tags Status: 400 Process Time: 2.34ms
+2025-03-18 01:42:56,451 - app.main - INFO - Method: POST Path: /api/upload Status: 201 Process Time: 3.24ms
+2025-03-18 01:42:56,695 - app.main - INFO - Method: POST Path: /api/upload Status: 201 Process Time: 2.47ms
+2025-03-18 01:42:56,759 - app.main - INFO - Method: POST Path: /api/upload Status: 401 Process Time: 0.93ms
+2025-03-18 01:42:57,004 - app.main - INFO - Method: POST Path: /api/upload Status: 400 Process Time: 2.23ms
+2025-03-18 01:42:57,249 - app.main - INFO - Method: POST Path: /api/upload Status: 400 Process Time: 2.64ms
+2025-03-18 01:42:57,730 - app.main - INFO - Method: POST Path: /api/users Status: 201 Process Time: 239.07ms
+2025-03-18 01:42:58,210 - app.main - INFO - Method: POST Path: /api/users Status: 400 Process Time: 2.84ms
+2025-03-18 01:42:58,686 - app.main - INFO - Method: POST Path: /api/users Status: 400 Process Time: 3.12ms
+2025-03-18 01:42:59,168 - app.main - INFO - Method: GET Path: /api/users Status: 200 Process Time: 5.53ms
+2025-03-18 01:42:59,650 - app.main - INFO - Method: GET Path: /api/users Status: 200 Process Time: 5.49ms
+2025-03-18 01:43:00,127 - app.main - INFO - Method: GET Path: /api/users/2 Status: 200 Process Time: 2.72ms
+2025-03-18 01:43:00,615 - app.main - INFO - Method: PUT Path: /api/users/2 Status: 200 Process Time: 4.64ms
+2025-03-18 01:43:00,860 - app.main - INFO - Method: PUT Path: /api/users/999 Status: 404 Process Time: 2.94ms
+2025-03-18 01:43:01,608 - app.main - INFO - Method: PUT Path: /api/users/3 Status: 400 Process Time: 36.45ms
+2025-03-18 01:43:02,107 - app.main - INFO - Method: DELETE Path: /api/users/2 Status: 200 Process Time: 4.16ms
+2025-03-18 01:43:02,350 - app.main - INFO - Method: DELETE Path: /api/users/999 Status: 404 Process Time: 2.68ms
+2025-03-18 01:46:45,519 - app.main - INFO - FastAPI application started
+2025-03-18 01:46:45,844 - app.main - INFO - Method: POST Path: /api/articles Status: 201 Process Time: 9.57ms
+2025-03-18 01:46:46,100 - app.main - INFO - Method: GET Path: /api/articles Status: 200 Process Time: 7.42ms
+2025-03-18 01:46:46,359 - app.main - INFO - Method: GET Path: /api/articles/1 Status: 200 Process Time: 2.30ms
+2025-03-18 01:46:46,608 - app.main - INFO - Method: PUT Path: /api/articles/1 Status: 200 Process Time: 5.01ms
+2025-03-18 01:46:46,860 - app.main - INFO - Method: DELETE Path: /api/articles/1 Status: 200 Process Time: 4.59ms
+2025-03-18 01:46:47,112 - app.main - INFO - Method: POST Path: /api/articles/1/like Status: 200 Process Time: 3.28ms
+2025-03-18 01:46:47,357 - app.main - INFO - Method: GET Path: /api/articles/999999 Status: 404 Process Time: 3.56ms
+2025-03-18 01:46:47,838 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 237.41ms
+2025-03-18 01:46:47,848 - app.main - INFO - Method: POST Path: /api/auth/login Status: 401 Process Time: 3.66ms
+2025-03-18 01:46:48,326 - app.main - INFO - Method: POST Path: /api/auth/login Status: 401 Process Time: 234.30ms
+2025-03-18 01:46:48,829 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 236.04ms
+2025-03-18 01:46:48,832 - app.main - INFO - Method: GET Path: /api/auth/me Status: 200 Process Time: 1.56ms
+2025-03-18 01:46:48,840 - app.main - INFO - Method: GET Path: /api/auth/me Status: 401 Process Time: 0.99ms
+2025-03-18 01:46:48,847 - app.main - INFO - Method: GET Path: /api/auth/me Status: 401 Process Time: 0.42ms
+2025-03-18 01:46:48,856 - app.main - INFO - Method: GET Path: /api/auth/me Status: 401 Process Time: 1.05ms
+2025-03-18 01:46:49,334 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 238.30ms
+2025-03-18 01:46:49,336 - app.main - INFO - Method: POST Path: /api/auth/logout Status: 200 Process Time: 0.73ms
+2025-03-18 01:46:49,343 - app.main - INFO - Method: POST Path: /api/auth/logout Status: 401 Process Time: 0.37ms
+2025-03-18 01:46:49,819 - app.main - INFO - Method: POST Path: /api/auth/login Status: 200 Process Time: 235.19ms
+2025-03-18 01:46:49,822 - app.main - INFO - Method: POST Path: /api/auth/logout Status: 200 Process Time: 0.82ms
+2025-03-18 01:46:49,824 - app.main - INFO - Method: GET Path: /api/auth/me Status: 401 Process Time: 0.88ms
+2025-03-18 01:46:50,064 - app.api.categories - INFO - Creating new category: Test Category
+2025-03-18 01:46:50,066 - app.api.categories - INFO - Category created successfully: 1
+2025-03-18 01:46:50,067 - app.main - INFO - Method: POST Path: /api/categories Status: 201 Process Time: 5.02ms
+2025-03-18 01:46:50,077 - app.main - INFO - Method: GET Path: /api/categories Status: 200 Process Time: 2.87ms
+2025-03-18 01:46:50,087 - app.main - INFO - Method: GET Path: /api/categories/1 Status: 200 Process Time: 1.90ms
+2025-03-18 01:46:50,331 - app.main - INFO - Method: PUT Path: /api/categories/1 Status: 200 Process Time: 3.43ms
+2025-03-18 01:46:50,575 - app.main - INFO - Method: DELETE Path: /api/categories/1 Status: 200 Process Time: 4.14ms
+2025-03-18 01:46:50,582 - app.main - INFO - Method: POST Path: /api/categories Status: 401 Process Time: 1.03ms
+2025-03-18 01:46:50,823 - app.api.categories - INFO - Creating new category: Duplicate
+2025-03-18 01:46:50,824 - app.main - INFO - Method: POST Path: /api/categories Status: 400 Process Time: 2.67ms
+2025-03-18 01:46:51,075 - app.main - INFO - Method: POST Path: /api/articles/1/comments Status: 201 Process Time: 9.96ms
+2025-03-18 01:46:51,321 - app.main - INFO - Method: POST Path: /api/articles/999999/comments Status: 404 Process Time: 3.31ms
+2025-03-18 01:46:51,568 - app.main - INFO - Method: GET Path: /api/articles/1/comments Status: 200 Process Time: 4.86ms
+2025-03-18 01:46:51,810 - app.main - INFO - Method: GET Path: /api/comments/1 Status: 200 Process Time: 1.94ms
+2025-03-18 01:46:52,056 - app.main - INFO - Method: PUT Path: /api/comments/1 Status: 200 Process Time: 4.08ms
+2025-03-18 01:46:52,304 - app.main - INFO - Method: DELETE Path: /api/comments/1 Status: 200 Process Time: 3.92ms
+2025-03-18 01:46:52,549 - app.main - INFO - Method: POST Path: /api/comments/1/like Status: 200 Process Time: 2.67ms
+2025-03-18 01:46:52,791 - app.main - INFO - Method: GET Path: /api/comments/999999 Status: 404 Process Time: 1.27ms
+2025-03-18 01:46:53,033 - app.main - INFO - Method: POST Path: /api/tags Status: 201 Process Time: 3.29ms
+2025-03-18 01:46:53,042 - app.main - INFO - Method: GET Path: /api/tags Status: 200 Process Time: 2.43ms
+2025-03-18 01:46:53,051 - app.main - INFO - Method: GET Path: /api/tags/1 Status: 200 Process Time: 1.76ms
+2025-03-18 01:46:53,294 - app.main - INFO - Method: PUT Path: /api/tags/1 Status: 200 Process Time: 3.01ms
+2025-03-18 01:46:53,536 - app.main - INFO - Method: DELETE Path: /api/tags/1 Status: 200 Process Time: 2.89ms
+2025-03-18 01:46:53,543 - app.main - INFO - Method: POST Path: /api/tags Status: 401 Process Time: 1.08ms
+2025-03-18 01:46:53,786 - app.main - INFO - Method: POST Path: /api/tags Status: 400 Process Time: 1.97ms
+2025-03-18 01:46:54,030 - app.main - INFO - Method: POST Path: /api/upload Status: 201 Process Time: 4.68ms
+2025-03-18 01:46:54,277 - app.main - INFO - Method: POST Path: /api/upload Status: 201 Process Time: 2.69ms
+2025-03-18 01:46:54,284 - app.main - INFO - Method: POST Path: /api/upload Status: 401 Process Time: 0.79ms
+2025-03-18 01:46:54,525 - app.main - INFO - Method: POST Path: /api/upload Status: 400 Process Time: 2.24ms
+2025-03-18 01:46:54,768 - app.main - INFO - Method: POST Path: /api/upload Status: 400 Process Time: 2.25ms
+2025-03-18 01:46:55,244 - app.main - INFO - Method: POST Path: /api/users Status: 201 Process Time: 236.97ms
+2025-03-18 01:46:55,730 - app.main - INFO - Method: POST Path: /api/users Status: 400 Process Time: 3.13ms
+2025-03-18 01:46:56,203 - app.main - INFO - Method: POST Path: /api/users Status: 400 Process Time: 2.42ms
+2025-03-18 01:46:56,680 - app.main - INFO - Method: GET Path: /api/users Status: 200 Process Time: 5.15ms
+2025-03-18 01:46:57,164 - app.main - INFO - Method: GET Path: /api/users Status: 200 Process Time: 12.52ms
+2025-03-18 01:46:57,639 - app.main - INFO - Method: GET Path: /api/users/2 Status: 200 Process Time: 2.98ms
+2025-03-18 01:46:58,115 - app.main - INFO - Method: PUT Path: /api/users/2 Status: 200 Process Time: 4.22ms
+2025-03-18 01:46:58,358 - app.main - INFO - Method: PUT Path: /api/users/999 Status: 404 Process Time: 2.70ms
+2025-03-18 01:46:59,089 - app.main - INFO - Method: PUT Path: /api/users/3 Status: 400 Process Time: 3.21ms
+2025-03-18 01:46:59,567 - app.main - INFO - Method: DELETE Path: /api/users/2 Status: 200 Process Time: 3.99ms
+2025-03-18 01:46:59,809 - app.main - INFO - Method: DELETE Path: /api/users/999 Status: 404 Process Time: 2.51ms
