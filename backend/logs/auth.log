@@ -157,3 +157,20 @@
 2025-03-17 09:48:30,694 - auth - INFO - User logged in successfully: admin
 2025-03-17 11:31:14,214 - auth - INFO - User logged in successfully: admin
 2025-03-17 12:15:39,540 - auth - INFO - User logged in successfully: admin
+2025-03-17 13:04:36,205 - auth - INFO - User logged in successfully: testuser
+2025-03-17 13:04:37,185 - auth - INFO - User logged in successfully: testuser
+2025-03-17 13:04:37,696 - auth - INFO - User logged in successfully: testuser
+2025-03-17 13:04:37,700 - auth - INFO - User logged out successfully
+2025-03-17 13:04:38,190 - auth - INFO - User logged in successfully: testuser
+2025-03-17 13:04:38,194 - auth - INFO - User logged out successfully
+2025-03-17 13:11:02,619 - auth - INFO - User logged in successfully: admin
+2025-03-17 13:34:55,293 - auth - INFO - User logged in successfully: admin
+2025-03-17 13:35:13,390 - auth - INFO - User logged in successfully: admin
+2025-03-17 13:36:59,504 - auth - INFO - User logged in successfully: admin
+2025-03-17 13:37:16,609 - auth - INFO - User logged in successfully: admin
+2025-03-17 14:08:13,264 - auth - INFO - User logged in successfully: admin
+2025-03-17 14:22:58,675 - auth - INFO - User logged in successfully: admin
+2025-03-17 18:07:56,335 - auth - INFO - User logged in successfully: admin
+2025-03-17 18:11:00,025 - auth - INFO - User logged in successfully: admin
+2025-03-17 18:44:34,401 - auth - INFO - User logged in successfully: admin
+2025-03-17 19:17:30,634 - auth - INFO - User logged in successfully: admin

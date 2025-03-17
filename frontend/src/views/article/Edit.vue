@@ -74,15 +74,15 @@ const loadOptions = async () => {
       articleApi.getTags()
     ]);
     
-    if (!categoriesRes.data || !Array.isArray(categoriesRes.data)) {
+    if (!categoriesRes.data || !Array.isArray(categoriesRes.data.items)) {
       throw new Error('加载分类失败：无效的数据格式');
     }
-    if (!tagsRes.data || !Array.isArray(tagsRes.data)) {
+    if (!tagsRes.data || !Array.isArray(tagsRes.data.items)) {
       throw new Error('加载标签失败：无效的数据格式');
     }
     
-    categories.value = categoriesRes.data;
-    tags.value = tagsRes.data;
+    categories.value = categoriesRes.data.items;
+    tags.value = tagsRes.data.items;
   } catch (error) {
     message.error('加载分类和标签失败');
     console.error('加载分类和标签失败:', error);

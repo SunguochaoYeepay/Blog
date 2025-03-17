@@ -34,8 +34,8 @@ export interface ArticleResponse extends Omit<ArticleCreate, 'category_ids' | 't
 }
 
 export interface ArticleQuery {
-  skip?: number;
-  limit?: number;
+  page?: number;
+  size?: number;
   title?: string;
   status?: 'draft' | 'published' | 'archived';
   is_featured?: boolean;
@@ -57,6 +57,14 @@ export interface Tag {
   slug: string;
 }
 
+export interface PaginatedResponse<T> {
+  items: T[];
+  total: number;
+  total_pages: number;
+  page: number;
+  size: number;
+}
+
 export interface ApiResponse<T> {
   code: number;
   message: string;
@@ -71,14 +79,11 @@ export const articleApi = {
       data: article
     }),
   
-  list: (params: ArticleQuery): Promise<ApiResponse<{ data: ArticleResponse[]; total: number }>> => {
+  list: (params: ArticleQuery): Promise<ApiResponse<PaginatedResponse<ArticleResponse>>> => {
     return request({
       url: '/api/articles',
       method: 'get',
-      params: {
-        ...params,
-        keyword: params.title, // 后端使用 keyword 作为标题搜索参数
-      }
+      params
     });
   },
   

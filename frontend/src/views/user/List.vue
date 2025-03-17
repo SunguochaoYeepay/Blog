@@ -188,7 +188,7 @@ import {
   DeleteOutlined,
   UploadOutlined
 } from '@ant-design/icons-vue';
-import { userApi } from '@/api/user';
+import userApi from '@/api/user';
 import type { User } from '@/api/user';
 import type { TableProps } from 'ant-design-vue/es/table';
 
@@ -249,7 +249,7 @@ const columns = [
     key: 'last_login',
     width: '20%',
     sorter: true,
-    customRender: ({ text }) => formatDate(text)
+    customRender: ({ text }: { text: string | null }) => formatDate(text)
   },
   {
     title: '操作',
@@ -262,12 +262,14 @@ const columns = [
 const loadUsers = async () => {
   try {
     loading.value = true;
-    const response = await userApi.getList({
-      skip: (pagination.value.current - 1) * pagination.value.pageSize,
-      limit: pagination.value.pageSize,
+    const page = pagination.value.current || 1;
+    const size = pagination.value.pageSize || 10;
+    const response = await userApi.list({
+      page,
+      size,
       ...searchForm.value
     });
-    users.value = response.data.data;
+    users.value = response.data.items;
     total.value = response.data.total;
     pagination.value.total = response.data.total;
   } catch (error) {

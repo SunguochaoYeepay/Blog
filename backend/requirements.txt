@@ -4,12 +4,12 @@ sqlalchemy==2.0.27
 pydantic==2.6.1
 pydantic[email]
 email-validator>=2.0.0
-python-jose==3.3.0
+python-jose==3.4.0
 passlib==1.7.4
-python-multipart==0.0.9
+python-multipart==0.0.20
 alembic>=1.11.0
-pymysql==1.1.0
-cryptography>=41.0.0
+pymysql==1.1.1
+cryptography==42.0.5
 bcrypt==4.1.2
 pydantic-settings==2.1.0
 redis==5.0.1

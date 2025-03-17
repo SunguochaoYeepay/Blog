@@ -128,7 +128,7 @@
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { message } from 'ant-design-vue/es';
-import { userApi, type User, type UserCreateDTO, type UserUpdateDTO } from '@/api/user';
+import userApi from '@/api/user';
 import { 
   UploadOutlined,
   UserOutlined

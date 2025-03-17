@@ -2708,3 +2708,94 @@ TypeError: cache_user() takes 1 positional argument but 2 were given
 2025-03-17 12:22:14,806 - users - INFO - Found 10 users out of 13 total matches
 2025-03-17 12:24:57,122 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
 2025-03-17 12:24:57,124 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 13:04:43,523 - users - INFO - Creating new user: testuser
+2025-03-17 13:04:43,795 - users - INFO - User created successfully: 2
+2025-03-17 13:04:44,296 - users - INFO - Creating new user: testuser
+2025-03-17 13:04:44,838 - users - INFO - Creating new user: testuser2
+2025-03-17 13:04:45,331 - users - INFO - Searching users with query: username=None email=None department=None role=None, skip: 0, limit: 10
+2025-03-17 13:04:45,333 - users - INFO - Found 2 users out of 2 total matches
+2025-03-17 13:04:45,816 - users - INFO - Searching users with query: username=None email=None department=IT role=None, skip: 0, limit: 10
+2025-03-17 13:04:45,817 - users - DEBUG - Applying filters: [<sqlalchemy.sql.elements.BinaryExpression object at 0x110573220>]
+2025-03-17 13:04:45,818 - users - INFO - Found 1 users out of 1 total matches
+2025-03-17 13:04:46,302 - users - INFO - Fetching user with id: 2
+2025-03-17 13:04:46,787 - users - INFO - Updating user: 2
+2025-03-17 13:04:46,788 - users - INFO - User updated successfully: 2
+2025-03-17 13:04:47,035 - users - INFO - Updating user: 999
+2025-03-17 13:04:47,754 - users - INFO - Updating user: 3
+2025-03-17 13:04:48,236 - users - INFO - Deleting user: 2
+2025-03-17 13:04:48,238 - users - INFO - User deleted successfully: 2
+2025-03-17 13:04:48,485 - users - INFO - Deleting user: 999
+2025-03-17 13:18:43,871 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-17 13:18:43,878 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 14:13:37,980 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 14:13:37,986 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 14:13:39,508 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 14:13:39,519 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 14:14:07,211 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 14:14:07,214 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 14:19:24,097 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 14:19:24,100 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 14:19:30,844 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 14:19:30,858 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 14:22:58,939 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 14:22:58,965 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 14:24:56,197 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 14:24:56,202 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 14:26:05,144 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 14:26:05,147 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 14:28:20,521 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 14:28:20,524 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 14:30:47,365 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 14:30:47,369 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 14:30:49,829 - users - INFO - Fetching user with id: 2
+2025-03-17 14:30:58,565 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 14:30:58,580 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 14:31:02,522 - users - INFO - Deleting user: 16
+2025-03-17 14:31:02,575 - users - INFO - User deleted successfully: 16
+2025-03-17 14:31:02,604 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 14:31:02,607 - users - INFO - Found 10 users out of 12 total matches
+2025-03-17 14:31:06,453 - users - INFO - Deleting user: 17
+2025-03-17 14:31:06,460 - users - INFO - User deleted successfully: 17
+2025-03-17 14:31:06,489 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 14:31:06,491 - users - INFO - Found 10 users out of 11 total matches
+2025-03-17 14:31:28,270 - users - INFO - Creating new user: 特殊调调色
+2025-03-17 14:31:28,558 - users - INFO - User created successfully: 21
+2025-03-17 14:31:28,683 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 14:31:28,694 - users - INFO - Found 10 users out of 12 total matches
+2025-03-17 14:31:33,383 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 2, size: 10
+2025-03-17 14:31:33,386 - users - INFO - Found 2 users out of 12 total matches
+2025-03-17 18:11:25,500 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 18:11:25,508 - users - INFO - Found 10 users out of 12 total matches
+2025-03-17 18:45:22,235 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 18:45:22,239 - users - INFO - Found 10 users out of 12 total matches
+2025-03-17 18:45:40,495 - users - INFO - Creating new user: erqwerwe
+2025-03-17 18:45:40,834 - users - INFO - User created successfully: 22
+2025-03-17 18:45:40,985 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 18:45:41,010 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 18:45:45,143 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 2, size: 10
+2025-03-17 18:45:45,144 - users - INFO - Found 3 users out of 13 total matches
+2025-03-17 18:45:47,318 - users - INFO - Fetching user with id: 22
+2025-03-17 18:45:51,085 - users - INFO - Updating user: 22
+2025-03-17 18:45:51,369 - users - INFO - User updated successfully: 22
+2025-03-17 18:45:51,485 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 18:45:51,527 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 18:45:54,012 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 2, size: 10
+2025-03-17 18:45:54,041 - users - INFO - Found 3 users out of 13 total matches
+2025-03-17 18:45:56,830 - users - INFO - Deleting user: 22
+2025-03-17 18:45:56,844 - users - INFO - User deleted successfully: 22
+2025-03-17 18:45:56,870 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 2, size: 10
+2025-03-17 18:45:56,872 - users - INFO - Found 2 users out of 12 total matches
+2025-03-17 18:46:00,995 - users - INFO - Deleting user: 21
+2025-03-17 18:46:01,000 - users - INFO - User deleted successfully: 21
+2025-03-17 18:46:01,016 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 2, size: 10
+2025-03-17 18:46:01,018 - users - INFO - Found 1 users out of 11 total matches
+2025-03-17 19:05:03,214 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 19:05:03,227 - users - INFO - Found 10 users out of 11 total matches
+2025-03-17 19:05:06,881 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 19:05:06,890 - users - INFO - Found 10 users out of 11 total matches
+2025-03-17 19:05:09,966 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 19:05:09,970 - users - INFO - Found 10 users out of 11 total matches
+2025-03-17 19:17:36,493 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 19:17:36,555 - users - INFO - Found 10 users out of 11 total matches
+2025-03-17 19:33:58,167 - users - INFO - Searching users with query: username='' email='' department=None role=None, page: 1, size: 10
+2025-03-17 19:33:58,177 - users - INFO - Found 10 users out of 11 total matches

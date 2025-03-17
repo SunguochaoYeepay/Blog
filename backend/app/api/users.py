@@ -99,15 +99,15 @@ async def create_user(
 @router.get("/users", response_model=Response[dict], status_code=status.HTTP_200_OK)
 async def search_users(
     query: UserQuery = Depends(),
-    skip: int = Query(0, ge=0),
-    limit: int = Query(10, ge=1, le=100),
+    page: int = Query(1, ge=1, description="页码"),
+    size: int = Query(10, ge=1, le=100, description="每页数量"),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     # 检查权限
     check_admin_permission(current_user)
     
-    logger.info(f"Searching users with query: username={query.username} email={query.email} department={query.department} role={query.role}, skip: {skip}, limit: {limit}")
+    logger.info(f"Searching users with query: {query}, page: {page}, size: {size}")
     
     try:
         filters = []
@@ -120,20 +120,32 @@ async def search_users(
         if query.role:
             filters.append(User.role.ilike(f"%{query.role}%"))
 
-        db_users = db.query(User)
+        base_query = db.query(User)
         if filters:
             logger.debug(f"Applying filters: {filters}")
-            db_users = db_users.filter(or_(*filters))
+            base_query = base_query.filter(or_(*filters))
         
-        total = db_users.count()
-        users = db_users.offset(skip).limit(limit).all()
+        # 添加按创建时间倒序排序
+        base_query = base_query.order_by(User.created_at.desc())
+        
+        # 计算总数和总页数
+        total = base_query.count()
+        total_pages = (total + size - 1) // size
+        
+        # 处理页码超出范围的情况
+        if page > total_pages and total_pages > 0:
+            page = total_pages
+        
+        # 获取分页数据
+        offset = (page - 1) * size
+        users = base_query.offset(offset).limit(size).all()
         
         logger.info(f"Found {len(users)} users out of {total} total matches")
         return Response(
             code=200,
             message="获取成功",
             data={
-                "data": [
+                "items": [
                     {
                         "id": user.id,
                         "username": user.username,
@@ -147,7 +159,10 @@ async def search_users(
                         "updated_at": user.updated_at
                     } for user in users
                 ],
-                "total": total
+                "total": total,
+                "page": page,
+                "size": size,
+                "total_pages": total_pages
             }
         )
     except HTTPException:

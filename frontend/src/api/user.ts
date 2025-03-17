@@ -1,4 +1,5 @@
 import request from '@/utils/request';
+import type { PaginatedResponse, ApiResponse, PaginationQuery } from '@/types/common';
 
 export interface User {
   id: number;
@@ -16,13 +17,11 @@ export interface User {
   updated_at: string;
 }
 
-export interface UserQuery {
+export interface UserQuery extends PaginationQuery {
   username?: string;
   email?: string;
   role?: string;
   department?: string;
-  skip?: number;
-  limit?: number;
 }
 
 export interface UserCreateDTO {
@@ -50,10 +49,14 @@ export interface ListResponse<T> {
   total: number;
 }
 
-export const userApi = {
+export default {
   // 获取用户列表
-  getList: (params: UserQuery) => {
-    return request<ListResponse<User>>({ url: '/api/users', method: 'get', params });
+  list: (params: UserQuery): Promise<ApiResponse<PaginatedResponse<User>>> => {
+    return request({
+      url: '/api/users',
+      method: 'get',
+      params,
+    });
   },
 
   // 获取单个用户

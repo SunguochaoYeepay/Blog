@@ -9,6 +9,7 @@ from app.models.user import User
 from app.schemas.common import ResponseModel, ErrorResponse
 from app.schemas.comment import CommentCreate, CommentResponse, CommentUpdate
 from app.schemas.response import Response
+from app.schemas.pagination import PaginatedResponse
 from app.logger import setup_logger
 from app.api.auth import get_current_user
 from ..dependencies.redis import (
@@ -86,11 +87,11 @@ async def create_comment(
             ).model_dump()
         )
 
-@router.get("/articles/{article_id}/comments", response_model=ResponseModel[List[CommentResponse]], status_code=status.HTTP_200_OK)
+@router.get("/articles/{article_id}/comments", response_model=Response[PaginatedResponse[CommentResponse]], status_code=status.HTTP_200_OK)
 async def get_article_comments(
     article_id: int,
-    skip: int = Query(0, ge=0),
-    limit: int = Query(10, ge=1, le=100),
+    page: int = Query(1, ge=1, description="页码，从1开始"),
+    size: int = Query(10, ge=1, le=100, description="每页大小，1-100之间"),
     db: Session = Depends(get_db)
 ):
     """获取文章评论列表"""
@@ -103,12 +104,21 @@ async def get_article_comments(
                 detail="文章不存在"
             )
         
-        # 获取评论列表
+        # 获取总数和计算总页数
+        total = db.query(Comment).filter(Comment.article_id == article_id).count()
+        total_pages = (total + size - 1) // size
+        
+        # 处理页码超出范围的情况
+        if total > 0 and page > total_pages:
+            page = total_pages
+        
+        # 获取分页数据
+        offset = (page - 1) * size
         comments = db.query(Comment)\
             .filter(Comment.article_id == article_id)\
             .order_by(Comment.created_at.desc())\
-            .offset(skip)\
-            .limit(limit)\
+            .offset(offset)\
+            .limit(size)\
             .all()
         
         # 处理评论数据
@@ -121,10 +131,19 @@ async def get_article_comments(
             # 缓存评论
             cache_comment(comment.id, comment_data)
         
-        return ResponseModel(
+        # 构造分页响应
+        paginated_response = PaginatedResponse[CommentResponse](
+            items=comment_responses,
+            total=total,
+            page=page,
+            size=size,
+            total_pages=total_pages
+        )
+        
+        return Response[PaginatedResponse[CommentResponse]](
             code=200,
             message="查询成功",
-            data=comment_responses
+            data=paginated_response
         )
     except HTTPException:
         raise

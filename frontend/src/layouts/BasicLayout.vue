@@ -53,6 +53,13 @@
           </template>
           <span>标签管理</span>
         </a-menu-item>
+
+        <a-menu-item key="/admin/category" @click="handleMenuClick({ name: 'Category' })">
+          <template #icon>
+            <FolderOutlined />
+          </template>
+          <span>分类管理</span>
+        </a-menu-item>
       </a-menu>
     </a-layout-sider>
 
@@ -123,7 +130,8 @@ import {
   LogoutOutlined,
   DownOutlined,
   SettingOutlined,
-  TagsOutlined
+  TagsOutlined,
+  FolderOutlined
 } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue/es'
 
@@ -142,6 +150,8 @@ const currentPageTitle = computed(() => {
     return '用户管理'
   } else if (path.includes('/tag')) {
     return '标签管理'
+  } else if (path.includes('/category')) {
+    return '分类管理'
   }
   return '首页'
 })

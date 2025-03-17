@@ -66,9 +66,10 @@
 
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue';
-import { message } from 'ant-design-vue';
-import type { TablePaginationConfig } from 'ant-design-vue';
-import { tagService } from '@/api/tag';
+import message from 'ant-design-vue/es/message';
+import type { TablePaginationConfig } from 'ant-design-vue/es/table';
+import { tagApi } from '@/api/tag';
+import type { Tag } from '@/api/tag';
 
 // 定义表格列
 const columns = [
@@ -101,9 +102,9 @@ const columns = [
 
 // 状态定义
 const loading = ref(false);
-const tags = ref([]);
+const tags = ref<Tag[]>([]);
 const modalVisible = ref(false);
-const editingTag = ref(null);
+const editingTag = ref<Tag | null>(null);
 const formRef = ref();
 
 // 分页配置
@@ -131,11 +132,10 @@ const rules = {
 const loadTags = async () => {
   loading.value = true;
   try {
-    const skip = (pagination.current - 1) * pagination.pageSize;
-    const response = await tagService.getTags(skip, pagination.pageSize);
+    const response = await tagApi.list({ page: pagination.current, size: pagination.pageSize });
     if (response.code === 200) {
-      tags.value = response.data;
-      pagination.total = response.total || response.data.length;
+      tags.value = response.data.items;
+      pagination.total = response.data.total;
     }
   } catch (error) {
     message.error('加载标签失败');
@@ -168,12 +168,12 @@ const handleSubmit = async () => {
   try {
     await formRef.value.validate();
     if (editingTag.value) {
-      const response = await tagService.updateTag(editingTag.value.id, formState);
+      const response = await tagApi.update(editingTag.value.id, formState);
       if (response.code === 200) {
         message.success('标签更新成功');
       }
     } else {
-      const response = await tagService.createTag(formState);
+      const response = await tagApi.create(formState);
       if (response.code === 201) {
         message.success('标签创建成功');
       }
@@ -194,7 +194,7 @@ const handleCancel = () => {
 // 处理删除
 const handleDelete = async (id: number) => {
   try {
-    const response = await tagService.deleteTag(id);
+    const response = await tagApi.delete(id);
     if (response.code === 200) {
       message.success('标签删除成功');
       loadTags();

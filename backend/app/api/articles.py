@@ -125,31 +125,33 @@ async def create_article(
 
 @router.get("/articles", response_model=Response[dict], status_code=status.HTTP_200_OK)
 async def list_articles(
-    skip: int = Query(0, ge=0),
-    limit: int = Query(10, ge=1, le=100),
-    keyword: str = Query(None),
-    status: str = Query(None),
-    is_featured: bool = Query(None),
-    author_id: int = Query(None),
-    title: str = Query(None),
+    page: int = Query(1, ge=1, description="页码"),
+    size: int = Query(10, ge=1, le=100, description="每页数量"),
+    keyword: str = Query(None, description="搜索关键词"),
+    status: str = Query(None, description="文章状态"),
+    is_featured: bool = Query(None, description="是否精选"),
+    author_id: int = Query(None, description="作者ID"),
+    title: str = Query(None, description="文章标题"),
     db: Session = Depends(get_db)
 ):
     """获取文章列表"""
-    logger.info(f"Listing articles with skip: {skip}, limit: {limit}, keyword: {keyword}, title: {title}")
+    logger.info(f"Listing articles with page: {page}, size: {size}, keyword: {keyword}, title: {title}")
     
     # 如果没有过滤条件，尝试从缓存获取
-    if not any([keyword, status, is_featured, author_id, title]) and skip == 0:
+    if not any([keyword, status, is_featured, author_id, title]) and page == 1:
         cached_articles = get_cached_multiple_articles("recent")
         if cached_articles:
             total = len(cached_articles)
+            total_pages = (total + size - 1) // size
             return Response[dict](
                 code=200,
                 message="查询成功",
                 data={
-                    "data": cached_articles[:limit],
+                    "items": cached_articles[:size],
                     "total": total,
-                    "skip": skip,
-                    "limit": limit
+                    "page": page,
+                    "size": size,
+                    "total_pages": total_pages
                 }
             )
     
@@ -179,11 +181,17 @@ async def list_articles(
     if author_id:
         query = query.filter(Article.author_id == author_id)
     
-    # 获取总数
+    # 获取总数和计算总页数
     total = query.count()
+    total_pages = (total + size - 1) // size
     
-    # 分页
-    articles = query.offset(skip).limit(limit).all()
+    # 处理页码超出范围的情况
+    if page > total_pages and total_pages > 0:
+        page = total_pages
+    
+    # 获取分页数据
+    offset = (page - 1) * size
+    articles = query.order_by(Article.created_at.desc()).offset(offset).limit(size).all()
     
     # 序列化文章数据
     article_responses = []
@@ -231,7 +239,7 @@ async def list_articles(
         article_responses.append(article_dict)
     
     # 如果是获取首页文章，缓存结果
-    if not any([keyword, status, is_featured, author_id, title]) and skip == 0:
+    if not any([keyword, status, is_featured, author_id, title]) and page == 1:
         cache_multiple_articles(article_responses, "recent")
     
     logger.info(f"Found {len(articles)} articles out of {total} total matches")
@@ -239,10 +247,11 @@ async def list_articles(
         code=200,
         message="查询成功",
         data={
-            "data": article_responses,
+            "items": article_responses,
             "total": total,
-            "skip": skip,
-            "limit": limit
+            "page": page,
+            "size": size,
+            "total_pages": (total + size - 1) // size
         }
     )
 

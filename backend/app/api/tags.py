@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from typing import List, Optional
@@ -6,14 +6,38 @@ from app.database import get_db
 from app.models.tag import Tag
 from app.schemas.tag import TagCreate, TagUpdate, TagResponse
 from app.schemas.response import Response
+from app.schemas.pagination import PaginatedResponse
 from app.api.auth import get_current_user
 from app.models.user import User
 from datetime import datetime
 import logging
 from app.utils.slug import generate_slug
+import math
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
+
+@router.get("/tags/all", response_model=Response[List[TagResponse]])
+async def get_all_tags(db: Session = Depends(get_db)):
+    """获取所有标签（不分页）"""
+    logger.info("Getting all tags")
+    try:
+        # 按创建时间倒序获取所有标签
+        tags = db.query(Tag).order_by(Tag.created_at.desc()).all()
+        return Response(
+            code=200,
+            message="获取成功",
+            data=tags
+        )
+    except Exception as e:
+        logger.error(f"Error getting all tags: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=Response(
+                code=500,
+                message="获取标签列表失败"
+            ).model_dump()
+        )
 
 @router.post("/tags", response_model=Response[TagResponse], status_code=status.HTTP_201_CREATED)
 async def create_tag(
@@ -52,20 +76,55 @@ async def create_tag(
             ).model_dump()
         )
 
-@router.get("/tags", response_model=Response[List[TagResponse]])
+@router.get("/tags", response_model=Response[PaginatedResponse[TagResponse]])
 async def get_tags(
-    skip: int = 0,
-    limit: int = 10,
+    page: int = Query(default=1, ge=1, description="页码，从1开始"),
+    size: int = Query(default=10, ge=1, le=100, description="每页大小，1-100之间"),
     db: Session = Depends(get_db)
 ):
     """获取标签列表"""
-    tags = db.query(Tag).offset(skip).limit(limit).all()
-    total = db.query(Tag).count()
-    return Response[List[TagResponse]](
-        code=200,
-        message="获取成功",
-        data=[TagResponse.model_validate(tag) for tag in tags]
-    )
+    try:
+        # 计算偏移量
+        skip = (page - 1) * size
+        
+        # 获取总数
+        total = db.query(Tag).count()
+        
+        # 计算总页数
+        total_pages = math.ceil(total / size)
+        
+        # 如果请求的页码超出范围，返回最后一页
+        if total > 0 and page > total_pages:
+            page = total_pages
+            skip = (page - 1) * size
+        
+        # 获取当前页数据，按创建时间倒序排列
+        tags = db.query(Tag).order_by(Tag.created_at.desc()).offset(skip).limit(size).all()
+        
+        # 构造分页响应
+        paginated_response = PaginatedResponse[TagResponse](
+            items=[TagResponse.model_validate(tag) for tag in tags],
+            total=total,
+            page=page,
+            size=size,
+            total_pages=total_pages
+        )
+        
+        return Response[PaginatedResponse[TagResponse]](
+            code=200,
+            message="获取成功",
+            data=paginated_response
+        )
+    except Exception as e:
+        logger.error(f"获取标签列表失败: {str(e)}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=Response(
+                code=500,
+                message=f"获取失败: {str(e)}",
+                data=None
+            ).model_dump()
+        )
 
 @router.get("/tags/{tag_id}", response_model=Response[TagResponse])
 async def get_tag(
@@ -166,4 +225,4 @@ async def delete_tag(
                 message="删除标签失败",
                 data=None
             ).model_dump()
-        ) 
+        )

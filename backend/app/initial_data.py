@@ -1,3 +1,4 @@
+-- Active: 1741598341111@@127.0.0.1@3306
 from datetime import datetime
 from sqlalchemy.orm import Session
 from app.models.user import User
@@ -14,7 +15,7 @@ def init_db(db: Session):
         full_name="System Administrator",
         department="IT",
         role="admin",
-        hashed_password=get_password_hash("admin123"),
+        hashed_password=get_password_hash("admin"),
         is_active=True
     )
     db.add(admin)

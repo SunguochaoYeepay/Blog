@@ -12,9 +12,10 @@ class Tag(Base):
     slug = Column(String(50), unique=True, index=True)
     description = Column(Text)
     created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     # Relations
     articles = relationship("Article", secondary=article_tags, back_populates="tags")
 
     class Config:
-        from_attributes = True 
+        from_attributes = True

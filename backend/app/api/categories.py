@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from typing import List, Optional
@@ -6,14 +6,38 @@ from app.database import get_db
 from app.models.category import Category
 from app.schemas.category import CategoryCreate, CategoryUpdate, CategoryResponse
 from app.schemas.response import Response
+from app.schemas.pagination import PaginatedResponse
 from app.api.auth import get_current_user
 from app.models.user import User
 from datetime import datetime
 import logging
 from app.utils.slug import generate_slug
+import math
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
+
+@router.get("/categories/all", response_model=Response[List[CategoryResponse]])
+async def get_all_categories(db: Session = Depends(get_db)):
+    """获取所有分类（不分页）"""
+    logger.info("Getting all categories")
+    try:
+        # 按创建时间倒序获取所有分类
+        categories = db.query(Category).order_by(Category.created_at.desc()).all()
+        return Response(
+            code=200,
+            message="获取成功",
+            data=categories
+        )
+    except Exception as e:
+        logger.error(f"Error getting all categories: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=Response(
+                code=500,
+                message="获取分类列表失败"
+            ).model_dump()
+        )
 
 @router.post("/categories", response_model=Response[CategoryResponse], status_code=status.HTTP_201_CREATED)
 async def create_category(
@@ -40,7 +64,8 @@ async def create_category(
             name=category.name,
             slug=category.slug or generate_slug(category.name),
             description=category.description,
-            parent_id=category.parent_id
+            parent_id=category.parent_id,
+            created_at=datetime.utcnow()  # 添加创建时间
         )
         
         db.add(db_category)
@@ -64,23 +89,47 @@ async def create_category(
             ).model_dump()
         )
 
-@router.get("/categories", response_model=Response[List[CategoryResponse]])
+@router.get("/categories", response_model=Response[PaginatedResponse[CategoryResponse]])
 async def get_categories(
-    skip: int = 0,
-    limit: int = 10,
+    page: int = Query(default=1, ge=1, description="页码，从1开始"),
+    size: int = Query(default=10, ge=1, le=100, description="每页大小，1-100之间"),
     db: Session = Depends(get_db)
 ):
     """获取分类列表"""
     try:
-        categories = db.query(Category).filter(Category.parent_id.is_(None)).offset(skip).limit(limit).all()
+        # 计算偏移量
+        skip = (page - 1) * size
+        
+        # 获取总数
         total = db.query(Category).filter(Category.parent_id.is_(None)).count()
-        return Response[List[CategoryResponse]](
+        
+        # 计算总页数
+        total_pages = math.ceil(total / size)
+        
+        # 如果请求的页码超出范围，返回最后一页
+        if total > 0 and page > total_pages:
+            page = total_pages
+            skip = (page - 1) * size
+        
+        # 获取当前页数据，按创建时间倒序排列
+        categories = db.query(Category).filter(Category.parent_id.is_(None)).order_by(Category.created_at.desc()).offset(skip).limit(size).all()
+        
+        # 构造分页响应
+        paginated_response = PaginatedResponse[CategoryResponse](
+            items=[CategoryResponse.model_validate(category) for category in categories],
+            total=total,
+            page=page,
+            size=size,
+            total_pages=total_pages
+        )
+        
+        return Response[PaginatedResponse[CategoryResponse]](
             code=200,
             message="获取成功",
-            data=[CategoryResponse.model_validate(category) for category in categories],
-            meta={"total": total, "skip": skip, "limit": limit}
+            data=paginated_response
         )
     except Exception as e:
+        logger.error(f"获取分类列表失败: {str(e)}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=Response(
@@ -153,6 +202,10 @@ async def update_category(
             
         for key, value in update_data.items():
             setattr(db_category, key, value)
+        
+        # 更新修改时间
+        db_category.updated_at = datetime.utcnow()
+        
         db.commit()
         db.refresh(db_category)
         return Response[CategoryResponse](
@@ -228,4 +281,4 @@ async def delete_category(
                 message=f"删除失败: {str(e)}",
                 data=None
             ).model_dump()
-        ) 
+        )

@@ -1,4 +1,5 @@
 import request from '@/utils/request';
+import type { PaginatedResponse, ApiResponse, PaginationQuery } from '@/types/common';
 
 export interface Tag {
   id: number;
@@ -19,18 +20,30 @@ export interface TagUpdate {
   description?: string;
 }
 
-export const tagService = {
+export interface TagQuery extends PaginationQuery {
+  name?: string;
+}
+
+export const tagApi = {
   // 获取标签列表
-  getTags: (skip: number = 0, limit: number = 10) => {
+  list: (params?: TagQuery): Promise<ApiResponse<PaginatedResponse<Tag>>> => {
     return request({
-      url: `/api/tags`,
+      url: '/api/tags',
       method: 'get',
-      params: { skip, limit }
+      params
+    });
+  },
+
+  // 获取所有标签（不分页）
+  listAll: (): Promise<ApiResponse<Tag[]>> => {
+    return request({
+      url: '/api/tags/all',
+      method: 'get'
     });
   },
 
   // 获取单个标签
-  getTag: (id: number) => {
+  get: (id: number): Promise<ApiResponse<Tag>> => {
     return request({
       url: `/api/tags/${id}`,
       method: 'get'
@@ -38,7 +51,7 @@ export const tagService = {
   },
 
   // 创建标签
-  createTag: (tag: TagCreate) => {
+  create: (tag: TagCreate): Promise<ApiResponse<Tag>> => {
     return request({
       url: '/api/tags',
       method: 'post',
@@ -47,7 +60,7 @@ export const tagService = {
   },
 
   // 更新标签
-  updateTag: (id: number, tag: TagUpdate) => {
+  update: (id: number, tag: TagUpdate): Promise<ApiResponse<Tag>> => {
     return request({
       url: `/api/tags/${id}`,
       method: 'put',
@@ -56,7 +69,7 @@ export const tagService = {
   },
 
   // 删除标签
-  deleteTag: (id: number) => {
+  delete: (id: number): Promise<ApiResponse<void>> => {
     return request({
       url: `/api/tags/${id}`,
       method: 'delete'

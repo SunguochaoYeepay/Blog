@@ -201,16 +201,17 @@ const columns: ColumnsType<ArticleResponse> = [
 const loadArticles = async () => {
   try {
     loading.value = true;
-    const skip = ((pagination.value.current || 1) - 1) * (pagination.value.pageSize || 10);
+    const page = pagination.value.current || 1;
+    const size = pagination.value.pageSize || 10;
     const response = await articleApi.list({
-      skip,
-      limit: pagination.value.pageSize || 10,
+      page,
+      size,
       title: searchForm.value.title,
       status: searchForm.value.status,
       sort_field: sortState.value.field,
       sort_order: sortState.value.order,
     });
-    articles.value = response.data.data;
+    articles.value = response.data.items;
     pagination.value.total = response.data.total;
   } catch (error) {
     console.error('加载文章列表失败:', error);
