@@ -46,6 +46,13 @@
             <span>创建用户</span>
           </a-menu-item>
         </a-sub-menu>
+
+        <a-menu-item key="/admin/tag" @click="handleMenuClick({ name: 'Tag' })">
+          <template #icon>
+            <TagsOutlined />
+          </template>
+          <span>标签管理</span>
+        </a-menu-item>
       </a-menu>
     </a-layout-sider>
 
@@ -115,7 +122,8 @@ import {
   UserOutlined,
   LogoutOutlined,
   DownOutlined,
-  SettingOutlined
+  SettingOutlined,
+  TagsOutlined
 } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue/es'
 
@@ -132,6 +140,8 @@ const currentPageTitle = computed(() => {
     return '文章管理'
   } else if (path.includes('/user')) {
     return '用户管理'
+  } else if (path.includes('/tag')) {
+    return '标签管理'
   }
   return '首页'
 })

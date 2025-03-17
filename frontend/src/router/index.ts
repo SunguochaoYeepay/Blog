@@ -90,6 +90,15 @@ const routes: RouteRecordRaw[] = [
           title: '编辑用户',
           requiresAuth: true
         }
+      },
+      {
+        path: 'tag',
+        name: 'Tag',
+        component: () => import('@/views/tag/TagList.vue'),
+        meta: {
+          title: '标签管理',
+          requiresAuth: true
+        }
       }
     ]
   },
