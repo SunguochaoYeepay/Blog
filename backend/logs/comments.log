@@ -231,3 +231,7 @@ TypeError: Object of type datetime is not JSON serializable
 2025-03-14 18:24:41,533 - comments - INFO - Comment updated successfully: 1
 2025-03-14 18:24:41,801 - comments - INFO - Comment deleted successfully: 1
 2025-03-14 18:24:42,064 - comments - INFO - Comment like toggled successfully: 1
+2025-03-17 09:45:44,275 - comments - INFO - Comment created successfully: 1
+2025-03-17 09:45:45,270 - comments - INFO - Comment updated successfully: 1
+2025-03-17 09:45:45,517 - comments - INFO - Comment deleted successfully: 1
+2025-03-17 09:45:45,763 - comments - INFO - Comment like toggled successfully: 1

@@ -146,3 +146,14 @@
 2025-03-15 11:30:39,267 - auth - INFO - User logged in successfully: admin
 2025-03-15 11:33:22,398 - auth - INFO - User logged out successfully
 2025-03-15 11:33:32,217 - auth - INFO - User logged in successfully: admin
+2025-03-17 09:45:00,022 - auth - INFO - User logged in successfully: testuser
+2025-03-17 09:45:01,017 - auth - INFO - User logged in successfully: testuser
+2025-03-17 09:45:01,521 - auth - INFO - User logged in successfully: testuser
+2025-03-17 09:45:01,524 - auth - INFO - User logged out successfully
+2025-03-17 09:45:02,009 - auth - INFO - User logged in successfully: testuser
+2025-03-17 09:45:02,011 - auth - INFO - User logged out successfully
+2025-03-17 09:47:46,077 - auth - INFO - User logged in successfully: admin
+2025-03-17 09:48:20,502 - auth - INFO - User logged out successfully
+2025-03-17 09:48:30,694 - auth - INFO - User logged in successfully: admin
+2025-03-17 11:31:14,214 - auth - INFO - User logged in successfully: admin
+2025-03-17 12:15:39,540 - auth - INFO - User logged in successfully: admin

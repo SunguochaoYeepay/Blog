@@ -2643,3 +2643,68 @@ TypeError: cache_user() takes 1 positional argument but 2 were given
 2025-03-15 11:39:22,146 - users - INFO - Found 8 users out of 8 total matches
 2025-03-15 11:39:39,397 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
 2025-03-15 11:39:39,399 - users - INFO - Found 8 users out of 8 total matches
+2025-03-17 09:46:37,230 - users - INFO - Creating new user: testuser
+2025-03-17 09:46:37,465 - users - INFO - User created successfully: 2
+2025-03-17 09:46:37,961 - users - INFO - Creating new user: testuser
+2025-03-17 09:46:38,483 - users - INFO - Creating new user: testuser2
+2025-03-17 09:46:38,979 - users - INFO - Searching users with query: username=None email=None department=None role=None, skip: 0, limit: 10
+2025-03-17 09:46:38,981 - users - INFO - Found 2 users out of 2 total matches
+2025-03-17 09:46:39,462 - users - INFO - Searching users with query: username=None email=None department=IT role=None, skip: 0, limit: 10
+2025-03-17 09:46:39,463 - users - DEBUG - Applying filters: [<sqlalchemy.sql.elements.BinaryExpression object at 0x107fca7d0>]
+2025-03-17 09:46:39,465 - users - INFO - Found 1 users out of 1 total matches
+2025-03-17 09:46:39,968 - users - INFO - Fetching user with id: 2
+2025-03-17 09:46:40,447 - users - INFO - Updating user: 2
+2025-03-17 09:46:40,448 - users - INFO - User updated successfully: 2
+2025-03-17 09:46:40,691 - users - INFO - Updating user: 999
+2025-03-17 09:46:41,410 - users - INFO - Updating user: 3
+2025-03-17 09:46:41,900 - users - INFO - Deleting user: 2
+2025-03-17 09:46:41,903 - users - INFO - User deleted successfully: 2
+2025-03-17 09:46:42,169 - users - INFO - Deleting user: 999
+2025-03-17 09:47:48,698 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-17 09:47:48,702 - users - INFO - Found 10 users out of 12 total matches
+2025-03-17 09:48:01,505 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-17 09:48:01,509 - users - INFO - Found 10 users out of 12 total matches
+2025-03-17 09:48:04,936 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-17 09:48:04,939 - users - INFO - Found 10 users out of 12 total matches
+2025-03-17 09:48:59,491 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-17 09:48:59,510 - users - INFO - Found 10 users out of 12 total matches
+2025-03-17 09:49:03,242 - users - INFO - Searching users with query: username=admin email= department=None role=None, skip: 0, limit: 10
+2025-03-17 09:49:03,242 - users - DEBUG - Applying filters: [<sqlalchemy.sql.elements.BinaryExpression object at 0x1083acbb0>]
+2025-03-17 09:49:03,245 - users - INFO - Found 1 users out of 1 total matches
+2025-03-17 09:49:17,488 - users - INFO - Updating avatar for user: 4
+2025-03-17 09:49:17,498 - users - ERROR - Error updating avatar: cache_user() takes 1 positional argument but 2 were given
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/Blog/backend/app/api/users.py", line 390, in update_user_avatar
+    cache_user(db_user.id, user_data)
+TypeError: cache_user() takes 1 positional argument but 2 were given
+2025-03-17 09:49:24,638 - users - INFO - Updating avatar for user: 4
+2025-03-17 09:49:24,644 - users - ERROR - Error updating avatar: cache_user() takes 1 positional argument but 2 were given
+Traceback (most recent call last):
+  File "/Users/sunguochao/Documents/Development/cursor/Blog/backend/app/api/users.py", line 390, in update_user_avatar
+    cache_user(db_user.id, user_data)
+TypeError: cache_user() takes 1 positional argument but 2 were given
+2025-03-17 09:49:52,050 - users - INFO - Creating new user: 1111111111
+2025-03-17 09:49:52,300 - users - INFO - User created successfully: 20
+2025-03-17 09:49:52,370 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-17 09:49:52,373 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 09:50:22,646 - users - INFO - Fetching user with id: 2
+2025-03-17 11:31:14,465 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-17 11:31:14,477 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 11:31:25,042 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-17 11:31:25,047 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 12:15:39,712 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-17 12:15:39,760 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 12:15:46,527 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-17 12:15:46,530 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 12:21:25,851 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-17 12:21:25,854 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 12:21:38,395 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-17 12:21:38,397 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 12:21:43,817 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-17 12:21:43,819 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 12:21:58,920 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-17 12:21:58,922 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 12:22:14,802 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-17 12:22:14,806 - users - INFO - Found 10 users out of 13 total matches
+2025-03-17 12:24:57,122 - users - INFO - Searching users with query: username= email= department=None role=None, skip: 0, limit: 10
+2025-03-17 12:24:57,124 - users - INFO - Found 10 users out of 13 total matches

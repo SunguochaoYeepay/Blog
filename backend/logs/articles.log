@@ -2369,3 +2369,28 @@ sqlalchemy.exc.DataError: (pymysql.err.DataError) (1406, "Data too long for colu
 2025-03-15 11:39:12,830 - articles - INFO - Article deleted successfully: 14
 2025-03-15 11:39:12,853 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
 2025-03-15 11:39:12,862 - articles - INFO - Found 2 articles out of 2 total matches
+2025-03-17 09:45:32,794 - articles - INFO - Creating new article: Test Article
+2025-03-17 09:45:32,800 - articles - INFO - Article created successfully: 1
+2025-03-17 09:45:33,044 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: None, title: None
+2025-03-17 09:45:33,076 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-17 09:45:33,572 - articles - INFO - Article updated successfully: 1
+2025-03-17 09:45:33,818 - articles - INFO - Article deleted successfully: 1
+2025-03-17 09:47:46,217 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-17 09:47:46,258 - articles - INFO - Found 9 articles out of 9 total matches
+2025-03-17 09:47:53,180 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-17 09:47:58,199 - articles - INFO - Article updated successfully: 2
+2025-03-17 09:47:58,272 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-17 09:47:58,292 - articles - INFO - Found 9 articles out of 9 total matches
+2025-03-17 09:48:06,328 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-17 09:48:30,793 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-17 09:48:52,737 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-17 09:48:56,991 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: test, title: test
+2025-03-17 09:48:57,002 - articles - INFO - Found 1 articles out of 1 total matches
+2025-03-17 11:31:17,230 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-17 11:31:17,357 - articles - INFO - Found 9 articles out of 9 total matches
+2025-03-17 11:31:20,890 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-17 12:22:17,664 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-17 12:22:25,384 - articles - INFO - Article updated successfully: 2
+2025-03-17 12:22:25,459 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
+2025-03-17 12:22:25,483 - articles - INFO - Found 9 articles out of 9 total matches
+2025-03-17 12:24:59,241 - articles - INFO - Listing articles with skip: 0, limit: 10, keyword: , title: 
