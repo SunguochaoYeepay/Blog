@@ -1,5 +1,5 @@
 from pydantic import BaseModel, ConfigDict
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 class CommentBase(BaseModel):
@@ -22,6 +22,8 @@ class CommentQuery(BaseModel):
     user_id: Optional[int] = None
     start_date: Optional[datetime] = None
     end_date: Optional[datetime] = None
+    include_replies: Optional[bool] = True  # 是否包含回复
+    only_root: Optional[bool] = False  # 是否只查询根评论
     page: int = 1
     size: int = 10
 
@@ -38,5 +40,10 @@ class CommentResponse(CommentBase):
     like_count: int = 0
     user_name: Optional[str] = None
     article_title: Optional[str] = None
+    reply_count: int = 0  # 回复数量
+    replies: Optional[List['CommentResponse']] = None  # 回复列表
 
-    model_config = ConfigDict(from_attributes=True) 
+    model_config = ConfigDict(from_attributes=True)
+
+# 解决循环引用问题
+CommentResponse.model_rebuild() 

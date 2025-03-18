@@ -14,17 +14,19 @@ export interface CommentResponse {
   id: number
   content: string
   article_id: number
-  article_title?: string
   user_id: number
-  user_name?: string
   parent_id?: number
-  is_approved: boolean
-  is_spam: boolean
   ip_address?: string
   user_agent?: string
   created_at: string
   updated_at?: string
+  is_approved: boolean
+  is_spam: boolean
   like_count: number
+  user_name?: string
+  article_title?: string
+  reply_count: number
+  replies?: CommentResponse[]
 }
 
 // 评论查询参数类型
@@ -36,13 +38,16 @@ export interface CommentQuery {
   user_id?: number
   start_date?: string
   end_date?: string
+  include_replies?: boolean
+  only_root?: boolean
+  parent_id?: number
   page?: number
   size?: number
 }
 
 // 评论更新类型
 export interface CommentUpdate {
-  content?: string
+  content: string
   is_approved?: boolean
   is_spam?: boolean
 }

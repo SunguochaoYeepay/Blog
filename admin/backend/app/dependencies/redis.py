@@ -1,17 +1,38 @@
-from redis import Redis
+from redis import Redis, ConnectionError, TimeoutError
 from fastapi import Depends
 from ..config import settings
 import json
 from typing import Optional, Any, Dict
 from datetime import timedelta, datetime
+import time
 
 # Redis 客户端实例
-redis_client = Redis(
-    host=settings.REDIS_HOST,
-    port=settings.REDIS_PORT,
-    db=settings.REDIS_DB,
-    decode_responses=True
-)
+def get_redis_client():
+    """获取 Redis 客户端实例，带重试机制"""
+    max_retries = 3
+    retry_delay = 1  # 秒
+    
+    for attempt in range(max_retries):
+        try:
+            client = Redis(
+                host=settings.REDIS_HOST,
+                port=settings.REDIS_PORT,
+                db=settings.REDIS_DB,
+                decode_responses=True,
+                socket_timeout=5,  # 设置超时时间
+                socket_connect_timeout=5,
+                retry_on_timeout=True
+            )
+            client.ping()  # 测试连接
+            return client
+        except (ConnectionError, TimeoutError) as e:
+            if attempt == max_retries - 1:  # 最后一次尝试
+                raise Exception(f"Redis connection failed after {max_retries} attempts: {str(e)}")
+            time.sleep(retry_delay)
+    
+    raise Exception("Redis connection failed")
+
+redis_client = get_redis_client()
 
 # 缓存键前缀
 USER_PREFIX = "user:"
@@ -37,11 +58,14 @@ class DateTimeEncoder(json.JSONEncoder):
 
 def get_redis() -> Redis:
     """获取 Redis 连接"""
+    global redis_client
     try:
         redis_client.ping()
         return redis_client
     except Exception as e:
-        raise Exception(f"Redis connection error: {str(e)}")
+        # 尝试重新连接
+        redis_client = get_redis_client()
+        return redis_client
 
 def add_token_to_blacklist(token: str, expires_in: int):
     """将令牌添加到黑名单"""

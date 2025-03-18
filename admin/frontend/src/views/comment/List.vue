@@ -38,13 +38,30 @@
           @change="onDateRangeChange"
         />
       </a-form-item>
+      <a-form-item label="显示方式">
+        <a-radio-group v-model:value="searchForm.only_root">
+          <a-radio :value="false">全部评论</a-radio>
+          <a-radio :value="true">仅显示主评论</a-radio>
+        </a-radio-group>
+      </a-form-item>
     </template>
 
     <!-- 表格列内容 -->
     <template #column-content="{ column, record }">
       <template v-if="column.key === 'content'">
-        <div class="comment-content" @click="handleViewDetail(record)">
-          {{ record.content }}
+        <div>
+          <div class="comment-content" @click="handleViewDetail(record)">
+            {{ record.content }}
+          </div>
+          <div v-if="record.reply_count > 0" class="reply-info">
+            <a-button type="link" @click="showReplies(record)">
+              <template #icon><MessageOutlined /></template>
+              {{ record.reply_count }} 条回复
+            </a-button>
+          </div>
+          <div v-if="record.parent_id" class="reply-to">
+            <small>回复评论 #{{ record.parent_id }}</small>
+          </div>
         </div>
       </template>
 
@@ -93,19 +110,107 @@
     :comment="currentComment"
     @deleted="handleSearch"
   />
+
+  <!-- 回复抽屉 -->
+  <a-drawer
+    :title="`评论回复 (${currentComment?.reply_count || 0})`"
+    placement="right"
+    :width="600"
+    v-model:open="repliesDrawerVisible"
+    :closable="true"
+  >
+    <template v-if="currentComment">
+      <!-- 原评论内容 -->
+      <div class="parent-comment">
+        <a-comment>
+          <template #author>
+            <a>{{ currentComment.user_name }}</a>
+            <a-tag :color="getStatusColor(currentComment)" class="status-tag">
+              {{ getStatusText(currentComment) }}
+            </a-tag>
+          </template>
+          <template #avatar>
+            <a-avatar>{{ currentComment.user_name?.[0]?.toUpperCase() }}</a-avatar>
+          </template>
+          <template #content>
+            <p>{{ currentComment.content }}</p>
+          </template>
+          <template #datetime>
+            <a-tooltip :title="formatDate(currentComment.created_at)">
+              <span>{{ formatDate(currentComment.created_at) }}</span>
+            </a-tooltip>
+          </template>
+        </a-comment>
+        <a-divider />
+      </div>
+
+      <!-- 回复列表 -->
+      <div v-if="currentComment.replies && currentComment.replies.length > 0" class="replies-list">
+        <a-comment v-for="reply in currentComment.replies" :key="reply.id">
+          <template #actions>
+            <a-space>
+              <a @click="handleViewDetail(reply)">查看</a>
+              <a v-if="!reply.is_approved && !reply.is_spam" @click="handleApprove(reply)">通过</a>
+              <a v-if="!reply.is_spam" class="danger-link" @click="handleMarkSpam(reply)">标记垃圾</a>
+              <a-popconfirm
+                title="确定要删除这条回复吗？"
+                @confirm="handleDelete(reply)"
+                ok-text="确定"
+                cancel-text="取消"
+              >
+                <a class="danger-link">删除</a>
+              </a-popconfirm>
+            </a-space>
+          </template>
+          <template #author>
+            <a>{{ reply.user_name }}</a>
+            <a-tag :color="getStatusColor(reply)" class="status-tag">
+              {{ getStatusText(reply) }}
+            </a-tag>
+            <span v-if="reply.parent_id && reply.parent_id !== currentComment.id" class="reply-reference">
+              回复 #{{ reply.parent_id }}
+            </span>
+          </template>
+          <template #avatar>
+            <a-avatar>{{ reply.user_name?.[0]?.toUpperCase() }}</a-avatar>
+          </template>
+          <template #content>
+            <p>{{ reply.content }}</p>
+            <div v-if="reply.reply_count > 0" class="sub-reply-info">
+              <a @click="loadSubReplies(reply)">
+                <message-outlined />
+                {{ reply.reply_count }} 条回复
+              </a>
+            </div>
+          </template>
+          <template #datetime>
+            <a-tooltip :title="formatDate(reply.created_at)">
+              <span>{{ formatDate(reply.created_at) }}</span>
+            </a-tooltip>
+          </template>
+        </a-comment>
+      </div>
+      <div v-else class="no-replies">暂无回复</div>
+    </template>
+  </a-drawer>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, defineAsyncComponent } from 'vue'
 import type { TablePaginationConfig } from 'ant-design-vue/es/table/interface'
 import type { CommentResponse, CommentQuery } from '@/types/comment'
-import type { PageResponse, ApiResponse } from '@/types/response'
 import { COMMENT_STATUS_OPTIONS } from '@/types/comment'
 import { getComments, approveComment, markCommentAsSpam, deleteComment } from '@/api/comment'
 import { message } from 'ant-design-vue/es'
 import dayjs from 'dayjs'
 import BaseList from '@/components/BaseList.vue'
 import CommentDetail from './Detail.vue'
+import { MessageOutlined } from '@ant-design/icons-vue'
+
+// 异步导入 CommentReplies 组件
+const CommentReplies = defineAsyncComponent(() => 
+  import('@/components/CommentReplies.vue')
+)
 
 // 搜索表单数据
 const searchForm = reactive<CommentQuery>({
@@ -114,6 +219,8 @@ const searchForm = reactive<CommentQuery>({
   status: 'all',
   start_date: undefined,
   end_date: undefined,
+  include_replies: true,
+  only_root: false,
   page: 1,
   size: 10
 })
@@ -135,6 +242,7 @@ const pagination = reactive<TablePaginationConfig>({
 // 详情弹窗控制
 const detailVisible = ref(false)
 const currentComment = ref<CommentResponse | null>(null)
+const repliesDrawerVisible = ref(false)
 
 // 表格列定义
 const columns = [
@@ -167,7 +275,8 @@ const columns = [
     title: '评论时间',
     dataIndex: 'created_at',
     key: 'created_at',
-    width: '15%'
+    width: '15%',
+    customRender: ({ text }: { text: string }) => formatDate(text)
   },
   {
     title: '操作',
@@ -176,6 +285,11 @@ const columns = [
     className: 'operation-column'
   }
 ]
+
+// 格式化日期
+const formatDate = (date: string) => {
+  return dayjs(date).format('YYYY-MM-DD HH:mm:ss')
+}
 
 // 获取评论列表
 const fetchCommentList = async () => {
@@ -205,6 +319,7 @@ const handleReset = () => {
   searchForm.keyword = ''
   searchForm.article_title = ''
   searchForm.status = 'all'
+  searchForm.only_root = false
   dateRange.value = null
   searchForm.start_date = undefined
   searchForm.end_date = undefined
@@ -222,21 +337,21 @@ const onDateRangeChange = (dates: [dayjs.Dayjs, dayjs.Dayjs] | null) => {
   }
 }
 
-// 表格变化事件
-const handleTableChange = (pag: TablePaginationConfig) => {
-  searchForm.page = pag.current || 1
-  searchForm.size = pag.pageSize
+// 表格变化
+const handleTableChange = (pagination: TablePaginationConfig) => {
+  searchForm.page = pagination.current || 1
+  searchForm.size = pagination.pageSize || 10
   fetchCommentList()
 }
 
 // 获取状态文本
 const getStatusText = (record: CommentResponse) => {
-  if (record.is_spam) return '垃圾评论'
+  if (record.is_spam) return '垃圾'
   if (record.is_approved) return '已通过'
   return '待审核'
 }
 
-// 获取状态标签颜色
+// 获取状态颜色
 const getStatusColor = (record: CommentResponse) => {
   if (record.is_spam) return 'red'
   if (record.is_approved) return 'green'
@@ -254,7 +369,7 @@ const handleApprove = async (record: CommentResponse) => {
   try {
     await approveComment(record.id)
     message.success('评论已通过')
-    fetchCommentList()
+    await fetchCommentList()
   } catch (error) {
     message.error('操作失败')
   }
@@ -265,7 +380,7 @@ const handleMarkSpam = async (record: CommentResponse) => {
   try {
     await markCommentAsSpam(record.id)
     message.success('已标记为垃圾评论')
-    fetchCommentList()
+    await fetchCommentList()
   } catch (error) {
     message.error('操作失败')
   }
@@ -276,13 +391,53 @@ const handleDelete = async (record: CommentResponse) => {
   try {
     await deleteComment(record.id)
     message.success('评论已删除')
-    fetchCommentList()
+    await fetchCommentList()
   } catch (error) {
-    message.error('删除失败')
+    message.error('操作失败')
   }
 }
 
-// 初始化
+// 显示回复抽屉
+const showReplies = (record: CommentResponse) => {
+  currentComment.value = record
+  repliesDrawerVisible.value = true
+}
+
+// 计算回复的缩进
+const getReplyMargin = (reply: CommentResponse) => {
+  // 如果是直接回复主评论，不缩进
+  if (reply.parent_id === currentComment.value?.id) {
+    return '0px'
+  }
+  // 根据回复层级计算缩进
+  return '24px'
+}
+
+// 加载子回复
+const loadSubReplies = async (reply: CommentResponse) => {
+  try {
+    loading.value = true
+    // 这里需要调用获取子回复的 API
+    const response = await getComments({
+      parent_id: reply.id,
+      include_replies: true,
+      page: 1,
+      size: 100
+    })
+    // 将子回复添加到当前回复列表中
+    const index = currentComment.value?.replies?.findIndex(r => r.id === reply.id) ?? -1
+    if (index > -1 && currentComment.value?.replies) {
+      // 在当前回复后插入其子回复
+      currentComment.value.replies.splice(index + 1, 0, ...response.data.items)
+    }
+  } catch (error) {
+    message.error('获取子回复失败')
+  } finally {
+    loading.value = false
+  }
+}
+
+// 组件挂载时获取评论列表
 onMounted(() => {
   fetchCommentList()
 })
@@ -290,19 +445,99 @@ onMounted(() => {
 
 <style scoped>
 .comment-content {
-  max-height: 100px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  -webkit-box-orient: vertical;
-  box-orient: vertical;
   cursor: pointer;
   color: #1890ff;
+  margin-bottom: 8px;
 }
 
 .comment-content:hover {
   text-decoration: underline;
+}
+
+.reply-info {
+  margin-top: 4px;
+}
+
+.reply-to {
+  margin-top: 4px;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.operation-column :deep(.ant-btn) {
+  padding: 0 4px;
+}
+
+.parent-comment {
+  margin-bottom: 24px;
+}
+
+.replies-list {
+  padding-left: 24px;
+}
+
+.reply-reference {
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+.status-tag {
+  margin-left: 8px;
+}
+
+.sub-reply-info {
+  margin-top: 8px;
+}
+
+.danger-link {
+  color: #ff4d4f !important;
+}
+
+.danger-link:hover {
+  color: #ff7875 !important;
+}
+
+.no-replies {
+  color: rgba(0, 0, 0, 0.45);
+  text-align: center;
+  padding: 24px;
+}
+
+/* 自定义评论组件样式 */
+:deep(.ant-comment) {
+  background: #fff;
+  padding: 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  transition: all 0.3s;
+}
+
+:deep(.ant-comment:hover) {
+  background: #fafafa;
+}
+
+:deep(.ant-comment-nested) {
+  margin-left: 24px;
+}
+
+:deep(.ant-comment-content-detail) {
+  font-size: 14px;
+}
+
+:deep(.ant-comment-actions) {
+  margin-top: 8px;
+}
+
+:deep(.ant-comment-content-author) {
+  margin-bottom: 8px;
+}
+
+:deep(.ant-comment-content-author-name) {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+:deep(.ant-comment-content-author-time) {
+  color: rgba(0, 0, 0, 0.45);
 }
 </style>

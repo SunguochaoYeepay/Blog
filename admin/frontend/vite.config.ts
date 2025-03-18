@@ -29,4 +29,20 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    target: 'es2015',
+    minify: 'terser',
+    cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'ant-design-vue': ['ant-design-vue'],
+          'vue': ['vue', 'vue-router', 'pinia'],
+        },
+      },
+    },
+  },
+  optimizeDeps: {
+    include: ['ant-design-vue', 'dayjs'],
+  },
 }); 

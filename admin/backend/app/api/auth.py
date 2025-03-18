@@ -23,10 +23,6 @@ logger = setup_logger("auth")
 router = APIRouter()
 
 # 配置
-SECRET_KEY = "your-secret-key"  # 在生产环境中应该使用环境变量
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
 

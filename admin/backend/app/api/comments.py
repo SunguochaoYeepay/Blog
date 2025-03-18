@@ -127,10 +127,17 @@ async def get_article_comments(
         for comment in comments:
             comment_data = CommentResponse.model_validate(comment).model_dump()
             # 添加点赞数
-            comment_data["like_count"] = get_comment_likes(comment.id)
+            try:
+                comment_data["like_count"] = get_comment_likes(comment.id)
+            except Exception as e:
+                logger.error(f"Error getting comment likes: {str(e)}")
+                comment_data["like_count"] = 0
             comment_responses.append(comment_data)
             # 缓存评论
-            cache_comment(comment.id, comment_data)
+            try:
+                cache_comment(comment.id, comment_data)
+            except Exception as e:
+                logger.error(f"Error caching comment: {str(e)}")
         
         # 构造分页响应
         paginated_response = PaginatedResponse[CommentResponse](
@@ -422,7 +429,7 @@ async def get_comments(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """获取评论列表，支持多种筛选条件"""
+    """获取评论列表，支持多种筛选条件和多级评论"""
     try:
         # 构建基础查询
         base_query = db.query(Comment)\
@@ -430,12 +437,17 @@ async def get_comments(
             .join(User, Comment.user_id == User.id)\
             .options(
                 joinedload(Comment.article),
-                joinedload(Comment.user)
+                joinedload(Comment.user),
+                joinedload(Comment.replies).joinedload(Comment.user)  # 预加载回复及其用户信息
             )
 
         # 应用筛选条件
         filters = []
         
+        # 只查询根评论
+        if query.only_root:
+            filters.append(Comment.parent_id.is_(None))
+            
         # 关键词搜索
         if query.keyword:
             filters.append(Comment.content.ilike(f"%{query.keyword}%"))
@@ -444,10 +456,13 @@ async def get_comments(
         if query.status:
             if query.status == "approved":
                 filters.append(Comment.is_approved == True)
+                filters.append(Comment.is_spam == False)
             elif query.status == "pending":
                 filters.append(Comment.is_approved == False)
+                filters.append(Comment.is_spam == False)
             elif query.status == "spam":
                 filters.append(Comment.is_spam == True)
+            # 如果是 "all" 则不添加过滤条件
                 
         # 文章标题搜索
         if query.article_title:
@@ -491,15 +506,75 @@ async def get_comments(
         # 处理评论数据
         comment_responses = []
         for comment in comments:
-            comment_data = CommentResponse.model_validate(comment).model_dump()
-            # 添加用户名和文章标题
-            comment_data["user_name"] = comment.user.username if comment.user else None
-            comment_data["article_title"] = comment.article.title if comment.article else None
+            # 确保所有必需的布尔字段都有默认值
+            comment_dict = {
+                "id": comment.id,
+                "content": comment.content,
+                "article_id": comment.article_id,
+                "user_id": comment.user_id,
+                "parent_id": comment.parent_id,
+                "ip_address": comment.ip_address,
+                "user_agent": comment.user_agent,
+                "created_at": comment.created_at,
+                "updated_at": comment.updated_at,
+                "is_approved": comment.is_approved if comment.is_approved is not None else False,
+                "is_spam": comment.is_spam if comment.is_spam is not None else False,
+                "like_count": 0,
+                "user_name": comment.user.username if comment.user else None,
+                "article_title": comment.article.title if comment.article else None,
+                "reply_count": 0,
+                "replies": None
+            }
+            
+            comment_data = CommentResponse.model_validate(comment_dict)
+            
+            # 处理回复
+            if query.include_replies and not query.only_root:
+                replies = []
+                reply_count = 0
+                for reply in comment.replies or []:
+                    if not reply.is_spam:
+                        reply_dict = {
+                            "id": reply.id,
+                            "content": reply.content,
+                            "article_id": reply.article_id,
+                            "user_id": reply.user_id,
+                            "parent_id": reply.parent_id,
+                            "ip_address": reply.ip_address,
+                            "user_agent": reply.user_agent,
+                            "created_at": reply.created_at,
+                            "updated_at": reply.updated_at,
+                            "is_approved": reply.is_approved if reply.is_approved is not None else False,
+                            "is_spam": reply.is_spam if reply.is_spam is not None else False,
+                            "like_count": get_comment_likes(reply.id),
+                            "user_name": reply.user.username if reply.user else None,
+                            "article_title": reply.article.title if reply.article else None,
+                            "reply_count": 0,
+                            "replies": None
+                        }
+                        reply_data = CommentResponse.model_validate(reply_dict)
+                        replies.append(reply_data)
+                        reply_count += 1
+                
+                comment_data.replies = replies
+                comment_data.reply_count = reply_count
+            else:
+                comment_data.replies = None
+                comment_data.reply_count = len([r for r in (comment.replies or []) if not r.is_spam])
+            
             # 添加点赞数
-            comment_data["like_count"] = get_comment_likes(comment.id)
+            try:
+                comment_data.like_count = get_comment_likes(comment.id)
+            except Exception as e:
+                logger.error(f"Error getting comment likes: {str(e)}")
+                comment_data.like_count = 0
+            
             comment_responses.append(comment_data)
             # 缓存评论
-            cache_comment(comment.id, comment_data)
+            try:
+                cache_comment(comment.id, comment_data)
+            except Exception as e:
+                logger.error(f"Error caching comment: {str(e)}")
             
         # 构造分页响应
         paginated_response = PaginatedResponse[CommentResponse](
@@ -520,4 +595,54 @@ async def get_comments(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="获取评论失败"
+        )
+
+@router.get("/comments/{comment_id}/replies", response_model=Response[List[CommentResponse]], status_code=status.HTTP_200_OK)
+async def get_comment_replies(
+    comment_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """获取指定评论的回复列表"""
+    try:
+        # 检查评论是否存在
+        comment = db.query(Comment).filter(Comment.id == comment_id).first()
+        if not comment:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="评论不存在"
+            )
+            
+        # 获取回复列表
+        replies = db.query(Comment)\
+            .filter(Comment.parent_id == comment_id)\
+            .filter(Comment.is_spam == False)\
+            .options(
+                joinedload(Comment.user),
+                joinedload(Comment.article)
+            )\
+            .order_by(Comment.created_at.asc())\
+            .all()
+            
+        # 处理回复数据
+        reply_responses = []
+        for reply in replies:
+            reply_data = CommentResponse.model_validate(reply).model_dump()
+            reply_data["user_name"] = reply.user.username if reply.user else None
+            reply_data["article_title"] = reply.article.title if reply.article else None
+            reply_data["like_count"] = get_comment_likes(reply.id)
+            reply_responses.append(reply_data)
+            
+        return Response[List[CommentResponse]](
+            code=200,
+            message="查询成功",
+            data=reply_responses
+        )
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        logger.error(f"Error getting comment replies: {str(e)}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="获取评论回复失败"
         ) 
