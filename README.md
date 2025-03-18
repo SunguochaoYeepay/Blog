@@ -130,25 +130,27 @@
 
 ```
 Blog/
-├── backend/           # 后端服务
-│   ├── alembic/      # 数据库迁移
-│   ├── app/          # 应用代码
-│   │   ├── api/      # API 路由
-│   │   ├── core/     # 核心功能
-│   │   ├── models/   # 数据库模型
-│   │   └── schemas/  # Pydantic 模型
-│   └── tests/        # 测试用例
-├── frontend/         # 前端应用
-│   ├── src/
-│   │   ├── api/     # API 接口
+├── admin/             # 管理后台
+│   ├── frontend/     # 管理后台前端
+│   │   ├── src/     # 源代码
+│   │   ├── tests/   # 测试用例
+│   │   └── ...      # 其他配置文件
+│   └── backend/     # 管理后台后端
+│       ├── app/     # 应用代码
+│       ├── tests/   # 测试用例
+│       └── ...      # 其他配置文件
+├── website/         # 前端网站
+│   ├── src/        # 源代码
 │   │   ├── components/  # 组件
-│   │   ├── views/   # 页面
-│   │   └── store/   # 状态管理
-│   └── tests/       # 测试用例
-└── design-docs/     # 设计文档
-    ├── backend/     # 后端设计
-    └── frontend/    # 前端设计
-    
+│   │   ├── views/      # 页面
+│   │   ├── stores/     # 状态管理
+│   │   └── ...        # 其他代码
+│   ├── tests/      # 测试用例
+│   └── ...         # 其他配置文件
+├── design-docs/    # 设计文档
+│   ├── personal-website/  # 个人网站相关文档
+│   └── boss-admin/       # 管理后台相关文档
+└── ...            # 其他配置文件
 ```
 
 ## 快速开始 
@@ -163,7 +165,7 @@ Blog/
 
 1. 创建虚拟环境
 ```bash
-cd backend
+cd admin/backend
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 ```
@@ -191,9 +193,28 @@ uvicorn app.main:app --reload
 
 ### 前端设置
 
+#### 网站前端
 1. 安装依赖
 ```bash
-cd frontend
+cd website
+npm install
+```
+
+2. 配置环境变量
+```bash
+cp .env.example .env
+# 编辑 .env 文件配置 API 地址等信息
+```
+
+3. 启动开发服务器
+```bash
+npm run dev
+```
+
+#### 管理后台前端
+1. 安装依赖
+```bash
+cd admin/frontend
 npm install
 ```
 
@@ -226,63 +247,74 @@ docker-compose up -d
 ```
 
 ### 传统部署
-详见 [部署文档](design-docs/backend/deployment.md)
+详见 [部署文档](design-docs/admin/backend/deployment.md)
 
 ## 开发指南
 
-- [后端架构](design-docs/backend/architecture.md)
-- [API 设计规范](design-docs/backend/api-standards.md)
-- [数据库设计](design-docs/backend/database.md)
-- [前端架构](design-docs/frontend/architecture.md)
-- [前端代码规范](design-docs/frontend/code-standards.md)
+### 管理后台
+- [后端架构](design-docs/admin/backend/architecture.md)
+- [API 设计规范](design-docs/admin/backend/api-standards.md)
+- [数据库设计](design-docs/admin/backend/database.md)
+- [前端架构](design-docs/admin/frontend/architecture.md)
+- [前端代码规范](design-docs/admin/frontend/code-standards.md)
+- [部署指南](design-docs/admin/backend/deployment.md)
+
+### 个人网站
+- [前端架构](design-docs/website/architecture.md)
+- [前端代码规范](design-docs/website/code-standards.md)
+- [组件设计](design-docs/website/components.md)
+- [性能优化](design-docs/website/performance.md)
+
+### 通用文档
+- [Git 工作流](design-docs/common/git-workflow.md)
+- [代码审查规范](design-docs/common/code-review.md)
+- [测试规范](design-docs/common/testing.md)
+- [发布流程](design-docs/common/release-process.md)
 
 ## 测试
 
-### 后端测试
+### 管理后台测试
+#### 后端测试
 ```bash
-cd backend
+cd admin/backend
 pytest
 ```
 
-### 前端测试
+#### 前端测试
 ```bash
-cd frontend
+cd admin/frontend
 npm run test
 ```
 
-## 性能优化
-
-- 数据库索引优化
-- Redis 缓存层 (计划中)
-- 前端资源懒加载
-- CDN 加速 (计划中)
-- 图片压缩和优化 (计划中)
+### 网站前端测试
+```bash
+cd website
+npm run test
+```
 
 ## 贡献指南
 
-1. Fork 项目
-2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+1. Fork 本仓库
+2. 创建你的特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交你的改动 (`git commit -m 'Add some AmazingFeature'`)
 4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 创建 Pull Request
+5. 开启一个 Pull Request
+
+详细指南请参考 [贡献指南](design-docs/common/contributing.md)
 
 ## 更新日志
 
-详见 [CHANGELOG.md](design-docs/changelog.md)
+详见 [CHANGELOG.md](changelog.md)
 
 ## 许可证
 
-本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
+本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详细信息
 
-## 联系方式
+## 作者
 
-- 作者：Your Name
-- 邮箱：your.email@example.com
-- 项目链接：[https://github.com/yourusername/blog](https://github.com/yourusername/blog)
+* **Your Name** - *Initial work* - [YourGithub](https://github.com/yourusername)
 
 ## 致谢
 
-- [FastAPI](https://fastapi.tiangolo.com/)
-- [Vue.js](https://vuejs.org/)
-- [Ant Design Vue](https://antdv.com/)
-- [SQLAlchemy](https://www.sqlalchemy.org/)
+* 感谢所有为这个项目做出贡献的开发者
+* 特别感谢 [FastAPI](https://fastapi.tiangolo.com/) 和 [Vue.js](https://vuejs.org/) 的开发团队
