@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from typing import List, Optional
 from datetime import datetime
 from app.database import get_db
@@ -7,11 +7,12 @@ from app.models.comment import Comment
 from app.models.article import Article
 from app.models.user import User
 from app.schemas.common import ResponseModel, ErrorResponse
-from app.schemas.comment import CommentCreate, CommentResponse, CommentUpdate
+from app.schemas.comment import CommentCreate, CommentResponse, CommentUpdate, CommentQuery
 from app.schemas.response import Response
 from app.schemas.pagination import PaginatedResponse
 from app.logger import setup_logger
 from app.api.auth import get_current_user
+from sqlalchemy import or_, and_
 from ..dependencies.redis import (
     cache_comment,
     get_cached_comment,
@@ -413,4 +414,110 @@ async def mark_comment_spam(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="标记垃圾评论失败"
+        )
+
+@router.get("/comments", response_model=Response[PaginatedResponse[CommentResponse]], status_code=status.HTTP_200_OK)
+async def get_comments(
+    query: CommentQuery = Depends(),
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """获取评论列表，支持多种筛选条件"""
+    try:
+        # 构建基础查询
+        base_query = db.query(Comment)\
+            .join(Article, Comment.article_id == Article.id)\
+            .join(User, Comment.user_id == User.id)\
+            .options(
+                joinedload(Comment.article),
+                joinedload(Comment.user)
+            )
+
+        # 应用筛选条件
+        filters = []
+        
+        # 关键词搜索
+        if query.keyword:
+            filters.append(Comment.content.ilike(f"%{query.keyword}%"))
+            
+        # 状态筛选
+        if query.status:
+            if query.status == "approved":
+                filters.append(Comment.is_approved == True)
+            elif query.status == "pending":
+                filters.append(Comment.is_approved == False)
+            elif query.status == "spam":
+                filters.append(Comment.is_spam == True)
+                
+        # 文章标题搜索
+        if query.article_title:
+            filters.append(Article.title.ilike(f"%{query.article_title}%"))
+                
+        # 文章ID筛选
+        if query.article_id:
+            filters.append(Comment.article_id == query.article_id)
+            
+        # 用户筛选
+        if query.user_id:
+            filters.append(Comment.user_id == query.user_id)
+            
+        # 日期筛选
+        if query.start_date:
+            filters.append(Comment.created_at >= query.start_date)
+        
+        if query.end_date:
+            filters.append(Comment.created_at <= query.end_date)
+            
+        # 应用所有筛选条件
+        if filters:
+            base_query = base_query.filter(and_(*filters))
+            
+        # 获取总数
+        total = base_query.count()
+        total_pages = (total + query.size - 1) // query.size
+        
+        # 处理页码超出范围的情况
+        if total > 0 and query.page > total_pages:
+            query.page = total_pages
+            
+        # 获取分页数据
+        offset = (query.page - 1) * query.size
+        comments = base_query\
+            .order_by(Comment.created_at.desc())\
+            .offset(offset)\
+            .limit(query.size)\
+            .all()
+            
+        # 处理评论数据
+        comment_responses = []
+        for comment in comments:
+            comment_data = CommentResponse.model_validate(comment).model_dump()
+            # 添加用户名和文章标题
+            comment_data["user_name"] = comment.user.username if comment.user else None
+            comment_data["article_title"] = comment.article.title if comment.article else None
+            # 添加点赞数
+            comment_data["like_count"] = get_comment_likes(comment.id)
+            comment_responses.append(comment_data)
+            # 缓存评论
+            cache_comment(comment.id, comment_data)
+            
+        # 构造分页响应
+        paginated_response = PaginatedResponse[CommentResponse](
+            items=comment_responses,
+            total=total,
+            page=query.page,
+            size=query.size,
+            total_pages=total_pages
+        )
+        
+        return Response[PaginatedResponse[CommentResponse]](
+            code=200,
+            message="查询成功",
+            data=paginated_response
+        )
+    except Exception as e:
+        logger.error(f"Error getting comments: {str(e)}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="获取评论失败"
         ) 

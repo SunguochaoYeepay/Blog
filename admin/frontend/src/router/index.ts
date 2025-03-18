@@ -108,6 +108,16 @@ const routes: RouteRecordRaw[] = [
           title: '分类管理',
           requiresAuth: true,
         },
+      },
+      // 评论管理路由
+      {
+        path: 'comment',
+        name: 'CommentList',
+        component: () => import('@/views/comment/List.vue'),
+        meta: {
+          title: '评论管理',
+          requiresAuth: true
+        }
       }
     ]
   },

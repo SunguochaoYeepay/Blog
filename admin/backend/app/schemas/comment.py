@@ -14,6 +14,17 @@ class CommentCreate(CommentBase):
 class CommentUpdate(CommentBase):
     content: str
 
+class CommentQuery(BaseModel):
+    keyword: Optional[str] = None
+    status: Optional[str] = None
+    article_id: Optional[int] = None
+    article_title: Optional[str] = None
+    user_id: Optional[int] = None
+    start_date: Optional[datetime] = None
+    end_date: Optional[datetime] = None
+    page: int = 1
+    size: int = 10
+
 class CommentResponse(CommentBase):
     id: int
     article_id: int
@@ -25,5 +36,7 @@ class CommentResponse(CommentBase):
     is_approved: bool = False
     is_spam: bool = False
     like_count: int = 0
+    user_name: Optional[str] = None
+    article_title: Optional[str] = None
 
     model_config = ConfigDict(from_attributes=True) 

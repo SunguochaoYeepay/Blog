@@ -60,6 +60,13 @@
           </template>
           <span>分类管理</span>
         </a-menu-item>
+
+        <a-menu-item key="/admin/comment" @click="handleMenuClick({ name: 'CommentList' })">
+          <template #icon>
+            <CommentOutlined />
+          </template>
+          <span>评论管理</span>
+        </a-menu-item>
       </a-menu>
     </a-layout-sider>
 
@@ -131,7 +138,8 @@ import {
   DownOutlined,
   SettingOutlined,
   TagsOutlined,
-  FolderOutlined
+  FolderOutlined,
+  CommentOutlined
 } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue/es'
 
@@ -152,6 +160,8 @@ const currentPageTitle = computed(() => {
     return '标签管理'
   } else if (path.includes('/category')) {
     return '分类管理'
+  } else if (path.includes('/comment')) {
+    return '评论管理'
   }
   return '首页'
 })
