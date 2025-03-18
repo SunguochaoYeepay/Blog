@@ -318,3 +318,50 @@ npm run test
 
 * 感谢所有为这个项目做出贡献的开发者
 * 特别感谢 [FastAPI](https://fastapi.tiangolo.com/) 和 [Vue.js](https://vuejs.org/) 的开发团队
+
+## 组件说明
+
+### BaseList 基础列表页面组件
+
+用于快速构建管理后台的列表页面，提供统一的布局和样式。
+
+#### 功能特性
+
+- 统一的搜索表单布局
+- 灵活的表格操作区域
+- 标准化的数据表格展示
+- 统一的分页和加载状态
+- 响应式布局支持
+
+#### 使用示例
+
+```vue
+<template>
+  <base-list
+    :columns="columns"
+    :data-source="dataList"
+    :loading="loading"
+    :pagination="pagination"
+    @search="handleSearch"
+    @reset="handleReset"
+    @table-change="handleTableChange"
+  >
+    <!-- 搜索表单 -->
+    <template #search-form>
+      <a-form-item label="关键词">
+        <a-input v-model:value="searchForm.keyword" />
+      </a-form-item>
+    </template>
+
+    <!-- 表格操作区 -->
+    <template #table-operations>
+      <a-button type="primary">新建</a-button>
+    </template>
+
+    <!-- 自定义列内容 -->
+    <template #column-content="{ column, record }">
+      <!-- 自定义列渲染 -->
+    </template>
+  </base-list>
+</template>
+```
