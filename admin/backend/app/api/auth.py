@@ -255,27 +255,47 @@ async def get_current_user_info(current_user: User = Depends(get_current_user)):
 async def logout(token: str = Depends(oauth2_scheme)):
     """用户登出"""
     try:
-        # 尝试将令牌加入黑名单，但不影响登出流程
+        # 验证token的有效性
         try:
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
             expires = payload.get("exp")
-            if expires:
-                expires_in = expires - int(time.time())
-                if expires_in > 0:
-                    add_token_to_blacklist(token, expires_in)
+            if not expires or expires < int(time.time()):
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail=Response(
+                        code=401,
+                        message="无效的认证凭据"
+                    ).model_dump()
+                )
+        except jwt.JWTError:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=Response(
+                    code=401,
+                    message="无效的认证凭据"
+                ).model_dump()
+            )
+        
+        # 将有效的令牌加入黑名单
+        try:
+            expires_in = expires - int(time.time())
+            if expires_in > 0:
+                add_token_to_blacklist(token, expires_in)
         except Exception as e:
             logger.warning(f"Failed to add token to blacklist: {str(e)}")
         
         return Response(
             code=200,
-            message="登出成功"
+            message="注销成功"
         )
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Logout error: {str(e)}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=Response(
                 code=500,
-                message="登出失败，请稍后重试"
+                message="注销失败，请稍后重试"
             ).model_dump()
         ) 

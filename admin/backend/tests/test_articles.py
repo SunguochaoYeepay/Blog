@@ -6,7 +6,7 @@ from app.models.user import User
 from app.models.article import Article
 from app.models.category import Category
 from app.models.tag import Tag
-from app.database import get_db
+from app.database import get_db, SessionLocal
 from app.api.auth import create_access_token, get_password_hash
 from datetime import datetime
 from .test_config import override_get_db, init_test_db, cleanup_test_db
@@ -218,9 +218,13 @@ def test_delete_article(test_token: str, test_db: Session, test_user_data: User)
     assert data["code"] == 200
     assert data["message"] == "删除成功"
 
-    # 验证文章已被删除
-    article = test_db.query(Article).filter(Article.id == db_article.id).first()
-    assert article is None
+    # 使用新的会话验证删除结果
+    new_db = SessionLocal()
+    try:
+        article = new_db.query(Article).filter(Article.id == db_article.id).first()
+        assert article is None
+    finally:
+        new_db.close()
 
 def test_like_article(test_token: str, test_db: Session, test_user_data: User):
     """测试文章点赞"""

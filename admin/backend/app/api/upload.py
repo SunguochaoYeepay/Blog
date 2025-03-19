@@ -53,7 +53,7 @@ async def upload_file(
                 code=status.HTTP_400_BAD_REQUEST,
                 message="文件内容为空",
                 data=None
-            ).dict()
+            ).model_dump()
         )
     
     # 获取文件类型
@@ -65,7 +65,7 @@ async def upload_file(
                 code=status.HTTP_400_BAD_REQUEST,
                 message="不支持的文件类型",
                 data=None
-            ).dict()
+            ).model_dump()
         )
 
     # 确定文件类型
@@ -114,7 +114,7 @@ async def upload_file(
                 code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 message="文件上传失败",
                 data=None
-            ).dict()
+            ).model_dump()
         )
 
 @router.get("/upload/files", response_model=ResponseModel[List[dict]], status_code=status.HTTP_200_OK)
@@ -188,7 +188,7 @@ async def list_files(
                 code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 message="获取文件列表失败",
                 data=None
-            ).dict()
+            ).model_dump()
         )
 
 @router.post("/upload/image", summary="上传图片")

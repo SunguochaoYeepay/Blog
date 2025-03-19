@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional, List
 from datetime import datetime
 from .category import CategoryResponse
@@ -16,6 +16,8 @@ class ArticleBase(BaseModel):
     status: str = Field("draft", pattern="^(draft|published|archived)$")
     is_featured: bool = False
     allow_comments: bool = True
+
+    model_config = ConfigDict(from_attributes=True)
 
 class ArticleCreate(ArticleBase):
     category_ids: List[int] = []
@@ -37,9 +39,6 @@ class ArticleInDB(ArticleBase):
     view_count: int
     comment_count: int
     like_count: int
-
-    class Config:
-        from_attributes = True
 
 class ArticleResponse(ArticleInDB):
     categories: List[CategoryResponse] = []

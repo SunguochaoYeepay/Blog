@@ -223,9 +223,14 @@ def test_delete_comment(test_token: str, test_db: Session, test_article_data: Ar
     assert data["code"] == 200
     assert data["message"] == "删除成功"
 
-    # 验证评论已被删除
-    comment = test_db.query(Comment).filter(Comment.id == db_comment.id).first()
-    assert comment is None
+    # 使用新的会话验证删除结果
+    from app.database import SessionLocal
+    new_db = SessionLocal()
+    try:
+        comment = new_db.query(Comment).filter(Comment.id == db_comment.id).first()
+        assert comment is None
+    finally:
+        new_db.close()
 
 def test_like_comment(test_token: str, test_db: Session, test_article_data: Article, test_user_data: User):
     """测试评论点赞"""

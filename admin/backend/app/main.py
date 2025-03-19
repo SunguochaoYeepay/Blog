@@ -5,7 +5,7 @@ from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
-from app.api import users, articles, categories, tags, comments, auth, upload
+from app.api import users, articles, categories, tags, comments, auth, upload, dashboard
 from app.database import Base, engine
 from app.logger import setup_logger
 from app.schemas.response import Response
@@ -82,6 +82,7 @@ app.include_router(categories.router, prefix="/api", tags=["categories"])
 app.include_router(tags.router, prefix="/api", tags=["tags"])
 app.include_router(comments.router, prefix="/api", tags=["comments"])
 app.include_router(upload.router, prefix="/api", tags=["upload"])
+app.include_router(dashboard.router, prefix="/api", tags=["dashboard"])
 
 @app.get("/", response_model=Response[dict])
 def read_root():

@@ -250,41 +250,58 @@ async def delete_comment(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """删除评论"""
+    """删除评论及其所有回复"""
     try:
+        # 获取评论及其所有回复
         comment = db.query(Comment).filter(Comment.id == comment_id).first()
         if not comment:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="评论不存在"
+                detail=ResponseModel(
+                    code=404,
+                    message="评论不存在"
+                ).model_dump()
             )
         
         # 检查权限（只有评论作者或管理员可以删除）
         if comment.user_id != current_user.id and current_user.role != "admin":
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail="没有权限删除此评论"
+                detail=ResponseModel(
+                    code=403,
+                    message="没有权限删除此评论"
+                ).model_dump()
             )
         
+        # 删除所有回复评论
+        db.query(Comment).filter(Comment.parent_id == comment_id).delete(synchronize_session='fetch')
+        db.flush()
+        
+        # 删除主评论
         db.delete(comment)
+        
+        # 提交更改
         db.commit()
         
         # 删除缓存
         delete_comment_cache(comment_id)
         
-        logger.info(f"Comment deleted successfully: {comment_id}")
+        logger.info(f"Comment and its replies deleted successfully: {comment_id}")
         return ResponseModel(
             code=200,
             message="删除成功"
         )
-    except HTTPException:
-        raise
+    except HTTPException as e:
+        raise e
     except Exception as e:
         db.rollback()
-        logger.error(f"Error deleting comment: {str(e)}", exc_info=True)
+        logger.error(f"Error deleting comment and replies: {str(e)}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="删除评论失败"
+            detail=ResponseModel(
+                code=500,
+                message="删除评论失败"
+            ).model_dump()
         )
 
 @router.post("/comments/{comment_id}/like", response_model=ResponseModel[dict], status_code=status.HTTP_200_OK)

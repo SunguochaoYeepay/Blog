@@ -22,6 +22,7 @@ from ..dependencies.redis import (
     cache_multiple_articles,
     get_cached_multiple_articles
 )
+from ..models.comment import Comment
 
 logger = setup_logger("articles")
 router = APIRouter()
@@ -381,18 +382,37 @@ async def delete_article(
     db: Session = Depends(get_db)
 ):
     """删除文章"""
-    article = db.query(Article).filter(Article.id == article_id).first()
-    if not article:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=Response(
-                code=404,
-                message="文章不存在"
-            ).model_dump()
-        )
-    
     try:
+        # 检查文章是否存在
+        article = db.query(Article).filter(Article.id == article_id).first()
+        if not article:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=Response(
+                    code=404,
+                    message="文章不存在"
+                ).model_dump()
+            )
+        
+        # 删除文章的分类关联
+        article.categories = []
+        
+        # 删除文章的标签关联
+        article.tags = []
+        
+        # 刷新会话以确保关联更新被保存
+        db.flush()
+        
+        # 删除文章的评论
+        db.query(Comment).filter(Comment.article_id == article_id).delete(synchronize_session='fetch')
+        
+        # 刷新会话以确保评论删除被保存
+        db.flush()
+        
+        # 删除文章本身
         db.delete(article)
+        
+        # 提交所有更改
         db.commit()
         
         # 删除缓存
