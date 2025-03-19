@@ -48,6 +48,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { TablePaginationConfig } from 'ant-design-vue/es/table/interface'
+import type { FilterValue, SorterResult } from 'ant-design-vue/es/table/interface'
 
 interface Props {
   columns: any[]
@@ -73,7 +74,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   (e: 'search'): void
   (e: 'reset'): void
-  (e: 'table-change', pagination: TablePaginationConfig): void
+  (e: 'table-change', pagination: TablePaginationConfig, filters: Record<string, FilterValue | null>, sorter: SorterResult<any> | SorterResult<any>[]): void
 }>()
 
 const handleSearch = () => {
@@ -84,8 +85,12 @@ const handleReset = () => {
   emit('reset')
 }
 
-const handleTableChange = (pag: TablePaginationConfig) => {
-  emit('table-change', pag)
+const handleTableChange = (
+  pagination: TablePaginationConfig,
+  filters: Record<string, FilterValue | null>,
+  sorter: SorterResult<any> | SorterResult<any>[]
+) => {
+  emit('table-change', pagination, filters, sorter)
 }
 </script>
 

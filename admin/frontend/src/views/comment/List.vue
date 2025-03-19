@@ -72,34 +72,33 @@
       </template>
 
       <template v-if="column.key === 'action'">
-        <a-space>
-          <a-button type="link" @click="handleViewDetail(record)">
-            查看
-          </a-button>
-          <a-button
-            v-if="!record.is_approved && !record.is_spam"
-            type="link"
-            @click="handleApprove(record)"
-          >
-            通过
-          </a-button>
-          <a-button
-            v-if="!record.is_spam"
-            type="link"
-            danger
-            @click="handleMarkSpam(record)"
-          >
-            标记垃圾
-          </a-button>
-          <a-popconfirm
-            title="确定要删除这条评论吗？"
-            @confirm="handleDelete(record)"
-            ok-text="确定"
-            cancel-text="取消"
-          >
-            <a-button type="link" danger>删除</a-button>
-          </a-popconfirm>
-        </a-space>
+        <div class="action-column">
+          <a-space>
+            <a-button
+              v-if="!record.is_approved && !record.is_spam"
+              type="link"
+              @click="() => handleApprove(record)"
+            >
+              通过
+            </a-button>
+            <a-button
+              v-if="!record.is_spam"
+              type="link"
+              danger
+              @click="() => handleMarkSpam(record)"
+            >
+              标记垃圾
+            </a-button>
+            <a-popconfirm
+              title="确定要删除这条评论吗？"
+              @confirm="() => handleDelete(record)"
+              ok-text="确定"
+              cancel-text="取消"
+            >
+              <a-button type="link" danger>删除</a-button>
+            </a-popconfirm>
+          </a-space>
+        </div>
       </template>
     </template>
   </base-list>
@@ -149,12 +148,11 @@
         <a-comment v-for="reply in currentComment.replies" :key="reply.id">
           <template #actions>
             <a-space>
-              <a @click="handleViewDetail(reply)">查看</a>
-              <a v-if="!reply.is_approved && !reply.is_spam" @click="handleApprove(reply)">通过</a>
-              <a v-if="!reply.is_spam" class="danger-link" @click="handleMarkSpam(reply)">标记垃圾</a>
+              <a v-if="!reply.is_approved && !reply.is_spam" @click="() => handleApprove(reply)">通过</a>
+              <a v-if="!reply.is_spam" class="danger-link" @click="() => handleMarkSpam(reply)">标记垃圾</a>
               <a-popconfirm
                 title="确定要删除这条回复吗？"
-                @confirm="handleDelete(reply)"
+                @confirm="() => handleDelete(reply)"
                 ok-text="确定"
                 cancel-text="取消"
               >
@@ -196,8 +194,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, defineAsyncComponent } from 'vue'
-import type { TablePaginationConfig } from 'ant-design-vue/es/table/interface'
+import { ref, reactive, onMounted } from 'vue'
+import type { ColumnsType, TablePaginationConfig, FilterValue, SorterResult } from 'ant-design-vue/es/table/interface'
 import type { CommentResponse, CommentQuery } from '@/types/comment'
 import { COMMENT_STATUS_OPTIONS } from '@/types/comment'
 import { getComments, approveComment, markCommentAsSpam, deleteComment } from '@/api/comment'
@@ -206,11 +204,6 @@ import dayjs from 'dayjs'
 import BaseList from '@/components/BaseList.vue'
 import CommentDetail from './Detail.vue'
 import { MessageOutlined } from '@ant-design/icons-vue'
-
-// 异步导入 CommentReplies 组件
-const CommentReplies = defineAsyncComponent(() => 
-  import('@/components/CommentReplies.vue')
-)
 
 // 搜索表单数据
 const searchForm = reactive<CommentQuery>({
@@ -231,36 +224,46 @@ const dateRange = ref<[dayjs.Dayjs, dayjs.Dayjs] | null>(null)
 // 评论列表数据
 const commentList = ref<CommentResponse[]>([])
 const loading = ref(false)
+
+// 分页配置
 const pagination = reactive<TablePaginationConfig>({
   total: 0,
   current: 1,
   pageSize: 10,
   showSizeChanger: true,
-  showQuickJumper: true
+  showQuickJumper: true,
+  showTotal: (total) => `共 ${total} 条`,
+  position: ['bottomRight']
 })
 
-// 详情弹窗控制
-const detailVisible = ref(false)
+// 评论详情弹窗控制
+const detailVisible = ref<boolean>(false)
 const currentComment = ref<CommentResponse | null>(null)
-const repliesDrawerVisible = ref(false)
+const repliesDrawerVisible = ref<boolean>(false)
+
+// 格式化日期
+const formatDate = (date: string): string => {
+  return dayjs(date).format('YYYY-MM-DD HH:mm:ss')
+}
 
 // 表格列定义
-const columns = [
+const columns: ColumnsType<CommentResponse> = [
   {
     title: '评论内容',
     dataIndex: 'content',
     key: 'content',
     width: '30%',
-    className: 'comment-content-cell'
+    ellipsis: true
   },
   {
     title: '文章标题',
     dataIndex: 'article_title',
     key: 'article_title',
-    width: '20%'
+    width: '20%',
+    ellipsis: true
   },
   {
-    title: '评论用户',
+    title: '用户名',
     dataIndex: 'user_name',
     key: 'user_name',
     width: '10%'
@@ -272,27 +275,22 @@ const columns = [
     width: '10%'
   },
   {
-    title: '评论时间',
+    title: '创建时间',
     dataIndex: 'created_at',
     key: 'created_at',
-    width: '15%',
-    customRender: ({ text }: { text: string }) => formatDate(text)
+    width: '15%'
   },
   {
     title: '操作',
     key: 'action',
     width: '15%',
-    className: 'operation-column'
+    fixed: 'right',
+    align: 'center'
   }
 ]
 
-// 格式化日期
-const formatDate = (date: string) => {
-  return dayjs(date).format('YYYY-MM-DD HH:mm:ss')
-}
-
 // 获取评论列表
-const fetchCommentList = async () => {
+const fetchCommentList = async (): Promise<void> => {
   loading.value = true
   try {
     const response = await getComments(searchForm)
@@ -308,14 +306,30 @@ const fetchCommentList = async () => {
   }
 }
 
-// 搜索
-const handleSearch = () => {
+// 表格变化处理函数
+const handleTableChange = (
+  pagination: TablePaginationConfig,
+  _filters: Record<string, FilterValue | null>,
+  _sorter: SorterResult<CommentResponse> | SorterResult<CommentResponse>[]
+): void => {
+  searchForm.page = pagination.current || 1
+  searchForm.size = pagination.pageSize || 10
+  fetchCommentList()
+}
+
+// 搜索和重置函数
+const handleSearch = (e?: Event): void => {
+  if (e) {
+    e.preventDefault()
+  }
   searchForm.page = 1
   fetchCommentList()
 }
 
-// 重置搜索条件
-const handleReset = () => {
+const handleReset = (e?: Event): void => {
+  if (e) {
+    e.preventDefault()
+  }
   searchForm.keyword = ''
   searchForm.article_title = ''
   searchForm.status = 'all'
@@ -327,45 +341,38 @@ const handleReset = () => {
 }
 
 // 日期范围变化
-const onDateRangeChange = (dates: [dayjs.Dayjs, dayjs.Dayjs] | null) => {
-  if (dates) {
-    searchForm.start_date = dates[0].format('YYYY-MM-DD')
-    searchForm.end_date = dates[1].format('YYYY-MM-DD')
+const onDateRangeChange = (dates: [dayjs.Dayjs, dayjs.Dayjs] | null, dateStrings: [string, string] | null) => {
+  if (dates && dateStrings) {
+    searchForm.start_date = dateStrings[0]
+    searchForm.end_date = dateStrings[1]
   } else {
     searchForm.start_date = undefined
     searchForm.end_date = undefined
   }
 }
 
-// 表格变化
-const handleTableChange = (pagination: TablePaginationConfig) => {
-  searchForm.page = pagination.current || 1
-  searchForm.size = pagination.pageSize || 10
-  fetchCommentList()
-}
-
 // 获取状态文本
-const getStatusText = (record: CommentResponse) => {
+const getStatusText = (record: CommentResponse): string => {
   if (record.is_spam) return '垃圾'
   if (record.is_approved) return '已通过'
   return '待审核'
 }
 
 // 获取状态颜色
-const getStatusColor = (record: CommentResponse) => {
+const getStatusColor = (record: CommentResponse): string => {
   if (record.is_spam) return 'red'
   if (record.is_approved) return 'green'
   return 'orange'
 }
 
 // 查看详情
-const handleViewDetail = (record: CommentResponse) => {
+const handleViewDetail = (record: CommentResponse): void => {
   currentComment.value = record
   detailVisible.value = true
 }
 
 // 通过评论
-const handleApprove = async (record: CommentResponse) => {
+const handleApprove = async (record: CommentResponse): Promise<void> => {
   try {
     await approveComment(record.id)
     message.success('评论已通过')
@@ -376,7 +383,7 @@ const handleApprove = async (record: CommentResponse) => {
 }
 
 // 标记垃圾评论
-const handleMarkSpam = async (record: CommentResponse) => {
+const handleMarkSpam = async (record: CommentResponse): Promise<void> => {
   try {
     await markCommentAsSpam(record.id)
     message.success('已标记为垃圾评论')
@@ -387,7 +394,7 @@ const handleMarkSpam = async (record: CommentResponse) => {
 }
 
 // 删除评论
-const handleDelete = async (record: CommentResponse) => {
+const handleDelete = async (record: CommentResponse): Promise<void> => {
   try {
     await deleteComment(record.id)
     message.success('评论已删除')
@@ -403,30 +410,27 @@ const showReplies = (record: CommentResponse) => {
   repliesDrawerVisible.value = true
 }
 
-// 计算回复的缩进
-const getReplyMargin = (reply: CommentResponse) => {
-  // 如果是直接回复主评论，不缩进
-  if (reply.parent_id === currentComment.value?.id) {
-    return '0px'
-  }
-  // 根据回复层级计算缩进
-  return '24px'
-}
-
 // 加载子回复
 const loadSubReplies = async (reply: CommentResponse) => {
+  if (!currentComment.value?.replies) return
+
   try {
     loading.value = true
-    // 这里需要调用获取子回复的 API
     const response = await getComments({
       parent_id: reply.id,
       include_replies: true,
       page: 1,
-      size: 100
+      size: 100,
+      keyword: '',
+      article_title: '',
+      status: 'all',
+      start_date: undefined,
+      end_date: undefined,
+      only_root: false
     })
-    // 将子回复添加到当前回复列表中
-    const index = currentComment.value?.replies?.findIndex(r => r.id === reply.id) ?? -1
-    if (index > -1 && currentComment.value?.replies) {
+    
+    const index = currentComment.value.replies.findIndex(r => r.id === reply.id)
+    if (index > -1) {
       // 在当前回复后插入其子回复
       currentComment.value.replies.splice(index + 1, 0, ...response.data.items)
     }
@@ -539,5 +543,16 @@ onMounted(() => {
 
 :deep(.ant-comment-content-author-time) {
   color: rgba(0, 0, 0, 0.45);
+}
+
+.action-column {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+
+.action-column :deep(.ant-space) {
+  gap: 8px !important;
 }
 </style>
