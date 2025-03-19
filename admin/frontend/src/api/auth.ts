@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-import type { AxiosResponse } from 'axios';
+import type { ResponseData } from '@/utils/request';
 
 export interface LoginData {
   username: string;
@@ -20,7 +20,7 @@ export interface UserInfo {
 }
 
 export const authApi = {
-  login: (data: LoginData): Promise<{ data: LoginResponse }> => {
+  login: (data: LoginData): Promise<ResponseData<LoginResponse>> => {
     const formData = new URLSearchParams();
     formData.append('username', data.username);
     formData.append('password', data.password);
@@ -35,14 +35,14 @@ export const authApi = {
     });
   },
   
-  logout: (): Promise<{ data: void }> => {
+  logout: (): Promise<ResponseData<void>> => {
     return request({
       url: '/api/auth/logout',
       method: 'post'
     });
   },
 
-  getCurrentUser: (): Promise<{ data: UserInfo }> => {
+  getCurrentUser: (): Promise<ResponseData<UserInfo>> => {
     return request({
       url: '/api/auth/me',
       method: 'get'

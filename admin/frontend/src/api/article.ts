@@ -1,75 +1,8 @@
 import request from '@/utils/request';
-import type { AxiosResponse } from 'axios';
+import type { ApiResponse, PaginatedResponse } from '@/types/api';
+import type { ArticleCreate, ArticleResponse, ArticleQuery, Category, Tag } from './article.d';
 
-export interface ArticleCreate {
-  title: string;
-  slug: string;
-  content: string;
-  summary: string;
-  meta_title?: string;
-  meta_description?: string;
-  keywords?: string;
-  status: 'draft' | 'published' | 'archived';
-  is_featured: boolean;
-  allow_comments: boolean;
-  category_ids: number[];
-  tag_ids: number[];
-}
-
-export interface ArticleResponse extends Omit<ArticleCreate, 'category_ids' | 'tag_ids'> {
-  id: number;
-  created_at: string;
-  updated_at: string;
-  published_at?: string;
-  view_count: number;
-  comment_count: number;
-  like_count: number;
-  author: {
-    id: number;
-    username: string;
-    email: string;
-  };
-  categories: Category[];
-  tags: Tag[];
-}
-
-export interface ArticleQuery {
-  page?: number;
-  size?: number;
-  title?: string;
-  status?: 'draft' | 'published' | 'archived';
-  is_featured?: boolean;
-  author_id?: number;
-  sort_field?: string;
-  sort_order?: 'ascend' | 'descend';
-}
-
-export interface Category {
-  id: number;
-  name: string;
-  slug: string;
-  description?: string;
-}
-
-export interface Tag {
-  id: number;
-  name: string;
-  slug: string;
-}
-
-export interface PaginatedResponse<T> {
-  items: T[];
-  total: number;
-  total_pages: number;
-  page: number;
-  size: number;
-}
-
-export interface ApiResponse<T> {
-  code: number;
-  message: string;
-  data: T;
-}
+export { ArticleCreate, ArticleResponse, ArticleQuery, Category, Tag };
 
 export const articleApi = {
   create: (article: ArticleCreate): Promise<ApiResponse<ArticleResponse>> => 
@@ -116,5 +49,15 @@ export const articleApi = {
     request({
       url: '/api/tags',
       method: 'get'
+    }),
+    
+  uploadImage: (formData: FormData): Promise<ApiResponse<{ url: string }>> =>
+    request({
+      url: '/api/upload/image',
+      method: 'post',
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      data: formData
     })
 }; 

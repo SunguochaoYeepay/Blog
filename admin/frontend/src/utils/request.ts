@@ -1,25 +1,30 @@
 import axios from 'axios'
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { message } from 'ant-design-vue/es'
 import { useUserStore } from '@/store/user'
+import type { ApiResponse } from '@/types/api'
 
-export interface ResponseData<T = any> {
-  code: number
-  data: T
-  message: string
-}
-
-const service: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
-  timeout: 5000
+const service = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000',
+  timeout: 10000
 })
 
 service.interceptors.request.use(
-  (config) => {
+  (config: AxiosRequestConfig) => {
     const userStore = useUserStore()
     if (userStore.token) {
+      config.headers = config.headers || {}
       config.headers.Authorization = `Bearer ${userStore.token}`
     }
+    
+    // 如果请求已经设置了 Content-Type，不修改
+    if (config.headers && config.headers['Content-Type']) {
+      return config
+    }
+    
+    // 其他请求默认使用 application/json
+    config.headers = config.headers || {}
+    config.headers['Content-Type'] = 'application/json'
     return config
   },
   (error) => {
@@ -29,7 +34,7 @@ service.interceptors.request.use(
 )
 
 service.interceptors.response.use(
-  (response: AxiosResponse<ResponseData<any>>) => {
+  (response: AxiosResponse<ApiResponse<any>>) => {
     const res = response.data
     // 2xx 状态码都是成功
     if (res.code >= 200 && res.code < 300) {
@@ -55,8 +60,4 @@ service.interceptors.response.use(
   }
 )
 
-const request = <T = any>(config: AxiosRequestConfig): Promise<ResponseData<T>> => {
-  return service(config)
-}
-
-export default request
+export default service

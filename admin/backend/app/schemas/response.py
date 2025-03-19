@@ -1,10 +1,16 @@
-from typing import Any, Optional, TypeVar, Generic
+from typing import TypeVar, Generic, Optional
 from pydantic import BaseModel
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 class Response(BaseModel, Generic[T]):
-    """统一的响应模型"""
-    code: int = 200
-    message: str = "操作成功"
+    """通用响应模型
+    
+    Args:
+        code: 状态码
+        message: 响应消息
+        data: 响应数据
+    """
+    code: int
+    message: str
     data: Optional[T] = None

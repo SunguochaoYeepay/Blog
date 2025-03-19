@@ -80,8 +80,18 @@ export default {
   },
 
   // 更新用户头像
-  updateAvatar: (id: number, avatarData: string) => {
-    return request({ url: `/api/users/${id}/avatar`, method: 'put', data: { avatar: avatarData } });
+  updateAvatar: async (userId: number, file: File): Promise<ApiResponse<User>> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    return request({
+      url: `/api/users/${userId}/avatar`,
+      method: 'PUT',
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
   },
 
   // 批量删除用户

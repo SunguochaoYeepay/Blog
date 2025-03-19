@@ -218,6 +218,39 @@ const handleTitleChange = (e: Event) => {
   }
 };
 
+// 处理图片上传
+const handleUploadImages = async (files: FileList, callback: (urls: string[]) => void) => {
+  try {
+    const uploadPromises = Array.from(files).map(async (file) => {
+      // 检查文件类型
+      if (!file.type.startsWith('image/')) {
+        throw new Error('只能上传图片文件');
+      }
+      
+      // 检查文件大小（限制为 2MB）
+      if (file.size > 2 * 1024 * 1024) {
+        throw new Error('图片大小不能超过 2MB');
+      }
+      
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      // 调用上传 API
+      const response = await articleApi.uploadImage(formData);
+      if (response.code === 200 && response.data?.url) {
+        return response.data.url;
+      } else {
+        throw new Error('图片上传失败');
+      }
+    });
+    
+    const urls = await Promise.all(uploadPromises);
+    callback(urls);
+  } catch (error: any) {
+    message.error(error.message || '图片上传失败');
+  }
+};
+
 // 组件加载时获取分类和标签，以及文章数据（如果是编辑模式）
 onMounted(async () => {
   await loadOptions();
@@ -330,11 +363,19 @@ onMounted(async () => {
             'image',
             'table',
             'code',
-            'codeRow'
+            'codeRow',
+            'preview',
+            'fullscreen'
           ]"
           language="zh-CN"
           preview-theme="github"
-          style="height: 500px"
+          :preview="true"
+          preview-only
+          :style="{
+            height: '600px'
+          }"
+          class="content-editor"
+          @onUploadImg="handleUploadImages"
         />
       </a-form-item>
 
@@ -403,9 +444,74 @@ onMounted(async () => {
   </div>
 </template>
 
-<style scoped>
+<style lang="less" scoped>
 .article-edit {
   padding: 24px;
+  background: #fff;
+  border-radius: 2px;
+}
+
+.edit-form {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.content-editor {
+  :deep(.md-editor) {
+    border: 1px solid #d9d9d9;
+    border-radius: 2px;
+    
+    &:hover {
+      border-color: #40a9ff;
+    }
+    
+    &-content {
+      min-height: 400px;
+    }
+    
+    &-preview {
+      min-height: 400px;
+      padding: 16px 24px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    // 增大工具栏图标尺寸
+    &-toolbar {
+      .md-editor-toolbar-item {
+        font-size: 20px;
+        padding: 8px;
+        
+        svg {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+  }
+}
+
+:deep(.ant-form-item) {
+  margin-bottom: 24px;
+  
+  &-label {
+    font-weight: 500;
+  }
+}
+
+:deep(.ant-input),
+:deep(.ant-select-selector) {
+  border-radius: 2px;
+  
+  &:hover {
+    border-color: #40a9ff;
+  }
+  
+  &:focus,
+  &-focused {
+    border-color: #40a9ff;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  }
 }
 
 .form-actions {
@@ -413,19 +519,5 @@ onMounted(async () => {
   padding-top: 24px;
   border-top: 1px solid #f0f0f0;
   text-align: center;
-}
-
-:deep(.md-editor) {
-  border: 1px solid #d9d9d9;
-  border-radius: 2px;
-}
-
-:deep(.md-editor:hover) {
-  border-color: #40a9ff;
-}
-
-:deep(.md-editor-focused) {
-  border-color: #40a9ff;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
 }
 </style> 

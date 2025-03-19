@@ -18,6 +18,7 @@ from ..dependencies.redis import (
     get_cached_user,
     delete_user_cache
 )
+import time
 
 logger = setup_logger("auth")
 router = APIRouter()
@@ -90,22 +91,34 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 @router.post("/auth/login", response_model=Response[Token])
 async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     """用户登录"""
+    logger.info(f"Login attempt for user: {form_data.username}")
     try:
         user = db.query(User).filter(User.username == form_data.username).first()
         if not user or not verify_password(form_data.password, user.hashed_password):
+            logger.warning(f"Invalid credentials for user: {form_data.username}")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="用户名或密码错误",
+                detail=Response(
+                    code=401,
+                    message="用户名或密码错误"
+                ).model_dump(),
                 headers={"WWW-Authenticate": "Bearer"},
             )
         
+        # 生成访问令牌
         access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
             data={"sub": user.username}, expires_delta=access_token_expires
         )
         
-        logger.info(f"User logged in successfully: {user.username}")
-        return Response[Token](
+        # 尝试缓存用户信息，但不影响登录流程
+        try:
+            await cache_user(user)
+        except Exception as e:
+            logger.warning(f"Failed to cache user data: {str(e)}")
+        
+        logger.info(f"User {form_data.username} logged in successfully")
+        return Response(
             code=200,
             message="登录成功",
             data=Token(
@@ -116,13 +129,12 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = 
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error during login: {str(e)}", exc_info=True)
+        logger.error(f"Login error: {str(e)}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=Response(
                 code=500,
-                message="登录失败",
-                data=None
+                message="登录失败，请稍后重试"
             ).model_dump()
         )
 
@@ -241,32 +253,29 @@ async def get_current_user_info(current_user: User = Depends(get_current_user)):
 
 @router.post("/auth/logout", response_model=Response)
 async def logout(token: str = Depends(oauth2_scheme)):
-    """用户注销"""
+    """用户登出"""
     try:
-        # 解码令牌以获取过期时间
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-        exp = payload.get("exp")
+        # 尝试将令牌加入黑名单，但不影响登出流程
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+            expires = payload.get("exp")
+            if expires:
+                expires_in = expires - int(time.time())
+                if expires_in > 0:
+                    add_token_to_blacklist(token, expires_in)
+        except Exception as e:
+            logger.warning(f"Failed to add token to blacklist: {str(e)}")
         
-        if exp:
-            # 计算剩余有效期（秒）
-            current_timestamp = datetime.utcnow().timestamp()
-            remaining_time = int(exp - current_timestamp)
-            
-            if remaining_time > 0:
-                # 将令牌添加到黑名单，过期时间与令牌剩余有效期相同
-                add_token_to_blacklist(token, remaining_time)
-        
-        logger.info(f"User logged out successfully")
         return Response(
             code=200,
-            message="注销成功"
+            message="登出成功"
         )
-    except JWTError:
+    except Exception as e:
+        logger.error(f"Logout error: {str(e)}", exc_info=True)
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=Response(
-                code=401,
-                message="无效的认证凭据"
-            ).model_dump(),
-            headers={"WWW-Authenticate": "Bearer"},
+                code=500,
+                message="登出失败，请稍后重试"
+            ).model_dump()
         ) 

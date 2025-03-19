@@ -9,6 +9,19 @@ from app.database import get_db
 from app.config import settings
 from app.dependencies.redis import clear_all_likes
 
+"""
+测试环境配置说明：
+
+1. 测试环境使用 .env.test 作为基础配置文件
+2. 特殊情况说明：
+   - 七牛云配置沿用 .env.dev 中的设置
+   - 原因：
+     a. 现有测试用例稳定运行，主要验证功能逻辑而非配置正确性
+     b. 七牛云配置在测试和开发环境可以共用，不会相互影响
+     c. 避免维护多份相似配置带来的复杂性
+   - 注意：如果未来测试需要不同的七牛云配置，再考虑迁移到 .env.test
+"""
+
 # 设置测试环境变量
 os.environ["ENV"] = "test"
 

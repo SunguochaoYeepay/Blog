@@ -5,9 +5,12 @@ import json
 from typing import Optional, Any, Dict
 from datetime import timedelta, datetime
 import time
+from ..logger import setup_logger
+
+logger = setup_logger("redis")
 
 # Redis 客户端实例
-def get_redis_client():
+def get_redis_client() -> Optional[Redis]:
     """获取 Redis 客户端实例，带重试机制"""
     max_retries = 3
     retry_delay = 1  # 秒
@@ -24,13 +27,17 @@ def get_redis_client():
                 retry_on_timeout=True
             )
             client.ping()  # 测试连接
+            logger.info("Successfully connected to Redis")
             return client
         except (ConnectionError, TimeoutError) as e:
+            logger.warning(f"Redis connection attempt {attempt + 1} failed: {str(e)}")
             if attempt == max_retries - 1:  # 最后一次尝试
-                raise Exception(f"Redis connection failed after {max_retries} attempts: {str(e)}")
+                logger.error(f"Redis connection failed after {max_retries} attempts")
+                return None
             time.sleep(retry_delay)
     
-    raise Exception("Redis connection failed")
+    logger.error("Redis connection failed")
+    return None
 
 redis_client = get_redis_client()
 
@@ -56,41 +63,71 @@ class DateTimeEncoder(json.JSONEncoder):
             return obj.isoformat()
         return super().default(obj)
 
-def get_redis() -> Redis:
+def get_redis() -> Optional[Redis]:
     """获取 Redis 连接"""
     global redis_client
     try:
-        redis_client.ping()
-        return redis_client
+        if redis_client:
+            redis_client.ping()
+            return redis_client
     except Exception as e:
+        logger.warning(f"Redis ping failed: {str(e)}")
         # 尝试重新连接
         redis_client = get_redis_client()
-        return redis_client
+    return redis_client
 
-def add_token_to_blacklist(token: str, expires_in: int):
+def add_token_to_blacklist(token: str, expires_in: int) -> bool:
     """将令牌添加到黑名单"""
-    redis_client.setex(f"blacklist_token:{token}", expires_in, "1")
+    try:
+        if redis_client:
+            redis_client.setex(f"blacklist_token:{token}", expires_in, "1")
+            return True
+    except Exception as e:
+        logger.error(f"Error adding token to blacklist: {str(e)}")
+    return False
 
 def is_token_blacklisted(token: str) -> bool:
     """检查令牌是否在黑名单中"""
-    return bool(redis_client.exists(f"blacklist_token:{token}"))
+    try:
+        if redis_client:
+            return bool(redis_client.exists(f"blacklist_token:{token}"))
+    except Exception as e:
+        logger.error(f"Error checking token blacklist: {str(e)}")
+    return False  # 如果 Redis 不可用，默认令牌不在黑名单中
 
 # 用户缓存相关方法
-def cache_user(user_id: int, user_data: dict):
+def cache_user(user_id: int, user_data: dict) -> bool:
     """缓存用户信息"""
-    key = f"{USER_PREFIX}{user_id}"
-    redis_client.setex(key, USER_CACHE_TTL, json.dumps(user_data))
+    try:
+        if redis_client:
+            key = f"{USER_PREFIX}{user_id}"
+            redis_client.setex(key, USER_CACHE_TTL, json.dumps(user_data))
+            return True
+    except Exception as e:
+        logger.error(f"Error caching user data: {str(e)}")
+    return False
 
 def get_cached_user(user_id: int) -> Optional[dict]:
     """获取缓存的用户信息"""
-    key = f"{USER_PREFIX}{user_id}"
-    data = redis_client.get(key)
-    return json.loads(data) if data else None
+    try:
+        if redis_client:
+            key = f"{USER_PREFIX}{user_id}"
+            data = redis_client.get(key)
+            return json.loads(data) if data else None
+    except Exception as e:
+        logger.error(f"Error getting cached user data: {str(e)}")
+    return None
 
-def delete_user_cache(user_id: int):
+def delete_user_cache(user_id: int) -> bool:
     """删除用户缓存"""
-    key = f"{USER_PREFIX}{user_id}"
-    redis_client.delete(key)
+    try:
+        if redis_client:
+            key = f"{USER_PREFIX}{user_id}"
+            redis_client.delete(key)
+            return True
+    except Exception as e:
+        logger.error(f"Error deleting user cache: {str(e)}")
+    return False
 
 # 文章缓存相关方法
 def cache_article(article_id: int, article_data: dict):

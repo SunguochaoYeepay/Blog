@@ -1,3 +1,5 @@
+import type { ApiResponse } from '@/types/api';
+
 declare module '@/api/article' {
   export interface ArticleCreate {
     title: string;
@@ -14,7 +16,7 @@ declare module '@/api/article' {
     tag_ids: number[];
   }
 
-  export interface ArticleResponse extends ArticleCreate {
+  export interface ArticleResponse extends Omit<ArticleCreate, 'category_ids' | 'tag_ids'> {
     id: number;
     created_at: string;
     updated_at: string;
@@ -27,11 +29,13 @@ declare module '@/api/article' {
       username: string;
       email: string;
     };
+    categories: Category[];
+    tags: Tag[];
   }
 
   export interface ArticleQuery {
-    skip?: number;
-    limit?: number;
+    page?: number;
+    size?: number;
     title?: string;
     status?: 'draft' | 'published' | 'archived';
     is_featured?: boolean;
@@ -40,18 +44,34 @@ declare module '@/api/article' {
     sort_order?: 'ascend' | 'descend';
   }
 
+  export interface Category {
+    id: number;
+    name: string;
+    slug: string;
+    description?: string;
+  }
+
+  export interface Tag {
+    id: number;
+    name: string;
+    slug: string;
+  }
+
   export interface ArticleListResponse {
     data: ArticleResponse[];
     total: number;
   }
 
-  export const articleApi: {
-    create: (article: ArticleCreate) => Promise<{ data: ArticleResponse }>;
-    list: (params: ArticleQuery) => Promise<ArticleListResponse>;
-    get: (id: number) => Promise<{ data: ArticleResponse }>;
-    update: (id: number, article: Partial<ArticleCreate>) => Promise<{ data: ArticleResponse }>;
-    delete: (id: number) => Promise<void>;
-    getCategories: () => Promise<{ data: any[] }>;
-    getTags: () => Promise<{ data: any[] }>;
-  };
+  export interface ArticleApi {
+    create: (article: ArticleCreate) => Promise<ApiResponse<ArticleResponse>>;
+    list: (params: ArticleQuery) => Promise<ApiResponse<PaginatedResponse<ArticleResponse>>>;
+    get: (id: number) => Promise<ApiResponse<ArticleResponse>>;
+    update: (id: number, article: Partial<ArticleCreate>) => Promise<ApiResponse<ArticleResponse>>;
+    delete: (id: number) => Promise<ApiResponse<void>>;
+    getCategories: () => Promise<ApiResponse<Category[]>>;
+    getTags: () => Promise<ApiResponse<Tag[]>>;
+    uploadImage: (formData: FormData) => Promise<ApiResponse<{ url: string }>>;
+  }
+
+  export const articleApi: ArticleApi;
 } 

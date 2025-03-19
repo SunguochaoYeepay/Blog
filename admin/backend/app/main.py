@@ -1,24 +1,18 @@
 import os
 import sys
 import time
-import logging
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from app.api import users, articles, categories, tags, comments, auth, upload
 from app.database import Base, engine
-from app.logger import app_logger
+from app.logger import setup_logger
 from app.schemas.response import Response
 from app.config import settings
 
-# 配置日志
-logging.basicConfig(
-    level=getattr(logging, settings.LOG_LEVEL),
-    format=settings.LOG_FORMAT,
-    handlers=[logging.StreamHandler(sys.stdout)]
-)
-
-logger = logging.getLogger(__name__)
+# 创建应用日志记录器
+logger = setup_logger(__name__)
 
 # 创建数据库表
 Base.metadata.create_all(bind=engine)
@@ -31,6 +25,11 @@ app = FastAPI(
     redoc_url="/redoc",
     redirect_slashes=False
 )
+
+# 配置静态文件服务
+uploads_dir = os.path.join(settings.UPLOAD_DIR)
+os.makedirs(uploads_dir, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=uploads_dir), name="uploads")
 
 # 配置 CORS
 origins = settings.CORS_ORIGINS if isinstance(settings.CORS_ORIGINS, list) else ["http://127.0.0.1:3000", "http://localhost:3000"]

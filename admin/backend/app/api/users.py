@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query, status, Body
+from fastapi import APIRouter, Depends, HTTPException, Query, status, Body, File, UploadFile
 from sqlalchemy.orm import Session
 from typing import List
 from ..schemas.user import UserResponse, UserQuery, UserCreate, UserUpdate
@@ -12,6 +12,9 @@ from ..utils.security import get_password_hash
 from pydantic import BaseModel
 from .auth import get_current_user
 from ..utils.cache import cache_user
+from qiniu import Auth, put_data
+from ..config import settings
+from ..dependencies.redis import cache_user as cache_user_redis
 
 # 创建用户模块的日志记录器
 logger = setup_logger("users")
@@ -359,13 +362,23 @@ async def batch_delete_users(
 @router.put("/users/{user_id}/avatar", response_model=Response[UserResponse])
 async def update_user_avatar(
     user_id: int,
-    avatar_data: dict = Body(...),
+    file: UploadFile = File(...),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """更新用户头像"""
+    """更新用户头像
+    
+    Args:
+        user_id: 用户ID
+        file: 头像文件
+        current_user: 当前登录用户
+        db: 数据库会话
+    """
+    logger.info(f"Updating avatar for user {user_id}")
+    
     # 检查权限（允许用户更新自己的头像）
     if current_user.id != user_id and current_user.role != "admin":
+        logger.warning(f"Permission denied for user {current_user.id} to update avatar of user {user_id}")
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail=Response(
@@ -374,9 +387,10 @@ async def update_user_avatar(
             ).model_dump()
         )
     
-    logger.info(f"Updating avatar for user: {user_id}")
-    db_user = db.query(User).filter(User.id == user_id).first()
-    if not db_user:
+    # 检查用户是否存在
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        logger.warning(f"User {user_id} not found")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=Response(
@@ -385,34 +399,108 @@ async def update_user_avatar(
             ).model_dump()
         )
     
-    try:
-        db_user.avatar = avatar_data.get("avatar")
-        db_user.updated_at = datetime.utcnow()
-        db.commit()
-        db.refresh(db_user)
-        
-        # 更新缓存中的用户信息
-        user_data = {
-            "id": db_user.id,
-            "username": db_user.username,
-            "email": db_user.email,
-            "full_name": db_user.full_name,
-            "department": db_user.department,
-            "role": db_user.role,
-            "avatar": db_user.avatar,
-            "created_at": db_user.created_at.isoformat()
-        }
-        cache_user(db_user.id, user_data)
-        
-        logger.info(f"Avatar updated successfully for user: {user_id}")
-        return Response(
-            code=200,
-            message="头像更新成功",
-            data=UserResponse.model_validate(db_user)
+    # 检查文件类型
+    if not file.content_type.startswith('image/'):
+        logger.warning(f"Invalid file type: {file.content_type}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=Response(
+                code=400,
+                message="只支持图片文件"
+            ).model_dump()
         )
+    
+    try:
+        # 读取文件内容
+        file_content = await file.read()
+        if not file_content:
+            logger.warning("Empty file content")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=Response(
+                    code=400,
+                    message="文件内容为空"
+                ).model_dump()
+            )
+        
+        # 检查文件大小
+        if len(file_content) > settings.MAX_FILE_SIZE:
+            logger.warning(f"File size {len(file_content)} exceeds limit {settings.MAX_FILE_SIZE}")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=Response(
+                    code=400,
+                    message=f"文件大小超过限制（最大 {settings.MAX_FILE_SIZE // 1024 // 1024}MB）"
+                ).model_dump()
+            )
+        
+        # 生成文件名
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"avatar_{user_id}_{timestamp}_{file.filename}"
+        
+        try:
+            # 初始化七牛云客户端
+            q = Auth(settings.QINIU_ACCESS_KEY, settings.QINIU_SECRET_KEY)
+            
+            # 生成上传 Token
+            token = q.upload_token(settings.QINIU_BUCKET_NAME)
+            
+            # 上传文件到七牛云
+            ret, info = put_data(token, filename, file_content)
+            
+            if info.status_code == 200:
+                # 生成文件访问 URL
+                file_url = f"{settings.QINIU_DOMAIN}/{ret['key']}"
+                
+                # 更新用户头像
+                user.avatar = file_url
+                user.updated_at = datetime.utcnow()
+                db.commit()
+                db.refresh(user)
+                
+                # 更新缓存
+                user_data = {
+                    "id": user.id,
+                    "username": user.username,
+                    "email": user.email,
+                    "full_name": user.full_name,
+                    "department": user.department,
+                    "role": user.role,
+                    "avatar": user.avatar,
+                    "created_at": user.created_at.isoformat(),
+                    "updated_at": user.updated_at.isoformat() if user.updated_at else None
+                }
+                cache_user_redis(user.id, user_data)
+                
+                logger.info(f"Successfully updated avatar for user {user_id}")
+                return Response(
+                    code=200,
+                    message="头像更新成功",
+                    data=UserResponse.model_validate(user)
+                )
+            else:
+                logger.error(f"Qiniu upload failed: {info.error}")
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail=Response(
+                        code=500,
+                        message=f"七牛云上传失败: {info.error}"
+                    ).model_dump()
+                )
+        except Exception as e:
+            logger.error(f"Qiniu upload error: {str(e)}", exc_info=True)
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=Response(
+                    code=500,
+                    message="七牛云上传失败"
+                ).model_dump()
+            )
+            
+    except HTTPException:
+        raise
     except Exception as e:
-        db.rollback()
-        logger.error(f"Error updating avatar: {str(e)}", exc_info=True)
+        logger.error(f"Error updating user avatar: {str(e)}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=Response(
