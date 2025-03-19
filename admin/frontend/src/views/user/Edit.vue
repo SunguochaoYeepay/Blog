@@ -11,25 +11,24 @@
       >
         <!-- 头像上传区域 -->
         <div class="avatar-upload-container">
-          <div class="avatar-preview">
-            <img v-if="previewUrl" :src="previewUrl" alt="Avatar Preview" />
-            <a-avatar v-else :style="{ backgroundColor: getAvatarColor(formState.username) }" :size="100">
-              {{ formState.username ? formState.username.charAt(0).toUpperCase() : 'U' }}
-            </a-avatar>
-          </div>
-          <div class="avatar-upload-action">
-            <a-upload
-              name="avatar"
-              :show-upload-list="false"
-              :before-upload="beforeAvatarUpload"
-              :customRequest="handleCustomUpload"
-              :action="null"
-            >
-              <a-button>
-                <template #icon><UploadOutlined /></template>
-                更换头像
-              </a-button>
-            </a-upload>
+          <a-upload
+            v-model:file-list="fileList"
+            name="avatar"
+            list-type="picture-card"
+            class="avatar-uploader"
+            :show-upload-list="false"
+            :before-upload="beforeAvatarUpload"
+            :customRequest="handleCustomUpload"
+          >
+            <img v-if="previewUrl" :src="previewUrl" alt="avatar" class="avatar" />
+            <div v-else>
+              <loading-outlined v-if="uploading" />
+              <plus-outlined v-else />
+              <div class="ant-upload-text">上传头像</div>
+            </div>
+          </a-upload>
+          <div class="upload-tips">
+            <p>支持 jpg、png 格式，文件大小不超过 2MB</p>
           </div>
         </div>
 
@@ -128,10 +127,11 @@
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { message } from 'ant-design-vue/es';
+import type { UploadProps } from 'ant-design-vue/es/upload';
 import userApi from '@/api/user';
 import { 
-  UploadOutlined,
-  UserOutlined
+  PlusOutlined,
+  LoadingOutlined
 } from '@ant-design/icons-vue';
 
 const router = useRouter();
@@ -139,7 +139,8 @@ const route = useRoute();
 const formRef = ref();
 const submitting = ref(false);
 const previewUrl = ref('');
-const avatarFile = ref<File | null>(null);
+const fileList = ref<NonNullable<UploadProps['fileList']>>([]);
+const uploading = ref(false);
 
 // 判断是否为编辑模式
 const isEdit = computed(() => {
@@ -223,6 +224,13 @@ const fetchUserData = async () => {
     
     if (user.avatar) {
       previewUrl.value = user.avatar;
+      // 设置文件列表
+      fileList.value = [{
+        uid: '-1',
+        name: 'avatar',
+        status: 'done',
+        url: user.avatar
+      }];
     }
   } catch (error) {
     message.error('获取用户信息失败');
@@ -245,18 +253,100 @@ const beforeAvatarUpload = (file: File) => {
   return true;
 };
 
-// 处理自定义上传
-const handleCustomUpload = ({ file }: { file: File }) => {
-  if (beforeAvatarUpload(file)) {
+// 压缩图片
+const compressImage = (file: File): Promise<File> => {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (e) => {
-      const base64 = e.target?.result as string;
-      previewUrl.value = base64;
-      formState.avatar = base64;
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        
+        // 计算缩放比例，限制最大尺寸为 400x400
+        const maxSize = 400;
+        if (width > height && width > maxSize) {
+          height = Math.round((height * maxSize) / width);
+          width = maxSize;
+        } else if (height > maxSize) {
+          width = Math.round((width * maxSize) / height);
+          height = maxSize;
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0, width, height);
+        
+        // 转换为 Blob，降低质量到 0.6
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            reject(new Error('图片压缩失败'));
+            return;
+          }
+          // 检查压缩后的大小是否仍然过大
+          if (blob.size / 1024 / 1024 > 1) {
+            reject(new Error('压缩后图片仍然过大，请选择更小的图片'));
+            return;
+          }
+          // 创建新的 File 对象
+          const compressedFile = new File([blob], file.name, {
+            type: 'image/jpeg',
+            lastModified: Date.now(),
+          });
+          resolve(compressedFile);
+        }, 'image/jpeg', 0.6); // 使用 JPEG 格式，质量降低到 0.6
+      };
+      img.onerror = reject;
+      const result = e.target?.result;
+      if (typeof result !== 'string') {
+        reject(new Error('读取图片失败'));
+        return;
+      }
+      img.src = result;
     };
+    reader.onerror = reject;
     reader.readAsDataURL(file);
+  });
+};
+
+// 处理自定义上传
+const handleCustomUpload = async ({ file }: { file: File }) => {
+  if (beforeAvatarUpload(file)) {
+    try {
+      uploading.value = true;
+      
+      // 压缩图片
+      const compressedFile = await compressImage(file);
+      
+      // 创建 FormData
+      const formData = new FormData();
+      formData.append('file', compressedFile);
+      
+      // 上传到服务器
+      const response = await userApi.updateAvatar(userId.value || 0, compressedFile);
+      if (response.code === 200 && response.data?.avatar) {
+        message.success('头像上传成功');
+        formState.avatar = response.data.avatar;
+        previewUrl.value = response.data.avatar;
+        // 更新文件列表
+        fileList.value = [{
+          uid: '-1',
+          name: file.name,
+          status: 'done',
+          url: response.data.avatar
+        }];
+      } else {
+        message.error('头像上传失败');
+      }
+    } catch (error) {
+      message.error('头像上传失败');
+      console.error('Upload error:', error);
+    } finally {
+      uploading.value = false;
+    }
   }
-  return false;
 };
 
 // 获取头像背景色
@@ -311,31 +401,56 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* 添加全局样式控制 */
+:deep(.ant-modal-body) {
+  .avatar-preview {
+    max-width: 120px !important;
+    max-height: 120px !important;
+    margin: 0 auto;
+  }
+}
+
 .user-edit {
   padding: 24px;
   background: #f0f2f5;
 }
 
 .avatar-upload-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  text-align: center;
   margin-bottom: 24px;
 }
 
-.avatar-preview {
-  margin-bottom: 16px;
-  
-  img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
+.avatar-uploader {
+  :deep(.ant-upload) {
+    width: 128px;
+    height: 128px;
+    margin: 0 auto 8px;
+  }
+
+  .upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .avatar {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+  }
+
+  .ant-upload-text {
+    margin-top: 8px;
+    color: #666;
   }
 }
 
-.avatar-upload-action {
-  display: flex;
-  gap: 8px;
+.upload-tips {
+  margin-top: 8px;
+  color: #999;
+  font-size: 12px;
+  text-align: center;
 }
 </style>

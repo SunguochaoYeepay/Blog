@@ -93,17 +93,12 @@
         <template #bodyCell="{ column, record, text }: { column: { key: string }; record: User; text: string }">
           <template v-if="column.key === 'username'">
             <div class="user-cell">
-              <div class="avatar-wrapper" @click="handleEditAvatar(record)">
-                <a-avatar 
-                  :src="record.avatar"
-                  :style="{ backgroundColor: !record.avatar ? getAvatarColor(record.username) : 'transparent' }"
-                >
-                  {{ !record.avatar ? record.username.charAt(0).toUpperCase() : '' }}
-                </a-avatar>
-                <div class="avatar-edit-overlay">
-                  <EditOutlined />
-                </div>
-              </div>
+              <a-avatar 
+                :src="record.avatar"
+                :style="{ backgroundColor: !record.avatar ? getAvatarColor(record.username) : 'transparent' }"
+              >
+                {{ !record.avatar ? record.username.charAt(0).toUpperCase() : '' }}
+              </a-avatar>
               <div class="user-info">
                 <div class="username">{{ record.username }}</div>
                 <div class="email">{{ record.email }}</div>
@@ -128,55 +123,14 @@
         </template>
       </a-table>
     </a-card>
-
-    <!-- 头像编辑模态框 -->
-    <a-modal
-      v-model:visible="avatarModalVisible"
-      title="编辑头像"
-      :footer="null"
-      @cancel="handleAvatarCancel"
-    >
-      <div class="avatar-upload">
-        <div class="avatar-preview">
-          <img v-if="previewUrl" :src="previewUrl" alt="Avatar Preview" />
-          <div v-else class="avatar-placeholder">
-            <UserOutlined />
-            <span>暂无头像</span>
-          </div>
-        </div>
-        <div class="upload-actions">
-          <a-upload
-            name="avatar"
-            :show-upload-list="false"
-            :before-upload="beforeAvatarUpload"
-            @change="handleAvatarChange"
-          >
-            <a-button type="primary">
-              <template #icon><UploadOutlined /></template>
-              选择图片
-            </a-button>
-          </a-upload>
-          <a-button 
-            type="primary"
-            :disabled="!previewUrl"
-            @click="handleAvatarSubmit"
-            :loading="uploadLoading"
-          >
-            保存头像
-          </a-button>
-        </div>
-        <div class="upload-tips">
-          <p>支持 jpg、png 格式，文件大小不超过 2MB</p>
-        </div>
-      </div>
-    </a-modal>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { message, Modal } from 'ant-design-vue';
+import { message, Modal } from 'ant-design-vue/es';
+import type { UploadChangeParam, UploadFile } from 'ant-design-vue/es/upload';
 import { 
   UserOutlined,
   MailOutlined,
@@ -372,101 +326,6 @@ const handleBatchDelete = () => {
   });
 };
 
-// 头像相关
-const avatarModalVisible = ref(false);
-const previewUrl = ref('');
-const currentUser = ref<User | null>(null);
-const uploadLoading = ref(false);
-
-const handleEditAvatar = (user: User) => {
-  currentUser.value = user;
-  previewUrl.value = user.avatar || '';
-  avatarModalVisible.value = true;
-};
-
-const handleAvatarCancel = () => {
-  avatarModalVisible.value = false;
-  previewUrl.value = '';
-  currentUser.value = null;
-};
-
-const compressImage = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        let width = img.width;
-        let height = img.height;
-        
-        // 计算缩放比例，限制最大尺寸为 200x200
-        const maxSize = 200;
-        if (width > height && width > maxSize) {
-          height = Math.round((height * maxSize) / width);
-          width = maxSize;
-        } else if (height > maxSize) {
-          width = Math.round((width * maxSize) / height);
-          height = maxSize;
-        }
-        
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx?.drawImage(img, 0, 0, width, height);
-        
-        // 压缩为 JPEG 格式，质量 0.8
-        resolve(canvas.toDataURL('image/jpeg', 0.8));
-      };
-      img.onerror = reject;
-      img.src = e.target?.result as string;
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-};
-
-const beforeAvatarUpload = (file: File) => {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-  if (!isJpgOrPng) {
-    message.error('只能上传 JPG/PNG 格式的图片！');
-    return false;
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error('图片大小不能超过 2MB！');
-    return false;
-  }
-  return true;
-};
-
-const handleAvatarChange = async (info: any) => {
-  if (info.file.status !== 'uploading') {
-    try {
-      const compressedImage = await compressImage(info.file.originFileObj);
-      previewUrl.value = compressedImage;
-    } catch (error) {
-      message.error('图片处理失败');
-    }
-  }
-};
-
-const handleAvatarSubmit = async () => {
-  if (!currentUser.value || !previewUrl.value) return;
-  
-  try {
-    uploadLoading.value = true;
-    await userApi.updateAvatar(currentUser.value.id, previewUrl.value);
-    message.success('头像更新成功');
-    loadUsers();
-    handleAvatarCancel();
-  } catch (error) {
-    message.error('头像更新失败');
-  } finally {
-    uploadLoading.value = false;
-  }
-};
-
 // 工具函数
 const getRoleTagColor = (role: string) => {
   const colorMap: Record<string, string> = {
@@ -634,6 +493,7 @@ onMounted(() => {
       display: flex;
       align-items: center;
       justify-content: center;
+      background: #fafafa;
 
       img {
         width: 100%;
@@ -647,17 +507,13 @@ onMounted(() => {
         flex-direction: column;
         align-items: center;
         gap: 8px;
-
-        .anticon {
-          font-size: 32px;
-        }
       }
     }
 
     .upload-actions {
       display: flex;
       justify-content: center;
-      gap: 16px;
+      gap: 8px;
       margin-bottom: 16px;
     }
 
