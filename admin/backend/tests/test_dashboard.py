@@ -46,7 +46,11 @@ def test_get_dashboard_data(test_token):
     """测试获取仪表盘数据"""
     response = client.get("/api/dashboard", headers={"Authorization": f"Bearer {test_token}"})
     assert response.status_code == 200
-    data = response.json()
+    resp = response.json()
+    assert resp["code"] == 200
+    assert resp["message"] == "获取仪表盘数据成功"
+    assert "data" in resp
+    data = resp["data"]
     assert "statistics" in data
     assert "chart_data" in data
     assert "recent_activities" in data
@@ -57,7 +61,11 @@ def test_get_statistics(test_token):
     """测试获取统计数据"""
     response = client.get("/api/dashboard/statistics", headers={"Authorization": f"Bearer {test_token}"})
     assert response.status_code == 200
-    data = response.json()
+    resp = response.json()
+    assert resp["code"] == 200
+    assert resp["message"] == "获取统计数据成功"
+    assert "data" in resp
+    data = resp["data"]
     assert "total_users" in data
     assert "total_articles" in data
     assert "total_views" in data
@@ -67,7 +75,11 @@ def test_get_chart_data(test_token):
     """测试获取图表数据"""
     response = client.get("/api/dashboard/chart", headers={"Authorization": f"Bearer {test_token}"})
     assert response.status_code == 200
-    data = response.json()
+    resp = response.json()
+    assert resp["code"] == 200
+    assert resp["message"] == "获取图表数据成功"
+    assert "data" in resp
+    data = resp["data"]
     assert "dates" in data
     assert "views" in data
     assert "likes" in data
@@ -76,20 +88,33 @@ def test_get_recent_activities(test_token):
     """测试获取最近活动"""
     response = client.get("/api/dashboard/activities", headers={"Authorization": f"Bearer {test_token}"})
     assert response.status_code == 200
-    assert isinstance(response.json(), list)
+    resp = response.json()
+    assert resp["code"] == 200
+    assert resp["message"] == "获取最近活动成功"
+    assert "data" in resp
+    data = resp["data"]
+    assert isinstance(data, list)
 
 def test_get_category_stats(test_token):
     """测试获取分类统计"""
     response = client.get("/api/dashboard/categories", headers={"Authorization": f"Bearer {test_token}"})
     assert response.status_code == 200
-    data = response.json()
+    resp = response.json()
+    assert resp["code"] == 200
+    assert resp["message"] == "获取分类统计成功"
+    assert "data" in resp
+    data = resp["data"]
     assert isinstance(data, list)
 
 def test_get_system_status(test_token):
     """测试获取系统状态"""
     response = client.get("/api/dashboard/system", headers={"Authorization": f"Bearer {test_token}"})
     assert response.status_code == 200
-    data = response.json()
+    resp = response.json()
+    assert resp["code"] == 200
+    assert resp["message"] == "获取系统状态成功"
+    assert "data" in resp
+    data = resp["data"]
     
     # CPU信息测试
     assert "cpu_percent" in data

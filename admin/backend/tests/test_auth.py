@@ -16,12 +16,12 @@ client = TestClient(app)
 
 # 测试数据
 test_user = {
-    "username": "testuser",
-    "email": "test@example.com",
-    "password": "testpassword123",
-    "full_name": "Test User",
+    "username": "admin",
+    "email": "admin@example.com",
+    "password": "admin",
+    "full_name": "System Administrator",
     "department": "IT",
-    "role": "user"
+    "role": "admin"
 }
 
 @pytest.fixture(autouse=True)
