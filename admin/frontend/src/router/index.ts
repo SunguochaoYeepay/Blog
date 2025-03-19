@@ -30,8 +30,18 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        redirect: '/admin/article',
+        redirect: '/admin/dashboard',
         meta: {
+          requiresAuth: true
+        }
+      },
+      // 仪表盘路由
+      {
+        path: 'dashboard',
+        name: 'Dashboard',
+        component: () => import('@/views/dashboard/index.vue'),
+        meta: {
+          title: '仪表盘',
           requiresAuth: true
         }
       },
