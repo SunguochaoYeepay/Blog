@@ -16,6 +16,7 @@ class ArticleBase(BaseModel):
     status: str = Field("draft", pattern="^(draft|published|archived)$")
     is_featured: bool = False
     allow_comments: bool = True
+    is_published: bool = False
 
     model_config = ConfigDict(from_attributes=True)
 

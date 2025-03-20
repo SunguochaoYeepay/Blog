@@ -1,9 +1,10 @@
 import re
+from typing import Optional
 from unidecode import unidecode
 
-def generate_slug(text: str) -> str:
+def slugify(text: str) -> str:
     """
-    生成 URL 友好的 slug
+    将文本转换为 URL 友好的 slug。
     
     Args:
         text: 要转换的文本
@@ -12,10 +13,11 @@ def generate_slug(text: str) -> str:
         转换后的 slug
     """
     # 转换为小写并移除重音符号
-    text = unidecode(text.lower())
+    text = str(text).lower().strip()
+    text = unidecode(text)
     
-    # 将空格和特殊字符替换为连字符
+    # 将空格和其他特殊字符替换为连字符
     text = re.sub(r'[^\w\s-]', '', text)
-    text = re.sub(r'[-\s]+', '-', text).strip('-')
+    text = re.sub(r'[-\s]+', '-', text)
     
-    return text 
+    return text.strip('-') 

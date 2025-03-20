@@ -11,7 +11,12 @@ class TokenData(BaseModel):
 class UserLogin(BaseModel):
     username: str
     password: str
-    email: EmailStr
-    full_name: str
-    department: Optional[str] = None
-    role: Optional[str] = None 
+
+class ChangePasswordRequest(BaseModel):
+    old_password: str
+    new_password: str
+
+class ChangePassword(BaseModel):
+    """修改密码请求体"""
+    current_password: str
+    new_password: str 

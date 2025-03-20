@@ -3,7 +3,13 @@ from sqlalchemy.orm import relationship, Mapped, mapped_column
 from datetime import datetime
 from ..database import Base
 from .article_relationships import article_categories, article_tags
-from typing import List, Optional
+from typing import List, Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .category import Category  # noqa: F401
+    from .comment import Comment  # noqa: F401
+    from .tag import Tag  # noqa: F401
+    from .user import User  # noqa: F401
 
 class Article(Base):
     __tablename__ = "articles"
@@ -23,6 +29,7 @@ class Article(Base):
     status: Mapped[str] = mapped_column(String(20), default="draft")  # draft, published, archived
     is_featured: Mapped[bool] = mapped_column(Boolean, default=False)
     allow_comments: Mapped[bool] = mapped_column(Boolean, default=True)
+    is_published: Mapped[bool] = mapped_column(Boolean, default=True)
     
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

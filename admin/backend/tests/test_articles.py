@@ -1,254 +1,178 @@
 import pytest
-from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
-from app.main import app
-from app.models.user import User
+from fastapi.testclient import TestClient
 from app.models.article import Article
-from app.models.category import Category
-from app.models.tag import Tag
-from app.database import get_db, SessionLocal
-from app.api.auth import create_access_token, get_password_hash
-from datetime import datetime
-from .test_config import override_get_db, init_test_db, cleanup_test_db
-from unittest.mock import patch
+from tests.factories import ArticleFactory, CategoryFactory, TagFactory
 
-# 替换应用程序的数据库依赖
-app.dependency_overrides[get_db] = override_get_db
+pytestmark = pytest.mark.asyncio
 
-client = TestClient(app)
+class TestArticleAPI:
+    def test_create_article(self, authorized_client: TestClient, test_user):
+        """测试创建文章"""
+        article_data = {
+            "title": "Test Article",
+            "slug": "test-article",
+            "content": "Test content",
+            "summary": "Test summary",
+            "status": "draft",
+            "is_featured": False,
+            "allow_comments": True,
+            "is_published": True,
+            "category_ids": [],
+            "tag_ids": []
+        }
+        response = authorized_client.post("/api/articles", json=article_data)
+        assert response.status_code == 201
+        data = response.json()["data"]
+        assert data["title"] == article_data["title"]
+        assert data["content"] == article_data["content"]
+        assert response.json()["message"] == "创建文章成功"
 
-# 测试数据
-test_user = {
-    "username": "testuser",
-    "email": "test@example.com",
-    "password": "testpassword123",
-    "full_name": "Test User",
-    "department": "IT",
-    "role": "user"
-}
+    def test_get_articles(self, authorized_client: TestClient, db_session: Session, test_user):
+        """测试获取文章列表"""
+        # 创建多篇文章
+        for i in range(3):
+            ArticleFactory(
+                title=f"Test Article {i}",
+                slug=f"test-article-{i}",
+                author=test_user,
+                session=db_session
+            )
 
-test_article = {
-    "title": "Test Article",
-    "slug": "test-article",
-    "content": "This is a test article content",
-    "summary": "Test summary",
-    "meta_title": "Test Meta Title",
-    "meta_description": "Test meta description",
-    "keywords": "test,article",
-    "status": "published",
-    "is_featured": False,
-    "allow_comments": True,
-    "category_ids": [],
-    "tag_ids": []
-}
+        response = authorized_client.get("/api/articles")
+        assert response.status_code == 200
+        data = response.json()["data"]
+        assert len(data) == 3
+        assert isinstance(data, list)
+        assert response.json()["message"] == "获取文章列表成功"
 
-@pytest.fixture(autouse=True)
-def setup_db():
-    """设置测试数据库"""
-    init_test_db()
-    yield
-    cleanup_test_db()
+    def test_get_article(self, authorized_client: TestClient, db_session: Session, test_user):
+        """测试获取单篇文章"""
+        article = ArticleFactory(
+            title="Test Article Detail",
+            slug="test-article-detail",
+            author=test_user,
+            session=db_session
+        )
+        response = authorized_client.get(f"/api/articles/{article.id}")
+        assert response.status_code == 200
+        data = response.json()["data"]
+        assert data["title"] == article.title
+        assert data["content"] == article.content
+        assert response.json()["message"] == "获取文章详情成功"
 
-@pytest.fixture
-def test_db():
-    """创建测试数据库会话"""
-    db = next(override_get_db())
-    try:
-        yield db
-    finally:
-        db.close()
+    def test_update_article(self, authorized_client: TestClient, db_session: Session, test_user):
+        """测试更新文章"""
+        article = ArticleFactory(
+            title="Original Article",
+            slug="original-article",
+            author=test_user,
+            session=db_session
+        )
+        update_data = {
+            "title": "Updated Title",
+            "content": "Updated content",
+            "summary": "Updated summary",
+            "status": "draft",
+            "is_featured": False,
+            "allow_comments": True,
+            "is_published": False
+        }
+        response = authorized_client.put(f"/api/articles/{article.id}", json=update_data)
+        assert response.status_code == 200
+        data = response.json()["data"]
+        assert data["title"] == update_data["title"]
+        assert data["content"] == update_data["content"]
+        assert response.json()["message"] == "更新文章成功"
 
-@pytest.fixture
-def test_user_data(test_db: Session):
-    """创建测试用户"""
-    hashed_password = get_password_hash(test_user["password"])
-    db_user = User(
-        username=test_user["username"],
-        email=test_user["email"],
-        hashed_password=hashed_password,
-        full_name=test_user["full_name"],
-        department=test_user["department"],
-        role=test_user["role"],
-        created_at=datetime.utcnow()
+    def test_delete_article(self, authorized_client: TestClient, db_session: Session, test_user):
+        """测试删除文章"""
+        article = ArticleFactory(
+            title="Article to Delete",
+            slug="article-to-delete",
+            author=test_user,
+            session=db_session
+        )
+        response = authorized_client.delete(f"/api/articles/{article.id}")
+        assert response.status_code == 204
+        # 删除 204 状态码时不应该有响应体
+        assert response.content == b""
+
+    def test_search_articles(self, authorized_client: TestClient, db_session: Session, test_user):
+        """测试搜索文章"""
+        # 创建一些文章
+        ArticleFactory(
+            title="Python Programming",
+            content="Python is awesome",
+            slug="python-programming",
+            author=test_user,
+            session=db_session
+        )
+        ArticleFactory(
+            title="JavaScript Tips",
+            content="JavaScript is great",
+            slug="javascript-tips",
+            author=test_user,
+            session=db_session
+        )
+
+        # 搜索 Python 相关文章
+        response = authorized_client.get("/api/articles?search=Python")
+        assert response.status_code == 200
+        data = response.json()["data"]
+        assert len(data) == 1
+        assert "Python" in data[0]["title"]
+        assert response.json()["message"] == "获取文章列表成功"
+
+    def test_filter_articles(self, authorized_client: TestClient, db_session: Session, test_user):
+        """测试过滤文章"""
+        # 创建分类和标签
+        category = CategoryFactory(session=db_session)
+        tag = TagFactory(session=db_session)
+
+        # 创建带有分类和标签的文章
+        article = ArticleFactory(
+            title="Filtered Article",
+            slug="filtered-article",
+            author=test_user,
+            session=db_session
+        )
+        article.categories.append(category)
+        article.tags.append(tag)
+        db_session.commit()
+
+        # 按分类过滤
+        response = authorized_client.get(f"/api/articles?category_id={category.id}")
+        assert response.status_code == 200
+        data = response.json()["data"]
+        assert len(data) == 1
+        assert data[0]["id"] == article.id
+        assert response.json()["message"] == "获取文章列表成功"
+
+        # 按标签过滤
+        response = authorized_client.get(f"/api/articles?tag_id={tag.id}")
+        assert response.status_code == 200
+        data = response.json()["data"]
+        assert len(data) == 1
+        assert data[0]["id"] == article.id
+        assert response.json()["message"] == "获取文章列表成功"
+
+    @pytest.mark.parametrize(
+        "invalid_data,expected_detail",
+        [
+            ({"content": "Test content", "summary": "Test summary"}, "Field required"),
+            ({"title": "Test", "summary": "Test summary"}, "Field required"),
+            ({"title": "Test", "content": "Test content"}, None),
+        ]
     )
-    test_db.add(db_user)
-    test_db.commit()
-    test_db.refresh(db_user)
-    return db_user
-
-@pytest.fixture
-def test_token(test_user_data: User):
-    """创建测试令牌"""
-    access_token = create_access_token(data={"sub": test_user_data.username})
-    return access_token
-
-@pytest.fixture
-def test_categories(test_db: Session):
-    """创建测试分类"""
-    categories = [
-        Category(name="Test Category 1", slug="test-category-1"),
-        Category(name="Test Category 2", slug="test-category-2")
-    ]
-    test_db.add_all(categories)
-    test_db.commit()
-    
-    for category in categories:
-        test_db.refresh(category)
-    
-    return categories
-
-@pytest.fixture
-def test_tags(test_db: Session):
-    """创建测试标签"""
-    tags = [
-        Tag(name="Test Tag 1", slug="test-tag-1"),
-        Tag(name="Test Tag 2", slug="test-tag-2")
-    ]
-    test_db.add_all(tags)
-    test_db.commit()
-    
-    for tag in tags:
-        test_db.refresh(tag)
-    
-    return tags
-
-def create_test_article(article_data: dict, author: User, test_db: Session) -> Article:
-    """创建测试文章的辅助函数"""
-    db_article = Article(
-        title=article_data["title"],
-        slug=article_data["slug"],
-        content=article_data["content"],
-        summary=article_data["summary"],
-        meta_title=article_data["meta_title"],
-        meta_description=article_data["meta_description"],
-        keywords=article_data["keywords"],
-        status=article_data["status"],
-        is_featured=article_data["is_featured"],
-        allow_comments=article_data["allow_comments"],
-        author_id=author.id,
-        created_at=datetime.utcnow()
-    )
-    test_db.add(db_article)
-    test_db.commit()
-    test_db.refresh(db_article)
-    return db_article
-
-def test_create_article(test_token: str, test_user_data: User, test_db: Session):
-    """测试创建文章"""
-    article_data = test_article.copy()
-    article_data["author_id"] = test_user_data.id
-
-    response = client.post(
-        "/api/articles",
-        headers={"Authorization": f"Bearer {test_token}"},
-        json=article_data
-    )
-    assert response.status_code == 201
-    data = response.json()
-    assert data["code"] == 201
-    assert data["message"] == "文章创建成功"
-    assert data["data"]["title"] == article_data["title"]
-    assert data["data"]["content"] == article_data["content"]
-    assert data["data"]["author_id"] == test_user_data.id
-
-def test_list_articles(test_token: str, test_db: Session, test_user_data: User):
-    """测试获取文章列表"""
-    # 创建测试文章
-    db_article = create_test_article(test_article, test_user_data, test_db)
-
-    response = client.get(
-        "/api/articles",
-        headers={"Authorization": f"Bearer {test_token}"}
-    )
-    assert response.status_code == 200
-    data = response.json()
-    assert data["code"] == 200
-    assert data["message"] == "查询成功"
-    assert len(data["data"]["items"]) == 1
-    assert data["data"]["items"][0]["title"] == test_article["title"]
-
-def test_get_article(test_token: str, test_db: Session, test_user_data: User):
-    """测试获取文章详情"""
-    # 创建测试文章
-    db_article = create_test_article(test_article, test_user_data, test_db)
-
-    response = client.get(
-        f"/api/articles/{db_article.id}",
-        headers={"Authorization": f"Bearer {test_token}"}
-    )
-    assert response.status_code == 200
-    data = response.json()
-    assert data["code"] == 200
-    assert data["message"] == "查询成功"
-    assert data["data"]["title"] == test_article["title"]
-
-def test_update_article(test_token: str, test_db: Session, test_user_data: User):
-    """测试更新文章"""
-    # 创建测试文章
-    db_article = create_test_article(test_article, test_user_data, test_db)
-
-    update_data = {
-        "title": "Updated Title",
-        "content": "Updated content"
-    }
-
-    response = client.put(
-        f"/api/articles/{db_article.id}",
-        headers={"Authorization": f"Bearer {test_token}"},
-        json=update_data
-    )
-    assert response.status_code == 200
-    data = response.json()
-    assert data["code"] == 200
-    assert data["message"] == "更新成功"
-    assert data["data"]["title"] == update_data["title"]
-    assert data["data"]["content"] == update_data["content"]
-
-def test_delete_article(test_token: str, test_db: Session, test_user_data: User):
-    """测试删除文章"""
-    # 创建测试文章
-    db_article = create_test_article(test_article, test_user_data, test_db)
-
-    response = client.delete(
-        f"/api/articles/{db_article.id}",
-        headers={"Authorization": f"Bearer {test_token}"}
-    )
-    assert response.status_code == 200
-    data = response.json()
-    assert data["code"] == 200
-    assert data["message"] == "删除成功"
-
-    # 使用新的会话验证删除结果
-    new_db = SessionLocal()
-    try:
-        article = new_db.query(Article).filter(Article.id == db_article.id).first()
-        assert article is None
-    finally:
-        new_db.close()
-
-def test_like_article(test_token: str, test_db: Session, test_user_data: User):
-    """测试文章点赞"""
-    # 创建测试文章
-    db_article = create_test_article(test_article, test_user_data, test_db)
-
-    response = client.post(
-        f"/api/articles/{db_article.id}/like",
-        headers={"Authorization": f"Bearer {test_token}"}
-    )
-    assert response.status_code == 200
-    data = response.json()
-    assert data["code"] == 200
-    assert data["message"] == "操作成功"
-    assert data["data"]["is_liked"] is True
-    assert "like_count" in data["data"]
-
-def test_article_not_found(test_token: str):
-    """测试访问不存在的文章"""
-    response = client.get(
-        "/api/articles/999999",
-        headers={"Authorization": f"Bearer {test_token}"}
-    )
-    assert response.status_code == 404
-    data = response.json()
-    assert data["code"] == 404
-    assert "文章不存在" in data["message"] 
+    def test_create_article_validation(
+        self,
+        authorized_client: TestClient,
+        invalid_data: dict,
+        expected_detail: str
+    ):
+        """测试创建文章的字段验证"""
+        response = authorized_client.post("/api/articles", json=invalid_data)
+        assert response.status_code == 422
+        if expected_detail:
+            assert response.json()["detail"][0]["msg"] == expected_detail

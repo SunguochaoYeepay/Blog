@@ -1,75 +1,110 @@
 import os
-from pathlib import Path
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from app.database import Base
-from app.main import app
-from app.database import get_db
-from app.config import settings
-from app.dependencies.redis import clear_all_likes
+import pytest
+from app.core.config import Settings
 
-"""
-测试环境配置说明：
+def test_default_settings():
+    settings = Settings()
+    assert settings.PROJECT_NAME == "Blog Admin"
+    assert settings.VERSION == "0.1.0"
+    assert settings.API_V1_STR == "/api"
 
-1. 测试环境使用 .env.test 作为配置文件
-2. 使用独立的MySQL测试数据库
-3. 每次测试前会清空数据库并重新创建表
-4. Redis使用独立的数据库(DB=1)避免影响开发环境
-"""
+def test_cors_origins_parsing():
+    settings = Settings()
+    assert isinstance(settings.cors_origins, list)
+    assert len(settings.cors_origins) > 0
+    assert all(isinstance(origin, str) for origin in settings.cors_origins)
 
-# 设置测试环境变量
-os.environ["ENV"] = "test"
+def test_env_override():
+    os.environ["PROJECT_NAME"] = "Test Project"
+    settings = Settings()
+    assert settings.PROJECT_NAME == "Test Project"
+    del os.environ["PROJECT_NAME"]
 
-# 获取项目根目录
-root_dir = Path(__file__).parent.parent
-
-# 使用MySQL测试数据库
-SQLALCHEMY_DATABASE_URL = (
-    f"mysql+pymysql://{settings.MYSQL_USER}:{settings.MYSQL_PASSWORD}@"
-    f"{settings.MYSQL_HOST}:{settings.MYSQL_PORT}/{settings.MYSQL_DATABASE}"
-)
-
-# 创建测试数据库引擎
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
-    pool_pre_ping=True,
-    pool_recycle=3600
-)
-
-# 创建测试会话
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-def override_get_db():
-    """重写数据库依赖"""
+def test_database_url_mysql_config():
+    # 保存原始环境变量
+    original_database_url = os.environ.get("DATABASE_URL")
+    original_test_mode = os.environ.get("TEST_MODE")
+    
     try:
-        db = TestingSessionLocal()
-        yield db
+        # 清理环境变量
+        if "DATABASE_URL" in os.environ:
+            del os.environ["DATABASE_URL"]
+        os.environ["TEST_MODE"] = "false"
+        
+        # 使用构造函数参数
+        settings = Settings(
+            MYSQL_USER="testuser",
+            MYSQL_PASSWORD="testpass",
+            MYSQL_HOST="testhost",
+            MYSQL_PORT="3307",
+            MYSQL_DATABASE="testdb"
+        )
+        assert settings.DATABASE_URL == "mysql+pymysql://testuser:testpass@testhost:3307/testdb"
     finally:
-        if db:
-            db.close()
+        # 恢复环境变量
+        if original_database_url:
+            os.environ["DATABASE_URL"] = original_database_url
+        elif "DATABASE_URL" in os.environ:
+            del os.environ["DATABASE_URL"]
+            
+        if original_test_mode:
+            os.environ["TEST_MODE"] = original_test_mode
+        elif "TEST_MODE" in os.environ:
+            del os.environ["TEST_MODE"]
 
-def init_test_db():
-    """初始化测试数据库"""
+def test_database_url_env_override():
+    # 保存原始环境变量
+    original_database_url = os.environ.get("DATABASE_URL")
+    original_test_mode = os.environ.get("TEST_MODE")
+    
     try:
-        # 删除所有表
-        Base.metadata.drop_all(bind=engine)
-        # 创建所有表
-        Base.metadata.create_all(bind=engine)
-        # 清理点赞数据
-        clear_all_likes()
-    except Exception as e:
-        print(f"初始化测试数据库失败: {e}")
-        raise
+        # 清理环境变量
+        if "TEST_MODE" in os.environ:
+            del os.environ["TEST_MODE"]
+        os.environ["DATABASE_URL"] = "postgresql://user:pass@localhost:5432/db"
+        
+        settings = Settings()
+        assert settings.DATABASE_URL == "postgresql://user:pass@localhost:5432/db"
+    finally:
+        # 恢复环境变量
+        if original_database_url:
+            os.environ["DATABASE_URL"] = original_database_url
+        elif "DATABASE_URL" in os.environ:
+            del os.environ["DATABASE_URL"]
+            
+        if original_test_mode:
+            os.environ["TEST_MODE"] = original_test_mode
+        elif "TEST_MODE" in os.environ:
+            del os.environ["TEST_MODE"]
 
-def cleanup_test_db():
-    """清理测试数据库"""
+def test_test_mode_database_url():
+    # 保存原始环境变量
+    original_database_url = os.environ.get("DATABASE_URL")
+    original_test_mode = os.environ.get("TEST_MODE")
+    
     try:
-        Base.metadata.drop_all(bind=engine)
-        # 清理点赞数据
-        clear_all_likes()
-    except Exception as e:
-        print(f"清理测试数据库失败: {e}")
-        raise
+        # 清理环境变量
+        if "DATABASE_URL" in os.environ:
+            del os.environ["DATABASE_URL"]
+        os.environ["TEST_MODE"] = "true"
+        
+        settings = Settings()
+        assert settings.DATABASE_URL == "sqlite:///./test.db"
+    finally:
+        # 恢复环境变量
+        if original_database_url:
+            os.environ["DATABASE_URL"] = original_database_url
+        elif "DATABASE_URL" in os.environ:
+            del os.environ["DATABASE_URL"]
+            
+        if original_test_mode:
+            os.environ["TEST_MODE"] = original_test_mode
+        elif "TEST_MODE" in os.environ:
+            del os.environ["TEST_MODE"]
 
-# 替换应用的数据库依赖
-app.dependency_overrides[get_db] = override_get_db
+def test_allowed_file_types():
+    settings = Settings()
+    assert isinstance(settings.allowed_image_types, list)
+    assert isinstance(settings.allowed_document_types, list)
+    assert len(settings.allowed_image_types) > 0
+    assert len(settings.allowed_document_types) > 0
