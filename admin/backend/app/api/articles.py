@@ -16,7 +16,9 @@ from app.schemas.article import (
 from app.schemas.pagination import PaginationParams
 from app.utils.slug import slugify
 
-router = APIRouter(prefix="/articles", tags=["articles"])
+router = APIRouter(
+    tags=["articles"]
+)
 
 @router.post("/", response_model=Response[ArticleResponse], status_code=status.HTTP_201_CREATED)
 def create_article(

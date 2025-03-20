@@ -16,7 +16,8 @@ def init_db(db: Session):
         department="IT",
         role="admin",
         hashed_password=get_password_hash("admin"),
-        is_active=True
+        is_active=True,
+        is_superuser=True
     )
     db.add(admin)
     
@@ -28,7 +29,8 @@ def init_db(db: Session):
         department="Marketing",
         role="user",
         hashed_password=get_password_hash("user123"),
-        is_active=True
+        is_active=True,
+        is_superuser=False
     )
     db.add(user)
     

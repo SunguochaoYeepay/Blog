@@ -10,19 +10,18 @@ class TestAuthAPI:
     def test_login_success_form(self, client: TestClient, db_session: Session):
         """测试表单登录成功"""
         # 创建测试用户
-        hashed_password = get_password_hash("password123")
         user = User(
-            username="auth_test_user_1",
+            username="auth_test1",
             email="auth_test1@example.com",
-            hashed_password=hashed_password,
-            full_name="Test User",
+            hashed_password=get_password_hash("password123"),
             is_active=True
         )
         db_session.add(user)
         db_session.commit()
 
+        # 登录数据
         login_data = {
-            "username": "auth_test_user_1",
+            "username": "auth_test1@example.com",
             "password": "password123"
         }
         response = client.post("/api/auth/login", data=login_data)
@@ -35,19 +34,18 @@ class TestAuthAPI:
     def test_login_success_json(self, client: TestClient, db_session: Session):
         """测试JSON登录成功"""
         # 创建测试用户
-        hashed_password = get_password_hash("password123")
         user = User(
-            username="auth_test_user_2",
+            username="auth_test2",
             email="auth_test2@example.com",
-            hashed_password=hashed_password,
-            full_name="Test User",
+            hashed_password=get_password_hash("password123"),
             is_active=True
         )
         db_session.add(user)
         db_session.commit()
 
+        # 登录数据
         login_data = {
-            "username": "auth_test_user_2",
+            "email": "auth_test2@example.com",
             "password": "password123"
         }
         response = client.post("/api/auth/login/json", json=login_data)
@@ -60,7 +58,7 @@ class TestAuthAPI:
     def test_login_invalid_credentials(self, client: TestClient, db_session: Session):
         """测试登录失败 - 无效的凭证"""
         login_data = {
-            "username": "nonexistent_user",
+            "username": "nonexistent@example.com",
             "password": "wrong_password"
         }
         response = client.post("/api/auth/login", data=login_data)
@@ -68,21 +66,20 @@ class TestAuthAPI:
         assert response.json()["detail"] == "用户名或密码错误"
 
     def test_login_inactive_user(self, client: TestClient, db_session: Session):
-        """测试登录失败 - 非活跃用户"""
-        # 创建非活跃用户
-        hashed_password = get_password_hash("password123")
+        """测试未激活用户登录"""
+        # 创建未激活的测试用户
         user = User(
-            username="inactive_test_user",
+            username="inactive_test",
             email="inactive_test@example.com",
-            hashed_password=hashed_password,
-            full_name="Inactive User",
+            hashed_password=get_password_hash("password123"),
             is_active=False
         )
         db_session.add(user)
         db_session.commit()
 
+        # 登录数据
         login_data = {
-            "username": "inactive_test_user",
+            "username": "inactive_test@example.com",
             "password": "password123"
         }
         response = client.post("/api/auth/login", data=login_data)

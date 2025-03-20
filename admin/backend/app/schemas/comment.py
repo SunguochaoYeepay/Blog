@@ -4,6 +4,7 @@ from datetime import datetime
 
 class CommentBase(BaseModel):
     content: str
+    article_id: int
     parent_id: Optional[int] = None
     is_approved: Optional[bool] = False
     is_spam: Optional[bool] = False

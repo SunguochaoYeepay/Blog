@@ -1,11 +1,8 @@
 import logging
 import sys
+import os
 from pathlib import Path
 from logging.handlers import RotatingFileHandler
-
-# 创建日志目录
-log_dir = Path("logs")
-log_dir.mkdir(exist_ok=True)
 
 # 配置日志格式
 log_format = logging.Formatter(
@@ -13,8 +10,24 @@ log_format = logging.Formatter(
 )
 
 def setup_logger(name: str) -> logging.Logger:
+    """
+    设置日志记录器
+    
+    Args:
+        name: 日志记录器名称
+    """
+    # 如果已经存在同名的 logger，直接返回
+    existing_logger = logging.getLogger(name)
+    if existing_logger.handlers:
+        return existing_logger
+    
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
+
+    # 确定日志目录
+    log_dir = os.environ.get("LOG_DIR", "logs")
+    log_dir = Path(log_dir)
+    log_dir.mkdir(exist_ok=True)
 
     # 控制台处理器
     console_handler = logging.StreamHandler(sys.stdout)
@@ -36,4 +49,4 @@ def setup_logger(name: str) -> logging.Logger:
     return logger
 
 # 创建应用主日志记录器
-app_logger = setup_logger("app") 
+app_logger = setup_logger("app")

@@ -14,48 +14,29 @@ from app.schemas.response import Response
 from app.schemas.token import Token
 from app.schemas.user import User as UserSchema
 from app.schemas.auth import ChangePassword, UserLogin
+from app.database import get_db
+from app.schemas.msg import Msg
 
 router = APIRouter(
-    prefix="/auth",
     tags=["auth"]
 )
 
 @router.post("/login", response_model=Response[Token])
-async def login(
-    request: Request,
-    db: Session = Depends(deps.get_db),
-    form_data: OAuth2PasswordRequestForm = Depends(),
+def login(
+    db: Session = Depends(get_db),
+    form_data: OAuth2PasswordRequestForm = Depends()
 ) -> Any:
     """
-    用户登录接口
-    
-    支持表单登录：username和password通过form-data提交
+    OAuth2 compatible token login, get an access token for future requests
     """
-    # 验证用户
-    user = db.query(User).filter(User.username == form_data.username).first()
+    user = db.query(User).filter(User.email == form_data.username).first()
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="用户名或密码错误",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise HTTPException(status_code=401, detail="用户名或密码错误")
+    elif not security.verify_password(form_data.password, user.hashed_password):
+        raise HTTPException(status_code=401, detail="用户名或密码错误")
+    elif not user.is_active:
+        raise HTTPException(status_code=400, detail="用户未激活")
     
-    # 验证密码
-    if not security.verify_password(form_data.password, user.hashed_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="用户名或密码错误",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    
-    # 验证用户状态
-    if not user.is_active:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="用户未激活"
-        )
-
-    # 生成访问令牌
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = security.create_access_token(
         user.id, expires_delta=access_token_expires
@@ -68,40 +49,23 @@ async def login(
     )
 
 @router.post("/login/json", response_model=Response[Token])
-async def login_json(
-    user_login: UserLogin,
-    db: Session = Depends(deps.get_db),
+def login_json(
+    *,
+    db: Session = Depends(get_db),
+    email: str = Body(...),
+    password: str = Body(...)
 ) -> Any:
     """
-    用户登录接口 (JSON)
-    
-    支持JSON登录：username和password通过JSON提交
+    JSON compatible token login, get an access token for future requests
     """
-    # 验证用户
-    user = db.query(User).filter(User.username == user_login.username).first()
+    user = db.query(User).filter(User.email == email).first()
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="用户名或密码错误",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise HTTPException(status_code=400, detail="邮箱或密码错误")
+    elif not security.verify_password(password, user.hashed_password):
+        raise HTTPException(status_code=400, detail="邮箱或密码错误")
+    elif not user.is_active:
+        raise HTTPException(status_code=400, detail="用户未激活")
     
-    # 验证密码
-    if not security.verify_password(user_login.password, user.hashed_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="用户名或密码错误",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    
-    # 验证用户状态
-    if not user.is_active:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="用户未激活"
-        )
-
-    # 生成访问令牌
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = security.create_access_token(
         user.id, expires_delta=access_token_expires
@@ -174,3 +138,21 @@ def change_password(
         code=200,
         message="密码修改成功"
     )
+
+@router.post("/test-token", response_model=Response[UserSchema])
+def test_token(current_user: User = Depends(deps.get_current_user)) -> Any:
+    """
+    Test access token
+    """
+    return Response(
+        code=200,
+        message="Token验证成功",
+        data=current_user
+    )
+
+@router.post("/logout", response_model=Msg)
+def logout() -> Any:
+    """
+    Logout current user
+    """
+    return {"msg": "Logged out successfully"}

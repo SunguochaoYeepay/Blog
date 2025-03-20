@@ -13,7 +13,9 @@ from app.schemas.user import UserCreate, UserUpdate, UserResponse, UserUpdateMe
 from app.schemas.response import Response
 from app.schemas.pagination import PaginationParams, PaginatedResponse
 
-router = APIRouter(prefix="/users", tags=["users"])
+router = APIRouter(
+    tags=["users"]
+)
 
 @router.get("/", response_model=Response[PaginatedResponse[UserResponse]])
 def get_users(

@@ -1,13 +1,64 @@
 from functools import wraps
 from app.models.user import User
-from app.config import settings
-import redis
+from app.core.config import settings
+from redis import Redis
+from typing import Callable, Any, Optional
 import json
-from typing import Callable
 import logging
 
+class RedisCache:
+    def __init__(self):
+        self.client = Redis(
+            host=settings.REDIS_HOST,
+            port=settings.REDIS_PORT,
+            db=settings.REDIS_DB,
+            decode_responses=True
+        )
+
+    def set(self, key: str, value: Any, expire: int = None) -> bool:
+        """设置缓存"""
+        try:
+            if isinstance(value, (dict, list)):
+                value = json.dumps(value)
+            if expire:
+                return self.client.setex(key, expire, value)
+            return self.client.set(key, value)
+        except Exception as e:
+            logging.error(f"Redis set error: {str(e)}")
+            return False
+
+    def get(self, key: str) -> Optional[Any]:
+        """获取缓存"""
+        try:
+            value = self.client.get(key)
+            if value:
+                try:
+                    return json.loads(value)
+                except json.JSONDecodeError:
+                    return value
+            return None
+        except Exception as e:
+            logging.error(f"Redis get error: {str(e)}")
+            return None
+
+    def delete(self, key: str) -> bool:
+        """删除缓存"""
+        try:
+            return bool(self.client.delete(key))
+        except Exception as e:
+            logging.error(f"Redis delete error: {str(e)}")
+            return False
+
+    def clear(self) -> bool:
+        """清空缓存"""
+        try:
+            return bool(self.client.flushdb())
+        except Exception as e:
+            logging.error(f"Redis clear error: {str(e)}")
+            return False
+
 # 创建Redis连接
-redis_client = redis.Redis(
+redis_client = Redis(
     host=settings.REDIS_HOST,
     port=settings.REDIS_PORT,
     db=settings.REDIS_DB,
@@ -48,7 +99,7 @@ def cache_user(func: Callable):
                 )
         except Exception as e:
             logging.error(f"Redis cache error: {str(e)}")
-
+            
         return result
-
+    
     return wrapper

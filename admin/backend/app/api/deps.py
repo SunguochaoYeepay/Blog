@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from pydantic import ValidationError
 
-from app.database import SessionLocal
+from app.database import SessionLocal, get_db
 from app.core.config import settings
 from app.core import security
 from app.models.user import User
@@ -15,18 +15,6 @@ from app.schemas.token import TokenPayload
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl=f"{settings.API_V1_STR}/auth/login"
 )
-
-def get_db() -> Generator:
-    """
-    获取数据库会话
-    
-    每个请求都会创建一个新的数据库会话，请求结束后关闭会话
-    """
-    try:
-        db = SessionLocal()
-        yield db
-    finally:
-        db.close()
 
 def get_current_user(
     db: Session = Depends(get_db),
