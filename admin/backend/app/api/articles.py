@@ -13,14 +13,14 @@ from app.schemas.article import (
     ArticleUpdate,
     ArticleResponse
 )
-from app.schemas.pagination import PaginationParams
+from app.schemas.pagination import PaginationParams, PaginatedResponse
 from app.utils.slug import slugify
 
 router = APIRouter(
     tags=["articles"]
 )
 
-@router.post("/", response_model=Response[ArticleResponse], status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=Response[ArticleResponse], status_code=status.HTTP_201_CREATED)
 def create_article(
     *,
     db: Session = Depends(deps.get_db),
@@ -80,17 +80,24 @@ def create_article(
         data=db_article
     )
 
-@router.get("/", response_model=Response[List[ArticleResponse]])
+@router.get("", response_model=Response[PaginatedResponse[ArticleResponse]])
 def get_articles(
-    skip: int = Query(0, ge=0),
-    limit: int = Query(10, ge=1, le=100),
+    pagination: PaginationParams = Depends(),
     search: Optional[str] = None,
     category_id: Optional[int] = None,
     tag_id: Optional[int] = None,
     status: Optional[str] = None,
     db: Session = Depends(deps.get_db)
 ):
-    """获取文章列表"""
+    """获取文章列表
+    
+    Args:
+        pagination: 分页参数
+        search: 搜索关键词
+        category_id: 分类ID
+        tag_id: 标签ID
+        status: 文章状态
+    """
     query = db.query(Article)
     
     # 搜索
@@ -107,12 +114,24 @@ def get_articles(
     if status:
         query = query.filter(Article.status == status)
     
+    # 计算总数和总页数
     total = query.count()
-    articles = query.offset(skip).limit(limit).all()
+    total_pages = (total + pagination.limit - 1) // pagination.limit
+    
+    # 获取分页数据
+    articles = query.offset(pagination.skip).limit(pagination.limit).all()
+    
+    # 返回分页响应
     return Response(
         code=200,
         message="获取文章列表成功",
-        data=articles
+        data=PaginatedResponse(
+            items=articles,
+            total=total,
+            page=pagination.page,
+            size=pagination.limit,
+            total_pages=total_pages
+        )
     )
 
 @router.get("/{article_id}", response_model=Response[ArticleResponse])

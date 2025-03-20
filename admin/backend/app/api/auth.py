@@ -22,14 +22,14 @@ router = APIRouter(
 )
 
 @router.post("/login", response_model=Response[Token])
-def login(
+async def login(
     db: Session = Depends(get_db),
     form_data: OAuth2PasswordRequestForm = Depends()
 ) -> Any:
     """
     OAuth2 compatible token login, get an access token for future requests
     """
-    user = db.query(User).filter(User.email == form_data.username).first()
+    user = db.query(User).filter(User.username == form_data.username).first()
     if not user:
         raise HTTPException(status_code=401, detail="用户名或密码错误")
     elif not security.verify_password(form_data.password, user.hashed_password):
@@ -52,17 +52,17 @@ def login(
 def login_json(
     *,
     db: Session = Depends(get_db),
-    email: str = Body(...),
+    username: str = Body(...),
     password: str = Body(...)
 ) -> Any:
     """
     JSON compatible token login, get an access token for future requests
     """
-    user = db.query(User).filter(User.email == email).first()
+    user = db.query(User).filter(User.username == username).first()
     if not user:
-        raise HTTPException(status_code=400, detail="邮箱或密码错误")
+        raise HTTPException(status_code=400, detail="用户名或密码错误")
     elif not security.verify_password(password, user.hashed_password):
-        raise HTTPException(status_code=400, detail="邮箱或密码错误")
+        raise HTTPException(status_code=400, detail="用户名或密码错误")
     elif not user.is_active:
         raise HTTPException(status_code=400, detail="用户未激活")
     
@@ -150,9 +150,12 @@ def test_token(current_user: User = Depends(deps.get_current_user)) -> Any:
         data=current_user
     )
 
-@router.post("/logout", response_model=Msg)
+@router.post("/logout", response_model=Response)
 def logout() -> Any:
     """
     Logout current user
     """
-    return {"msg": "Logged out successfully"}
+    return Response(
+        code=200,
+        message="退出登录成功"
+    )

@@ -17,7 +17,7 @@ router = APIRouter(
     tags=["users"]
 )
 
-@router.get("/", response_model=Response[PaginatedResponse[UserResponse]])
+@router.get("", response_model=Response[PaginatedResponse[UserResponse]])
 def get_users(
     pagination: PaginationParams = Depends(),
     db: Session = Depends(get_db),
@@ -46,7 +46,7 @@ def get_users(
         }
     )
 
-@router.post("/", response_model=Response[UserResponse], status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=Response[UserResponse], status_code=status.HTTP_201_CREATED)
 def create_user(
     *,
     db: Session = Depends(deps.get_db),

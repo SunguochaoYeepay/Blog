@@ -16,6 +16,7 @@ class Tag(Base):
     
     # Relations
     articles = relationship("Article", secondary=article_tags, back_populates="tags")
+    article_tags = relationship("ArticleTag", back_populates="tag", cascade="all, delete-orphan")
 
     class Config:
         from_attributes = True

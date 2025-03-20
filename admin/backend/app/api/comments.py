@@ -8,29 +8,47 @@ from app.models.comment import Comment
 from app.models.user import User
 from app.schemas.comment import CommentCreate, CommentUpdate, CommentResponse
 from app.schemas.response import Response
+from app.schemas.pagination import PaginationParams, PaginatedResponse
 
 router = APIRouter(
     tags=["comments"]
 )
 
-@router.get("/", response_model=Response[List[CommentResponse]])
+@router.get("", response_model=Response[PaginatedResponse[CommentResponse]])
 def get_comments(
+    pagination: PaginationParams = Depends(),
     db: Session = Depends(get_db),
-    skip: int = 0,
-    limit: int = 100,
     current_user: User = Depends(deps.get_current_active_user)
 ) -> Any:
+    """获取评论列表
+    
+    Args:
+        pagination: 分页参数
+        db: 数据库会话
+        current_user: 当前用户
     """
-    获取评论列表
-    """
-    comments = db.query(Comment).offset(skip).limit(limit).all()
+    query = db.query(Comment)
+    
+    # 计算总数和总页数
+    total = query.count()
+    total_pages = (total + pagination.limit - 1) // pagination.limit
+    
+    # 获取分页数据
+    comments = query.offset(pagination.skip).limit(pagination.limit).all()
+    
     return Response(
         code=200,
-        data=comments,
-        message="获取评论列表成功"
+        message="获取评论列表成功",
+        data=PaginatedResponse(
+            items=comments,
+            total=total,
+            page=pagination.page,
+            size=pagination.limit,
+            total_pages=total_pages
+        )
     )
 
-@router.post("/", response_model=Response[CommentResponse])
+@router.post("", response_model=Response[CommentResponse])
 def create_comment(
     *,
     db: Session = Depends(get_db),

@@ -1,6 +1,5 @@
 from typing import TypeVar, Generic, List
 from pydantic import BaseModel, Field
-from pydantic.generics import GenericModel
 
 T = TypeVar('T')
 
@@ -13,7 +12,7 @@ class PaginationParams(BaseModel):
     def skip(self) -> int:
         return (self.page - 1) * self.limit
 
-class PaginatedResponse(GenericModel, Generic[T]):
+class PaginatedResponse(BaseModel, Generic[T]):
     """分页响应模型"""
     items: List[T]
     total: int

@@ -1,6 +1,9 @@
 from datetime import datetime
 from typing import List, Optional
 from pydantic import BaseModel
+from sqlalchemy import Column, Integer, String, DateTime, Float, JSON
+from sqlalchemy.orm import Mapped, mapped_column
+from app.database import Base
 
 class StatisticsData(BaseModel):
     """统计数据模型"""
@@ -63,3 +66,27 @@ class DashboardData(BaseModel):
     recent_activities: List[ActivityItem]
     category_stats: List[CategoryStats]
     system_status: SystemStatus
+
+class Dashboard(Base):
+    """仪表盘统计数据模型"""
+    __tablename__ = "dashboard_stats"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    
+    # 基础统计
+    total_users: Mapped[int] = mapped_column(Integer, default=0)
+    total_articles: Mapped[int] = mapped_column(Integer, default=0)
+    total_views: Mapped[int] = mapped_column(Integer, default=0)
+    total_likes: Mapped[int] = mapped_column(Integer, default=0)
+    
+    # 图表数据
+    chart_data: Mapped[dict] = mapped_column(JSON)  # 存储图表数据的JSON
+    
+    # 系统状态
+    cpu_percent: Mapped[float] = mapped_column(Float, default=0.0)
+    memory_percent: Mapped[float] = mapped_column(Float, default=0.0)
+    disk_percent: Mapped[float] = mapped_column(Float, default=0.0)
+    
+    # 时间戳
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

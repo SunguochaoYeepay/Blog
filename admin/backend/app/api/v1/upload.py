@@ -1,7 +1,9 @@
-from fastapi import APIRouter, UploadFile, File, Depends
+from fastapi import APIRouter, File, Depends
+from fastapi.datastructures import UploadFile
 from app.services.storage import storage_service
-from app.core.security import get_current_user
+from app.api.deps import get_current_user
 from app.schemas.response import Response
+from app.models.user import User
 
 router = APIRouter()
 

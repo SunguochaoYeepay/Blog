@@ -43,6 +43,7 @@ class Article(Base):
     # Categories and Tags (Many-to-Many)
     categories = relationship("Category", secondary=article_categories, back_populates="articles")
     tags = relationship("Tag", secondary=article_tags, back_populates="articles")
+    article_tags = relationship("ArticleTag", back_populates="article", cascade="all, delete-orphan")
     
     # Statistics
     view_count: Mapped[int] = mapped_column(Integer, default=0)

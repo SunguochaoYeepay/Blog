@@ -11,6 +11,6 @@ class Response(BaseModel, Generic[T]):
         message: 响应消息
         data: 响应数据
     """
-    code: int
-    message: str
+    code: int = 200
+    message: str = "success"
     data: Optional[T] = None
