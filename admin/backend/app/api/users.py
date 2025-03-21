@@ -1,5 +1,5 @@
-from typing import Any, List
-from fastapi import APIRouter, Body, Depends, HTTPException, status
+from typing import Any, List, Optional
+from fastapi import APIRouter, Body, Depends, HTTPException, status, File, UploadFile
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
@@ -12,6 +12,7 @@ from app.schemas.user import User as UserSchema
 from app.schemas.user import UserCreate, UserUpdate, UserResponse, UserUpdateMe
 from app.schemas.response import Response
 from app.schemas.pagination import PaginationParams, PaginatedResponse
+from app.services.storage import storage_service
 
 router = APIRouter(
     tags=["users"]
@@ -237,4 +238,42 @@ def update_user_me(
         code=200,
         message="更新用户信息成功",
         data=current_user
+    )
+
+@router.put("/{user_id}/avatar", response_model=Response)
+async def update_avatar(
+    user_id: int,
+    file: UploadFile = File(...),
+    current_user = Depends(deps.get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    更新用户头像
+    """
+    # 检查用户权限
+    if current_user.id != user_id and not current_user.is_superuser:
+        raise HTTPException(
+            status_code=403,
+            detail="没有权限更新其他用户的头像"
+        )
+    
+    # 获取用户
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="用户不存在"
+        )
+    
+    # 上传图片
+    result = await storage_service.upload_image(file, prefix='avatars')
+    
+    # 更新用户头像
+    user.avatar = result['url']
+    db.commit()
+    
+    return Response(
+        code=200,
+        message="头像更新成功",
+        data={"avatar": result['url']}
     )
