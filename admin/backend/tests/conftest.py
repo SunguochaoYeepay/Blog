@@ -7,6 +7,7 @@ from sqlalchemy.pool import StaticPool
 from fastapi.testclient import TestClient
 from dotenv import load_dotenv
 import uuid
+from app.utils.slug import slugify
 
 # 添加项目根目录到 Python 路径
 import sys
@@ -22,9 +23,10 @@ from app.main import app
 from app.database import Base, get_db
 from app.core.config import settings
 from app.core.security import create_access_token, get_password_hash
-from tests.factories import UserFactory
+from tests.factories import UserFactory, ArticleFactory
 from app.api import deps
 from app.models.user import User
+from app.models.article import Article
 
 # 设置测试环境变量
 os.environ["TESTING"] = "1"
@@ -190,3 +192,38 @@ def test_env():
     os.environ.pop("TESTING", None)
     os.environ.pop("ENV", None)
     os.environ.pop("DEBUG", None)
+
+@pytest.fixture
+def normal_user(db_session: Session) -> User:
+    """创建普通用户"""
+    UserFactory._meta.sqlalchemy_session = db_session
+    user = UserFactory(
+        username=f"normal_{uuid.uuid4().hex[:8]}",
+        email=f"normal_{uuid.uuid4().hex[:8]}@example.com",
+        is_active=True,
+        is_superuser=False
+    )
+    return user
+
+@pytest.fixture
+def normal_user_token(normal_user) -> str:
+    """生成普通用户的访问令牌"""
+    return create_access_token(normal_user.id)
+
+@pytest.fixture
+def normal_user_token_headers(normal_user_token: str) -> Dict[str, str]:
+    """生成普通用户的请求头"""
+    return {"Authorization": f"Bearer {normal_user_token}"}
+
+@pytest.fixture
+def test_article(db_session: Session, normal_user: User) -> Article:
+    """创建测试文章"""
+    ArticleFactory._meta.sqlalchemy_session = db_session
+    title = f"test_article_{uuid.uuid4().hex[:8]}"
+    article = ArticleFactory(
+        title=title,
+        content="Test content",
+        author_id=normal_user.id,
+        slug=slugify(title)  # 从标题生成 slug
+    )
+    return article

@@ -5,6 +5,7 @@ from app.models.comment import Comment
 from app.models.article import Article
 from app.schemas.comment import CommentCreate
 from tests.utils import get_api_path
+from app.core.errors import ErrorCode, ErrorMessages
 from datetime import datetime, timedelta
 
 class TestCommentAPI:
@@ -108,16 +109,52 @@ class TestCommentAPI:
         }
         response = authorized_client.post(get_api_path("/comments"), json=comment_data)
         assert response.status_code == 200
+        assert response.json()["code"] == ErrorCode.SUCCESS
+        assert response.json()["message"] == ErrorMessages.COMMENT_CREATE_SUCCESS
         data = response.json()["data"]
         assert data["content"] == comment_data["content"]
-        assert response.json()["message"] == "创建评论成功"
+
+    def test_create_comment_empty_content(self, authorized_client: TestClient):
+        """测试创建评论 - 内容为空"""
+        comment_data = {
+            "content": "",
+            "article_id": self.article.id
+        }
+        response = authorized_client.post(get_api_path("/comments"), json=comment_data)
+        assert response.status_code == 200
+        assert response.json()["code"] == ErrorCode.COMMENT_CONTENT_EMPTY
+        assert response.json()["message"] == ErrorMessages.COMMENT_CONTENT_EMPTY
+
+    def test_create_comment_article_not_found(self, authorized_client: TestClient):
+        """测试创建评论 - 文章不存在"""
+        comment_data = {
+            "content": "Test comment",
+            "article_id": 999999
+        }
+        response = authorized_client.post(get_api_path("/comments"), json=comment_data)
+        assert response.status_code == 200
+        assert response.json()["code"] == ErrorCode.COMMENT_ARTICLE_NOT_FOUND
+        assert response.json()["message"] == ErrorMessages.COMMENT_ARTICLE_NOT_FOUND
+
+    def test_create_reply_parent_not_found(self, authorized_client: TestClient):
+        """测试创建回复 - 父评论不存在"""
+        comment_data = {
+            "content": "Test reply",
+            "article_id": self.article.id,
+            "parent_id": 999999
+        }
+        response = authorized_client.post(get_api_path("/comments"), json=comment_data)
+        assert response.status_code == 200
+        assert response.json()["code"] == ErrorCode.COMMENT_PARENT_NOT_FOUND
+        assert response.json()["message"] == ErrorMessages.COMMENT_PARENT_NOT_FOUND
 
     def test_get_comments(self, authorized_client: TestClient):
         """测试获取评论列表"""
         response = authorized_client.get(get_api_path("/comments"))
         assert response.status_code == 200
+        assert response.json()["code"] == ErrorCode.SUCCESS
+        assert response.json()["message"] == ErrorMessages.SUCCESS
         assert "data" in response.json()
-        assert response.json()["message"] == "获取评论列表成功"
 
     def test_get_comments_with_filters(self, authorized_client: TestClient):
         """测试带筛选条件的评论列表获取"""
@@ -185,6 +222,8 @@ class TestCommentAPI:
             get_api_path(f"/comments/{self.child_comment_1_id}/approve")
         )
         assert response.status_code == 200
+        assert response.json()["code"] == ErrorCode.SUCCESS
+        assert response.json()["message"] == ErrorMessages.COMMENT_APPROVE_SUCCESS
         data = response.json()["data"]
         assert data["is_approved"] is True
         assert data["is_spam"] is False
@@ -194,20 +233,41 @@ class TestCommentAPI:
             get_api_path(f"/comments/{self.child_comment_2_id}/spam")
         )
         assert response.status_code == 200
+        assert response.json()["code"] == ErrorCode.SUCCESS
+        assert response.json()["message"] == ErrorMessages.COMMENT_SPAM_SUCCESS
         data = response.json()["data"]
         assert data["is_spam"] is True
         assert data["is_approved"] is False
 
+    def test_comment_status_error(self, authorized_client: TestClient):
+        """测试评论状态错误"""
+        # 尝试审核已经是垃圾评论的评论
+        response = authorized_client.post(
+            get_api_path(f"/comments/{self.root_comment_2_id}/approve")  # root_comment_2 是垃圾评论
+        )
+        assert response.status_code == 200
+        assert response.json()["code"] == ErrorCode.COMMENT_STATUS_ERROR
+        assert response.json()["message"] == ErrorMessages.COMMENT_STATUS_ERROR
+
+    def test_comment_forbidden(self, unauthorized_client: TestClient):
+        """测试无权限操作评论"""
+        response = unauthorized_client.post(
+            get_api_path(f"/comments/{self.child_comment_1_id}/approve")
+        )
+        assert response.status_code == 200
+        assert response.json()["code"] == ErrorCode.COMMENT_FORBIDDEN
+        assert response.json()["message"] == ErrorMessages.COMMENT_FORBIDDEN
+
     def test_batch_operations(self, authorized_client: TestClient):
-        """测试批量操作评论
-        """
+        """测试批量操作评论"""
         # 测试批量审核通过
         response = authorized_client.post(
             get_api_path("/comments/batch-approve"),
             json={"comment_ids": [self.child_comment_1_id, self.child_comment_2_id]}
         )
-        print("Response:", response.json())  # 打印响应内容
         assert response.status_code == 200
+        assert response.json()["code"] == ErrorCode.SUCCESS
+        assert response.json()["message"] == ErrorMessages.COMMENT_APPROVE_SUCCESS
         comments = response.json()["data"]
         for comment in comments:
             assert comment["is_approved"] is True
@@ -218,9 +278,90 @@ class TestCommentAPI:
             get_api_path("/comments/batch-spam"),
             json={"comment_ids": [self.child_comment_1_id, self.child_comment_2_id]}
         )
-        print("Response:", response.json())  # 打印响应内容
         assert response.status_code == 200
+        assert response.json()["code"] == ErrorCode.SUCCESS
+        assert response.json()["message"] == ErrorMessages.COMMENT_SPAM_SUCCESS
         comments = response.json()["data"]
         for comment in comments:
             assert comment["is_spam"] is True
-            assert comment["is_approved"] is False 
+            assert comment["is_approved"] is False
+
+    def test_batch_operations_not_found(self, authorized_client: TestClient):
+        """测试批量操作 - 评论不存在"""
+        response = authorized_client.post(
+            get_api_path("/comments/batch-approve"),
+            json={"comment_ids": [999999]}
+        )
+        assert response.status_code == 200
+        assert response.json()["code"] == ErrorCode.COMMENT_NOT_FOUND
+        assert response.json()["message"] == ErrorMessages.COMMENT_NOT_FOUND
+
+    def test_batch_operations_forbidden(self, unauthorized_client: TestClient):
+        """测试批量操作 - 无权限"""
+        response = unauthorized_client.post(
+            get_api_path("/comments/batch-approve"),
+            json={"comment_ids": [self.child_comment_1_id]}
+        )
+        assert response.status_code == 200
+        assert response.json()["code"] == ErrorCode.COMMENT_FORBIDDEN
+        assert response.json()["message"] == ErrorMessages.COMMENT_FORBIDDEN
+
+    def test_comment_sorting(self, authorized_client: TestClient, db_session: Session, test_user):
+        """测试评论排序"""
+        # 创建测试评论数据
+        comments = [
+            Comment(
+                content=f"Sort Test Comment {i}",
+                article_id=self.article.id,
+                user_id=test_user.id,
+                created_at=datetime.utcnow() + timedelta(days=i),
+                likes=i * 10
+            ) for i in range(3)
+        ]
+        db_session.add_all(comments)
+        db_session.commit()
+
+        # 测试按创建时间降序排序
+        response = authorized_client.get(get_api_path("/comments?sort=-created_at"))
+        assert response.status_code == 200
+        assert response.json()["code"] == ErrorCode.SUCCESS
+        data = response.json()["data"]
+        assert len(data["items"]) >= 3
+        assert data["items"][0]["content"] == "Sort Test Comment 2"
+        assert data["items"][1]["content"] == "Sort Test Comment 1"
+        assert data["items"][2]["content"] == "Sort Test Comment 0"
+
+        # 测试按创建时间升序排序
+        response = authorized_client.get(get_api_path("/comments?sort=created_at"))
+        assert response.status_code == 200
+        assert response.json()["code"] == ErrorCode.SUCCESS
+        data = response.json()["data"]
+        assert len(data["items"]) >= 3
+        assert data["items"][0]["content"] == "Sort Test Comment 0"
+        assert data["items"][1]["content"] == "Sort Test Comment 1"
+        assert data["items"][2]["content"] == "Sort Test Comment 2"
+
+        # 测试按点赞数降序排序
+        response = authorized_client.get(get_api_path("/comments?sort=-likes"))
+        assert response.status_code == 200
+        assert response.json()["code"] == ErrorCode.SUCCESS
+        data = response.json()["data"]
+        assert len(data["items"]) >= 3
+        assert data["items"][0]["content"] == "Sort Test Comment 2"  # 20 likes
+        assert data["items"][1]["content"] == "Sort Test Comment 1"  # 10 likes
+        assert data["items"][2]["content"] == "Sort Test Comment 0"  # 0 likes
+
+        # 测试按点赞数升序排序
+        response = authorized_client.get(get_api_path("/comments?sort=likes"))
+        assert response.status_code == 200
+        assert response.json()["code"] == ErrorCode.SUCCESS
+        data = response.json()["data"]
+        assert len(data["items"]) >= 3
+        assert data["items"][0]["content"] == "Sort Test Comment 0"  # 0 likes
+        assert data["items"][1]["content"] == "Sort Test Comment 1"  # 10 likes
+        assert data["items"][2]["content"] == "Sort Test Comment 2"  # 20 likes
+
+        # 清理测试数据
+        for comment in comments:
+            db_session.delete(comment)
+        db_session.commit()
