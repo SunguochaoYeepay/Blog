@@ -17,10 +17,16 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     password: str = Field(..., description="密码")
 
-class UserUpdate(UserBase):
+class UserUpdate(BaseModel):
     username: Optional[str] = Field(None, description="用户名")
     email: Optional[EmailStr] = Field(None, description="邮箱")
+    full_name: Optional[str] = Field(None, description="全名")
+    department: Optional[str] = Field(None, description="部门")
+    role: Optional[str] = Field(None, description="角色")
     password: Optional[str] = Field(None, description="密码")
+    avatar: Optional[str] = Field(None, description="头像")
+    phone: Optional[str] = Field(None, description="电话")
+    bio: Optional[str] = Field(None, description="个人简介")
     is_active: Optional[bool] = Field(None, description="是否激活")
     is_superuser: Optional[bool] = Field(None, description="是否超级管理员")
 
@@ -35,9 +41,16 @@ class UserResponse(UserBase):
     id: int
     avatar: Optional[str] = None
     is_active: bool = True
+    is_superuser: bool = False
+    phone: Optional[str] = Field(None, description="电话")
+    bio: Optional[str] = Field(None, description="个人简介")
     last_login: Optional[datetime] = None
-    created_at: datetime
-    updated_at: Optional[datetime] = None
+    created_at: datetime = Field(..., description="创建时间")
+    updated_at: Optional[datetime] = Field(None, description="更新时间")
+    articles_count: Optional[int] = Field(0, description="文章数量")
+    comments_count: Optional[int] = Field(0, description="评论数量")
+    
+    model_config = ConfigDict(from_attributes=True)
 
 class UserQuery(BaseModel):
     username: Optional[str] = None

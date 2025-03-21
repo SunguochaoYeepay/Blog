@@ -37,8 +37,8 @@
         @change="handleTableChange"
         :row-key="rowKey"
       >
-        <template #bodyCell="{ column, record }">
-          <slot name="column-content" :column="column" :record="record"></slot>
+        <template #bodyCell="slotProps">
+          <slot name="bodyCell" v-bind="slotProps"></slot>
         </template>
       </a-table>
     </a-card>

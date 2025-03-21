@@ -8,6 +8,8 @@ from app.api import deps
 from app.core import security
 from app.database import get_db
 from app.models.user import User
+from app.models.article import Article
+from app.models.comment import Comment
 from app.schemas.user import User as UserSchema
 from app.schemas.user import UserCreate, UserUpdate, UserResponse, UserUpdateMe
 from app.schemas.response import Response
@@ -21,6 +23,9 @@ router = APIRouter(
 @router.get("", response_model=Response[PaginatedResponse[UserResponse]])
 def get_users(
     pagination: PaginationParams = Depends(),
+    username: Optional[str] = None,
+    email: Optional[str] = None,
+    role: Optional[str] = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(deps.get_current_active_user)
 ):
@@ -32,8 +37,22 @@ def get_users(
         )
 
     query = db.query(User)
+    
+    # 添加搜索条件
+    if username:
+        query = query.filter(User.username.ilike(f"%{username}%"))
+    if email:
+        query = query.filter(User.email.ilike(f"%{email}%"))
+    if role:
+        query = query.filter(User.role == role)
+
     total = query.count()
-    users = query.offset(pagination.skip).limit(pagination.limit).all()
+    users = query.offset(pagination.skip).limit(pagination.page_size).all()
+
+    # 为每个用户添加文章和评论数量
+    for user in users:
+        user.articles_count = db.query(Article).filter(Article.author_id == user.id).count()
+        user.comments_count = db.query(Comment).filter(Comment.user_id == user.id).count()
 
     return Response(
         code=200,
@@ -42,12 +61,12 @@ def get_users(
             "items": users,
             "total": total,
             "page": pagination.page,
-            "size": pagination.limit,
-            "total_pages": (total + pagination.limit - 1) // pagination.limit
+            "page_size": pagination.page_size,
+            "total_pages": (total + pagination.page_size - 1) // pagination.page_size
         }
     )
 
-@router.post("", response_model=Response[UserResponse], status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=Response[UserResponse])
 def create_user(
     *,
     db: Session = Depends(deps.get_db),
@@ -155,8 +174,9 @@ def update_user(
     if user_update.password:
         db_user.hashed_password = security.get_password_hash(user_update.password)
     
-    # 更新其他字段
-    for field, value in user_update.dict(exclude={'password'}, exclude_unset=True).items():
+    # 更新其他字段，包括头像
+    update_data = user_update.model_dump(exclude={'password'}, exclude_unset=True)
+    for field, value in update_data.items():
         setattr(db_user, field, value)
     
     db.commit()
@@ -167,7 +187,7 @@ def update_user(
         data=db_user
     )
 
-@router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{user_id}", response_model=Response)
 def delete_user(
     user_id: int,
     db: Session = Depends(get_db),
@@ -190,7 +210,7 @@ def delete_user(
     db.delete(db_user)
     db.commit()
     return Response(
-        code=204,
+        code=200,
         message="删除用户成功"
     )
 

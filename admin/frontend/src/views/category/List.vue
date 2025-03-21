@@ -128,7 +128,10 @@ const rules = {
 const loadCategories = async () => {
   loading.value = true
   try {
-    const response = await categoryApi.list({ page: pagination.current, size: pagination.pageSize })
+    const response = await categoryApi.list({ 
+      page: pagination.current, 
+      page_size: pagination.pageSize 
+    })
     if (response.code === 200) {
       categories.value = response.data.items
       pagination.total = response.data.total

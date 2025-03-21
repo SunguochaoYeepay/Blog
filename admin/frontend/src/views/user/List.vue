@@ -87,39 +87,86 @@
         :loading="loading"
         :pagination="pagination"
         :row-selection="{ selectedRowKeys, onChange: onSelectChange }"
-        :row-key="record => record.id"
+        :row-key="(record: TableUser) => record.id"
         @change="handleTableChange"
       >
-        <template #bodyCell="{ column, record, text }: { column: { key: string }; record: User; text: string }">
-          <template v-if="column.key === 'username'">
-            <div class="user-cell">
+        <!-- 用户名列 -->
+        <template #username="{ record }">
+          <div class="user-cell">
+            <div class="avatar-wrapper">
               <a-avatar 
                 :src="record.avatar"
                 :style="{ backgroundColor: !record.avatar ? getAvatarColor(record.username) : 'transparent' }"
+                :size="40"
               >
                 {{ !record.avatar ? record.username.charAt(0).toUpperCase() : '' }}
               </a-avatar>
-              <div class="user-info">
-                <div class="username">{{ record.username }}</div>
-                <div class="email">{{ record.email }}</div>
-              </div>
             </div>
-          </template>
-          <template v-else-if="column.key === 'role'">
-            <a-tag :color="getRoleTagColor(text)">
-              {{ getRoleLabel(text) }}
-            </a-tag>
-          </template>
-          <template v-else-if="column.key === 'status'">
-            <a-badge :status="getUserStatus(record).status" :text="getUserStatus(record).text" />
-          </template>
-          <template v-else-if="column.key === 'action'">
-            <a-space>
-              <a-button type="link" @click="handleEdit(record.id)">编辑</a-button>
-              <a-divider type="vertical" />
-              <a-button type="link" danger @click="handleDelete(record.id)">删除</a-button>
-            </a-space>
-          </template>
+            <div class="user-info">
+              <div class="username">{{ record.username }}</div>
+              <div class="email">{{ record.email }}</div>
+              <div class="full-name">{{ record.full_name }}</div>
+            </div>
+          </div>
+        </template>
+
+        <!-- 文章数列 -->
+        <template #articles_count="{ text }">
+          <a-badge 
+            :count="Number(text)" 
+            :number-style="{ backgroundColor: Number(text) > 0 ? '#52c41a' : '#d9d9d9' }" 
+          />
+        </template>
+
+        <!-- 评论数列 -->
+        <template #comments_count="{ text }">
+          <a-badge 
+            :count="Number(text)" 
+            :number-style="{ backgroundColor: Number(text) > 0 ? '#52c41a' : '#d9d9d9' }" 
+          />
+        </template>
+
+        <!-- 角色列 -->
+        <template #role="{ text }">
+          <a-tag :color="getRoleTagColor(text)">
+            {{ getRoleLabel(text) }}
+          </a-tag>
+        </template>
+
+        <!-- 状态列 -->
+        <template #status="{ text }">
+          <a-tag :color="text === 'active' ? 'success' : 'error'">
+            {{ text === 'active' ? '活跃' : '禁用' }}
+          </a-tag>
+        </template>
+
+        <!-- 最后登录列 -->
+        <template #last_login="{ text }">
+          <span :title="text ? new Date(text).toLocaleString() : '从未登录'">
+            {{ formatLastLoginDate(text) }}
+          </span>
+        </template>
+
+        <!-- 操作列 -->
+        <template #action="{ record }">
+          <a-space>
+            <a-button type="link" size="small" @click="handleEdit(record.id)">
+              <template #icon><EditOutlined /></template>
+              编辑
+            </a-button>
+            <a-divider type="vertical" />
+            <a-popconfirm
+              title="确定要删除此用户吗？"
+              @confirm="handleDelete(record.id)"
+              ok-text="确定"
+              cancel-text="取消"
+            >
+              <a-button type="link" danger size="small">
+                <template #icon><DeleteOutlined /></template>
+                删除
+              </a-button>
+            </a-popconfirm>
+          </a-space>
         </template>
       </a-table>
     </a-card>
@@ -131,6 +178,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { message, Modal } from 'ant-design-vue/es';
 import type { UploadChangeParam, UploadFile } from 'ant-design-vue/es/upload';
+import type { TableProps } from 'ant-design-vue/es/table';
 import { 
   UserOutlined,
   MailOutlined,
@@ -144,11 +192,16 @@ import {
 } from '@ant-design/icons-vue';
 import userApi from '@/api/user';
 import type { User } from '@/api/user';
-import type { TableProps } from 'ant-design-vue/es/table';
+import { formatDate } from '@/utils/date';
+
+interface TableUser extends User {
+  articles_count: number;
+  comments_count: number;
+}
 
 const router = useRouter();
 const loading = ref(false);
-const users = ref<User[]>([]);
+const users = ref<TableUser[]>([]);
 const total = ref(0);
 const selectedRowKeys = ref<number[]>([]);
 const searchForm = ref({
@@ -176,39 +229,77 @@ const roleOptions = [
 // 表格列定义
 const columns = [
   {
-    title: '用户信息',
+    title: '用户名',
     dataIndex: 'username',
-    key: 'username',
-    width: '25%',
+    width: '20%',
+    slots: {
+      customRender: 'username'
+    }
+  },
+  {
+    title: '部门',
+    dataIndex: 'department',
+    width: '12%'
+  },
+  {
+    title: '文章数',
+    dataIndex: 'articles_count',
+    width: '8%',
+    sorter: true,
+    slots: {
+      customRender: 'articles_count'
+    }
+  },
+  {
+    title: '评论数',
+    dataIndex: 'comments_count',
+    width: '8%',
+    sorter: true,
+    slots: {
+      customRender: 'comments_count'
+    }
   },
   {
     title: '角色',
     dataIndex: 'role',
-    key: 'role',
-    width: '15%',
-    filters: roleOptions.map(option => ({
-      text: option.label,
-      value: option.value
-    })),
+    width: '10%',
+    filters: [
+      { text: '管理员', value: 'admin' },
+      { text: '编辑', value: 'editor' },
+      { text: '用户', value: 'user' }
+    ],
+    slots: {
+      customRender: 'role'
+    }
   },
   {
     title: '状态',
     dataIndex: 'status',
-    key: 'status',
-    width: '15%',
+    width: '8%',
+    filters: [
+      { text: '活跃', value: 'active' },
+      { text: '禁用', value: 'inactive' }
+    ],
+    slots: {
+      customRender: 'status'
+    }
   },
   {
     title: '最后登录',
     dataIndex: 'last_login',
-    key: 'last_login',
-    width: '20%',
+    width: '15%',
     sorter: true,
-    customRender: ({ text }: { text: string | null }) => formatDate(text)
+    slots: {
+      customRender: 'last_login'
+    }
   },
   {
     title: '操作',
     key: 'action',
     width: '15%',
+    slots: {
+      customRender: 'action'
+    }
   }
 ];
 
@@ -217,13 +308,19 @@ const loadUsers = async () => {
   try {
     loading.value = true;
     const page = pagination.value.current || 1;
-    const size = pagination.value.pageSize || 10;
+    const pageSize = pagination.value.pageSize || 10;
     const response = await userApi.list({
       page,
-      size,
-      ...searchForm.value
+      page_size: pageSize,
+      username: searchForm.value.username,
+      email: searchForm.value.email,
+      role: searchForm.value.role
     });
-    users.value = response.data.items;
+    users.value = response.data.items.map(user => ({
+      ...user,
+      articles_count: user.articles_count || 0,
+      comments_count: user.comments_count || 0
+    }));
     total.value = response.data.total;
     pagination.value.total = response.data.total;
   } catch (error) {
@@ -341,7 +438,7 @@ const getRoleLabel = (role: string) => {
   return option ? option.label : role;
 };
 
-const getUserStatus = (user: User) => {
+const getUserStatus = (user: TableUser) => {
   const lastLogin = user.last_login ? new Date(user.last_login) : null;
   const now = new Date();
   
@@ -368,7 +465,7 @@ const getAvatarColor = (username: string) => {
   return colors[Math.abs(hash) % colors.length];
 };
 
-const formatDate = (dateStr: string | null) => {
+const formatLastLoginDate = (dateStr: string | null) => {
   if (!dateStr) return '从未登录';
   const date = new Date(dateStr);
   const now = new Date();

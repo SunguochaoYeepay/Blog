@@ -15,6 +15,8 @@ export interface User {
   last_login?: string;
   created_at: string;
   updated_at: string;
+  articles_count?: number;
+  comments_count?: number;
 }
 
 export interface UserQuery extends PaginationQuery {
@@ -28,20 +30,28 @@ export interface UserCreateDTO {
   username: string;
   email: string;
   password: string;
-  role: string;
   full_name: string;
   department?: string;
+  role?: string;
   avatar?: string;
+  phone?: string;
+  bio?: string;
+  is_active?: boolean;
+  is_superuser?: boolean;
 }
 
 export interface UserUpdateDTO {
   username?: string;
   email?: string;
   password?: string;
-  role?: string;
+  full_name?: string;
   department?: string;
+  role?: string;
   avatar?: string;
-  status?: string;
+  phone?: string;
+  bio?: string;
+  is_active?: boolean;
+  is_superuser?: boolean;
 }
 
 export interface ListResponse<T> {
@@ -60,23 +70,37 @@ export default {
   },
 
   // 获取单个用户
-  getById: (id: number) => {
-    return request<User>({ url: `/api/users/${id}`, method: 'get' });
+  getById: (id: number): Promise<ApiResponse<User>> => {
+    return request({
+      url: `/api/users/${id}`,
+      method: 'get'
+    });
   },
 
   // 创建用户
-  create: (data: UserCreateDTO) => {
-    return request<User>({ url: '/api/users', method: 'post', data });
+  create: (data: UserCreateDTO): Promise<ApiResponse<User>> => {
+    return request({
+      url: '/api/users',
+      method: 'post',
+      data
+    });
   },
 
   // 更新用户
-  update: (id: number, data: UserUpdateDTO) => {
-    return request<User>({ url: `/api/users/${id}`, method: 'put', data });
+  update: (id: number, data: UserUpdateDTO): Promise<ApiResponse<User>> => {
+    return request({
+      url: `/api/users/${id}`,
+      method: 'put',
+      data
+    });
   },
 
   // 删除用户
-  delete: (id: number) => {
-    return request({ url: `/api/users/${id}`, method: 'delete' });
+  delete: (id: number): Promise<ApiResponse<void>> => {
+    return request({
+      url: `/api/users/${id}`,
+      method: 'delete'
+    });
   },
 
   // 更新用户头像
@@ -95,15 +119,23 @@ export default {
   },
 
   // 批量删除用户
-  batchDelete: (ids: number[]) => {
-    return request({ url: '/api/users', method: 'delete', data: { ids } });
+  batchDelete: (ids: number[]): Promise<ApiResponse<void>> => {
+    return request({
+      url: '/api/users',
+      method: 'delete',
+      data: { ids }
+    });
   },
 
   // 修改密码
-  changePassword: (id: number, oldPassword: string, newPassword: string) => {
-    return request({ url: `/api/users/${id}/password`, method: 'put', data: {
-      old_password: oldPassword,
-      new_password: newPassword
-    } });
+  changePassword: (id: number, oldPassword: string, newPassword: string): Promise<ApiResponse<void>> => {
+    return request({
+      url: `/api/users/${id}/password`,
+      method: 'put',
+      data: {
+        old_password: oldPassword,
+        new_password: newPassword
+      }
+    });
   }
 };

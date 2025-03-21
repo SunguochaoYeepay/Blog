@@ -202,10 +202,10 @@ const loadArticles = async () => {
   try {
     loading.value = true;
     const page = pagination.value.current || 1;
-    const size = pagination.value.pageSize || 10;
+    const page_size = pagination.value.pageSize || 10;
     const response = await articleApi.list({
       page,
-      size,
+      page_size,
       title: searchForm.value.title,
       status: searchForm.value.status,
       sort_field: sortState.value.field,

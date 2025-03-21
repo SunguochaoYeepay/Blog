@@ -1,20 +1,28 @@
 import axios from 'axios'
-import type { AxiosRequestConfig, AxiosResponse } from 'axios'
+import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { message } from 'ant-design-vue/es'
-import { useUserStore } from '@/store/user'
-import type { ApiResponse } from '@/types/api'
+import { useUserStore } from '@/stores/user'
+import router from '@/router'
+import type { ApiResponse } from '@/types/common'
 
+// 创建 axios 实例
 const service = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000',
   timeout: 10000
 })
 
+// 请求拦截器
 service.interceptors.request.use(
   (config: AxiosRequestConfig) => {
     const userStore = useUserStore()
     if (userStore.token) {
-      config.headers = config.headers || {}
-      config.headers.Authorization = `Bearer ${userStore.token}`
+      if (config.headers) {
+        config.headers['Authorization'] = `Bearer ${userStore.token}`
+      } else {
+        config.headers = {
+          Authorization: `Bearer ${userStore.token}`
+        }
+      }
     }
     
     // 如果请求已经设置了 Content-Type，不修改
@@ -27,37 +35,41 @@ service.interceptors.request.use(
     config.headers['Content-Type'] = 'application/json'
     return config
   },
-  (error) => {
+  (error: AxiosError) => {
     message.error('请求发送失败')
     return Promise.reject(error)
   }
 )
 
+// 响应拦截器
 service.interceptors.response.use(
-  (response: AxiosResponse<ApiResponse<any>>) => {
+  (response: AxiosResponse) => {
     const res = response.data
-    // 2xx 状态码都是成功
-    if (res.code >= 200 && res.code < 300) {
-      return Promise.resolve(res)
-    }
-    message.error(res.message || '请求失败')
-    return Promise.reject(new Error(res.message || '请求失败'))
-  },
-  (error) => {
-    // 处理 422 错误
-    if (error.response?.status === 422) {
-      const detail = error.response.data?.detail
-      if (Array.isArray(detail)) {
-        // FastAPI 验证错误格式
-        message.error(detail[0]?.msg || '请求参数错误')
-      } else {
-        message.error(error.response.data?.detail?.message || error.response.data?.message || '请求参数错误')
+    
+    // 如果响应成功但业务状态码不是200，显示错误信息
+    if (res.code !== 200) {
+      message.error(res.message || 'Error')
+      
+      // 401: 未登录或token过期
+      if (res.code === 401) {
+        const userStore = useUserStore()
+        userStore.logout().then(() => {
+          router.push('/login')
+        })
       }
-    } else {
-      message.error(error.response?.data?.message || error.message || '请求失败')
+      return Promise.reject(new Error(res.message || 'Error'))
     }
+    return res
+  },
+  (error: AxiosError) => {
+    message.error(error.message)
     return Promise.reject(error)
   }
 )
 
-export default service
+// 封装 request 函数
+const request = <T = any>(config: AxiosRequestConfig): Promise<ApiResponse<T>> => {
+  return service(config) as Promise<ApiResponse<T>>
+}
+
+export default request

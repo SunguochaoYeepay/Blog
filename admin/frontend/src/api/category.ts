@@ -58,3 +58,18 @@ export const categoryApi = {
     });
   }
 };
+
+// 获取分类列表
+export const getCategories = (params: CategoryQuery) => {
+  return request<ApiResponse<{
+    items: CategoryResponse[]
+    total: number
+    page: number
+    page_size: number
+    total_pages: number
+  }>>({
+    url: '/api/categories',
+    method: 'get',
+    params
+  })
+}

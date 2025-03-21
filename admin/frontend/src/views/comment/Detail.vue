@@ -1,12 +1,12 @@
 <template>
   <div class="comment-detail">
     <a-modal
-      :visible="visible"
+      :open="visible"
       title="评论详情"
       :footer="null"
       width="700px"
       @cancel="handleClose"
-      @update:visible="$emit('update:visible', $event)"
+      @update:open="$emit('update:visible', $event)"
     >
       <a-descriptions bordered :column="1">
         <a-descriptions-item label="评论内容">

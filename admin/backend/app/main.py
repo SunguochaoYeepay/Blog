@@ -25,14 +25,15 @@ from app.models.dashboard import Dashboard
 from app.models.article_relationships import ArticleTag
 
 # 最后导入其他依赖
-from fastapi import FastAPI, Request, status
+from fastapi import FastAPI, Request, status, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 from sqlalchemy import inspect
 
 # 导入路由
 from app.api import users, articles, categories, tags, comments, auth, dashboard, upload
+from app.schemas.response import Response
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -81,25 +82,67 @@ async def health_check():
         # 检查数据库连接
         inspector = inspect(engine)
         inspector.get_table_names()
-        return {
-            "status": "ok",
-            "database": "connected",
-            "version": settings.VERSION,
-            "env": settings.ENV
-        }
+        return Response(
+            code=200,
+            message="服务正常",
+            data={
+                "status": "ok",
+                "database": "connected",
+                "version": settings.VERSION,
+                "env": settings.ENV
+            }
+        )
     except Exception as e:
         logger.error(f"健康检查失败: {str(e)}")
-        return JSONResponse(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            content={
+        return Response(
+            code=500,
+            message="服务异常",
+            data={
                 "status": "error",
-                "message": "服务异常",
                 "version": settings.VERSION,
                 "detail": str(e) if settings.DEBUG else None
             }
         )
 
 # 全局异常处理
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    """HTTP异常处理器"""
+    return JSONResponse(
+        status_code=200,  # 统一返回200
+        content=Response(
+            code=200,
+            message=exc.detail
+        ).model_dump()
+    )
+
+@app.exception_handler(IntegrityError)
+async def integrity_exception_handler(request: Request, exc: IntegrityError):
+    """数据完整性异常处理器"""
+    error_msg = str(exc)
+    logger.error(f"数据完整性错误: {error_msg}")
+    logger.error(f"请求路径: {request.url.path}")
+    
+    # 处理常见的完整性错误
+    if "Duplicate entry" in error_msg:
+        if "categories.ix_categories_name" in error_msg:
+            message = "分类名称已存在"
+        elif "categories.ix_categories_slug" in error_msg:
+            message = "分类链接已存在"
+        else:
+            message = "数据已存在"
+    else:
+        message = "数据验证错误"
+    
+    return JSONResponse(
+        status_code=200,  # 统一返回200
+        content=Response(
+            code=200,
+            message=message,
+            data={"detail": error_msg if settings.DEBUG else None}
+        ).model_dump()
+    )
+
 @app.exception_handler(SQLAlchemyError)
 async def sqlalchemy_exception_handler(request: Request, exc: SQLAlchemyError):
     """数据库异常处理器"""
@@ -107,11 +150,12 @@ async def sqlalchemy_exception_handler(request: Request, exc: SQLAlchemyError):
     logger.error(f"数据库错误: {error_msg}")
     logger.error(f"请求路径: {request.url.path}")
     return JSONResponse(
-        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        content={
-            "message": "数据库错误",
-            "detail": error_msg if settings.DEBUG else None
-        }
+        status_code=200,  # 统一返回200
+        content=Response(
+            code=200,
+            message="数据库错误",
+            data={"detail": error_msg if settings.DEBUG else None}
+        ).model_dump()
     )
 
 @app.exception_handler(Exception)
@@ -121,9 +165,10 @@ async def general_exception_handler(request: Request, exc: Exception):
     logger.error(f"未处理的异常: {error_msg}")
     logger.error(f"请求路径: {request.url.path}")
     return JSONResponse(
-        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        content={
-            "message": "服务器内部错误",
-            "detail": error_msg if settings.DEBUG else None
-        }
+        status_code=200,  # 统一返回200
+        content=Response(
+            code=200,
+            message="服务器内部错误",
+            data={"detail": error_msg if settings.DEBUG else None}
+        ).model_dump()
     )
