@@ -55,7 +55,7 @@ import { reactive, ref } from 'vue'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue/es'
 import { useRouter, useRoute } from 'vue-router'
-import { useUserStore } from '@/store/user'
+import { useUserStore } from '@/stores/user'
 import type { Rule } from 'ant-design-vue/es/form'
 import type { LoginParams } from '@/types/auth'
 
@@ -104,7 +104,7 @@ const handleSubmit = async () => {
     // 确保用户信息已经获取成功
     if (!userStore.userInfo) {
       console.log('Fetching user info before navigation...')
-      await userStore.fetchUserInfo()
+      await userStore.getUserInfo()
     }
     
     await router.replace(targetPath)

@@ -44,7 +44,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { message } from 'ant-design-vue'
+import { message } from 'ant-design-vue/es'
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -52,7 +52,7 @@ import {
   SettingOutlined,
   LogoutOutlined
 } from '@ant-design/icons-vue'
-import { useUserStore } from '@/store/user'
+import { useUserStore } from '@/stores/user'
 import Breadcrumb from './Breadcrumb.vue'
 import defaultAvatar from '@/assets/default-avatar.png'
 
